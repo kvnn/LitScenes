@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block bodyClasses %}
+bookView
+{% endblock %}
+
+{% block content %}
+
+<h2 class="book-title">{{book.title}} <small>by {{book.author}}</small></h2>
+
+<div class="row">
+    <div id="chunk-container" class="chunk-container">
+        {% for chunk in book.chunks %}
+            <div class="card chunk" data-chunk-id="{{ chunk.id }}">
+                <div class="card-body">
+                <h5 class="card-title chunk-title">#{{ chunk.sequence_number }}</h5>
+                <p class="card-text">{{ chunk.content }}</p>
+                </div>
+                <div class="chunk-tools">
+                    <!-- <a href="#" data-chunk-id="{{ chunk.id }}" class="chunk-generate-image">
+                        <i class="bi bi-images"></i>
+                    </a>
+                    <a href="#"class="chunk-expand btn btn-sm btn-secondary">
+                        <i class="bi bi-arrows-angle-expand"></i>
+                    </a> -->
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<div class="scene-container offcanvas offcanvas-end" tabindex="-1" id="scene-container" aria-labelledby="scene-container-label">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="scene-container-label"></h5>
+      <button id="scene-container-close" type="button" class="btn-close text-reset"></button>
+    </div>
+    <div class="offcanvas-body">
+      <!-- CREATE SCENE -->
+      <div class="dropdown mt-12">
+        <a class="btn btn-secondary mb-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+            Generate a Scene
+            <i class="bi bi-chevron-down"></i>
+        </a>
+        <div class="collapse mb-3" id="collapseExample">
+            <div class="card card-body">
+                <div class="row">
+                    <form id="form-generate-scene" class="form col col-md-6" action="/scenes/generate">
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <h5>Scene Prompt</h5>
+                                <select class="form-select" name="prompt_id">
+                                    {% for prompt in scene_prompts %}
+                                    <option value="{{ prompt.id }}">{{ prompt.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <h5>Aesthetic</h5>
+                                <select class="form-select" name="aesthetic_id">
+                                    {% for aesthetic in scene_aesthetics %}
+                                    <option value="{{ aesthetic.id }}">{{ aesthetic.title }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <button type="submit" id="scene-generate" type="button" class="btn btn-primary float-end">Generate</button>
+                    </form>
+                    <div class="col col-md-6">
+                        <div id="scene-generation-progress" class="generated-scene">
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXISTING SCENES -->
+        <p>asdfasdf asdfasdf asd fas fasd f asdfasdf </p>
+        <p>asdfasdf asdfasdf asd fas fasd f asdfasdf </p>
+        <p>asdfasdf asdfasdf asd fas fasd f asdfasdf </p>
+        <p>asdfasdf asdfasdf asd fas fasd f asdfasdf </p>
+        <p>asdfasdf asdfasdf asd fas fasd f asdfasdf </p>
+        <p>asdfasdf asdfasdf asd fas fasd f asdfasdf </p>
+        <p>asdfasdf asdfasdf asd fas fasd f asdfasdf </p>
+        <p>asdfasdf asdfasdf asd fas fasd f asdfasdf </p>
+        <p>asdfasdf asdfasdf asd fas fasd f asdfasdf </p>
+    </div>
+</div>
+
+{% endblock %}

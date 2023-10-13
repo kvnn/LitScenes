@@ -1,0 +1,112 @@
+.hide {
+    display: none;
+}
+
+#left-nav {
+    overflow: hidden;
+}
+
+h2.book-title {
+    margin-bottom: 20px;
+}
+
+.chunk-container {
+    /* width: 18rem; */
+}
+    .card.chunk {
+        float: left;
+        width: 17rem;
+        margin: 0 10px 20px;
+    }
+
+    .card.chunk.active {
+        border: 1px solid #007bff;
+    }
+
+        .card.chunk .card-body {
+            height: 200px;
+            overflow: auto;
+        }
+
+        .card.chunk.expanded .card-body {
+            height: auto;
+        }
+
+        .card.chunk .chunk-tools {
+            position: absolute;
+            width: 40px;
+            height: 99%;
+            top: 0px;
+            right: 0px;
+        }
+
+            .chunk-generate-image {
+                position: absolute;
+                top: -10px;
+                right: -7px;
+            }
+                .chunk-generate-image i {
+                    font-size: 30px;
+                }
+
+            .card.chunk .chunk-expand {
+                width: 25px;
+                padding: 1px;
+                position: absolute;
+                bottom: -6px;
+                right: -5px;
+            }
+.scene-container.offcanvas-end {
+    width: 80%;
+}
+
+    .scene-selection-prompt a {
+        padding: 10px;
+        color: #333;
+        text-decoration: none;
+    }
+
+/* Config Nav */
+
+.config-nav-container {
+    position: relative;
+    height: 25px;
+    overflow: visible;
+    text-align: right;
+}
+
+    .config-nav-container .expand {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+    }
+
+    .config-nav {
+        position: absolute;
+        z-index: 500;
+        top: 39px;
+        right: 5px;
+        height: 0px;
+        overflow: hidden;
+        padding: 0px 20px;
+
+        background: #fefe;
+        border: 1px solid #333;
+    }
+
+    .config-nav ul {
+        margin-top: 30px;
+    }
+
+    .config-nav li {
+        padding-top: 10px;
+        border-top: 1px solid #ddd;
+    }
+        .config-nav .help {
+            float: right;
+            font-size: 0.6rem;
+            padding: 1px 5px;
+        }
+        .config-nav .save {
+            float: right;
+        }
