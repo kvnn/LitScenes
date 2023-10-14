@@ -19,25 +19,21 @@ scene_generate_tasks = {
 
 }
 
-async function addTextByDelay(text, elem, charactersPerInterval, delay, finishCallback) {
+var addTextByDelay = function (text, elem, delay, finishCallback) {
     let currentIndex = 0;
-
-    async function appendCharactersBatch() {
-        for (let i = 0; i < charactersPerInterval && currentIndex < text.length; i++) {
+    
+    const animate = () => {
+        if (currentIndex < text.length) {
             elem.append(text[currentIndex]);
             currentIndex++;
-        }
-
-        if (currentIndex < text.length) {
-            await new Promise(resolve => setTimeout(resolve, delay));
-            await appendCharactersBatch();
+            requestAnimationFrame(animate);
         } else {
             finishCallback && finishCallback();
         }
-    }
-
-    await appendCharactersBatch();
-}
+    };
+    
+    animate();
+};
 
 
 let sceneGenerateBlock = false;
@@ -70,8 +66,11 @@ async function processNextMessage() {
         let newContent = data.task_results.content.slice(lengthDiff);
         console.log('newContent is ', newContent);
 
-        addTextByDelay(newContent, $('#generate_scene_content'), 1, 10, () => {
-            sceneGenerateBlock = false;
+        await new Promise(resolve => {
+            addTextByDelay(newContent, $('#generate_scene_content'), 1, () => {
+                sceneGenerateBlock = false;
+                resolve(); // Resolve the promise to continue processing the next message
+            });
         });
 
         scene_generate_tasks[data.task_id].content = data.task_results.content;
