@@ -1,12 +1,16 @@
+import asyncio
+import json
 import logging
+import os
 
-from fastapi import Depends, FastAPI, Body, Request
+from celery.result import AsyncResult
+from fastapi import Depends, FastAPI, Body, Request, WebSocket
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
-
+import redis
 
 from config import settings
 from services.book import BookService
@@ -25,6 +29,9 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
+
+redis_url = os.environ.get("REDIS_URL")
+redis_client = redis.from_url(redis_url)
 
 print(f'settings={settings}')
 
@@ -93,3 +100,24 @@ def generate_scene(data: CreateSceneRequest, db: Session = Depends(get_db)):
         return JSONResponse(content={"task_id": task_id})
     return JSONResponse(content={"error": error})
 
+@app.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket):    
+    await websocket.accept()
+    while True:
+        data = await websocket.receive_text()
+        await websocket.send_text(f"Message text was: {data}")
+        
+        async def loop():
+            generate_scene_task_id = redis_client.get('generate_scene_task_id').decode('utf-8')
+            print(f'generate_scene_task_id={generate_scene_task_id}')
+            if generate_scene_task_id:
+                task_details = AsyncResult(generate_scene_task_id)
+                if task_details.result and 'content' in task_details.result:
+                    await websocket.send_text(json.dumps({
+                        "type": "scene_generate",
+                        "task_id": generate_scene_task_id,
+                        "task_results": task_details.result
+                    }))
+            await asyncio.sleep(1)
+            await loop()
+        await loop()

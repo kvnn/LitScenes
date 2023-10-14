@@ -1,31 +1,21 @@
 import asyncio
 import os
 from pathlib import Path
-import re
-import time
-
-import openai
-import requests
-
-from config import settings
 from worker import generate_scene_prompt
 from sql_app.schemas import CreateSceneRequest
 from sql_app.models import Chunk, ScenePrompt, SceneAesthetic
 
+import redis
+
 from config_defaults import scene_prompt_format
 
+redis_url = os.environ.get("REDIS_URL")
+redis_client = redis.from_url(redis_url)
 
-
-openai.api_key = settings.openai_api_key
 current_directory = Path(__file__).parent
 root_directory = current_directory.parent
 images_path = (root_directory / 'static/img/scenes').as_posix()
 print(f'images_path={images_path}')
-
-def update_scene_task(task):
-    while not task.ready():
-        # socketio.emit('task_generate_scene', task.info)
-        print(f'update_scene_task State={task.state}, info={task.info}')
 
 
 class SceneService:    
@@ -43,12 +33,14 @@ class SceneService:
                 chunk=chunk.content,
                 max_length=scene_prompt.max_length
             )
-            
+            print(f'scene_prompt.max_length={scene_prompt.max_length}')
             task = generate_scene_prompt.delay(
                 images_path,
                 prompt,
+                scene_prompt.max_length,
                 aesthetic.title
             )
+            redis_client.set('generate_scene_task_id', task.id)
             return task.id, 'Task created'
         else:
             return False, 'Prompt or chunk not found'

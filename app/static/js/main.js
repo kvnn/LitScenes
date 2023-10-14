@@ -1,43 +1,3 @@
-// var socket = io();
-
-// socket.on('connect', function() {
-//     console.log('socketio connected');
-//     socket.on('task_generate_scene', (msg) => {
-//         console.log('message: ' + msg);
-//     });
-
-//     socket.on("*",function(event,data) {
-//         console.log('****', event);
-//         console.log('**** data', data);
-//     });
-// });
-
-
-function pollTaskStatus(taskId) {
-    var pollingInterval = 2000;  // Poll every 2 seconds
-    var endpoint = '/task_status/' + taskId;
-
-    function checkStatus() {
-        $.get(endpoint, function(data) {
-            console.log(`task ${taskId} data:`, data);
-            if (data.ready) {
-                console.log("Task is ready!");
-                console.log("Successful:", data.successful);
-                console.log("Value:", data.value);
-                // Stop the polling
-                clearInterval(polling);
-            } else {
-                console.log("Task is not ready yet. Polling again...");
-            }
-        }).fail(function() {
-            console.error("Failed to poll status. Stopping...");
-            clearInterval(polling);
-        });
-    }
-
-    var polling = setInterval(checkStatus, pollingInterval);
-}
-
 $(document).ready(function() {
     // for serializing form data into JSON
     $.fn.serializeObject = function() {
@@ -214,7 +174,6 @@ $(document).ready(function() {
                 } else {
                     // console.log('polling for task #', response.task_id)
                     $('#scene-generation-progress').text('...')
-                    // pollTaskStatus(response.task_id);
                 }
         }}).fail(function(jqXHR, textStatus, errorThrown) {
             // Handle error during the request
