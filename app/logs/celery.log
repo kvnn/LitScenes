@@ -25411,3 +25411,227 @@ fertile nooks in which the Dutch farmers are so fond of nestling.
 [2023-10-14 08:30:10,465: WARNING/ForkPoolWorker-3]  scene
 [2023-10-14 08:30:10,574: WARNING/ForkPoolWorker-3] .
 [2023-10-14 08:30:10,675: INFO/ForkPoolWorker-3] Task generate_scene_prompt[9b28c57e-9199-40a5-8cf1-283e235aa87a] succeeded in 64.90555386199776s: None
+[2023-10-14 08:32:38,858: INFO/MainProcess] Task generate_scene_prompt[de20e4b8-62c9-4cab-8269-c728d8a0d839] received
+[2023-10-14 08:32:38,871: WARNING/ForkPoolWorker-3] generate_scene_task for You were a witness to the following scene from the book "The Legend of Sleepy Hollow".You are asked to provide a detailed visual description of what you saw to a reknowned artist who will be painting it for the masses.Please write vividly and with specific visual details.As much as possible, describe the physical characteristics of the characters and the details of the location, and anything else thatwould need to be conveyed to capture what happened in a painting.Also generate a concise, captivating title. Please return the content in this format, in less than 1800 characters: {Title} //// {Description}Here is the content from "The Legend of Sleepy Hollow" : It is remarkable that the visionary propensity I have mentioned is not
+confined to the native inhabitants of the valley, but is unconsciously
+imbibed by every one who resides there for a time. However wide awake
+they may have been before they entered that sleepy region, they are
+sure, in a little time, to inhale the witching influence of the air, and
+begin to grow imaginative, to dream dreams, and see apparitions.
+
+I mention this peaceful spot with all possible laud, for it is in such
+little retired Dutch valleys, found here and there embosomed in the
+great State of New York, that population, manners, and customs remain
+fixed, while the great torrent of migration and improvement, which is
+making such incessant changes in other parts of this restless country,
+sweeps by them unobserved. They are like those little nooks of still
+water, which border a rapid stream, where we may see the straw and
+bubble riding quietly at anchor, or slowly revolving in their mimic
+harbor, undisturbed by the rush of the passing current. Though many
+years have elapsed since I trod the drowsy shades of Sleepy Hollow, yet
+I question whether I should not still find the same trees and the same
+families vegetating in its sheltered bosom.
+
+In this by-place of nature there abode, in a remote period of American
+history, that is to say, some thirty years since, a worthy wight of the
+name of Ichabod Crane, who sojourned, or, as he expressed it, “tarried,”
+ in Sleepy Hollow, for the purpose of instructing the children of the
+vicinity. He was a native of Connecticut, a State which supplies the
+Union with pioneers for the mind as well as for the forest, and sends
+forth yearly its legions of frontier woodmen and country schoolmasters.
+The cognomen of Crane was not inapplicable to his person. He was tall,
+but exceedingly lank, with narrow shoulders, long arms and legs, hands
+that dangled a mile out of his sleeves, feet that might have served for
+shovels, and his whole frame most loosely hung together. His head was
+small, and flat at top, with huge ears, large green glassy eyes, and a
+long snipe nose, so that it looked like a weather-cock perched upon his
+spindle neck to tell which way the wind blew. To see him striding along
+the profile of a hill on a windy day, with his clothes bagging and
+fluttering about him, one might have mistaken him for the genius of
+famine descending upon the earth, or some scarecrow eloped from a
+cornfield.
+
+His schoolhouse was a low building of one large room, rudely constructed
+of logs; the windows partly glazed, and partly patched with leaves of
+old copybooks. It was most ingeniously secured at vacant hours, by a
+withe twisted in the handle of the door, and stakes set against the
+window shutters; so that though a thief might get in with perfect ease,
+he would find some embarrassment in getting out,--an idea most probably
+borrowed by the architect, Yost Van Houten, from the mystery of an
+eelpot. The schoolhouse stood in a rather lonely but pleasant situation,
+just at the foot of a woody hill, with a brook running close by, and
+a formidable birch-tree growing at one end of it. From hence the low
+murmur of his pupils’ voices, conning over their lessons, might be heard
+in a drowsy summer’s day, like the hum of a beehive; interrupted now and
+then by the authoritative voice of the master, in the tone of menace or
+command, or, peradventure, by the appalling sound of the birch, as he
+urged some tardy loiterer along the flowery path of knowledge. Truth to
+say, he was a conscientious man, and ever bore in mind the golden maxim,
+“Spare the rod and spoil the child.” Ichabod Crane’s scholars certainly
+were not spoiled.
+
+I would not have it imagined, however, that he was one of those cruel
+potentates of the school who joy in the smart of their subjects; on
+the contrary, he administered justice with discrimination rather than
+severity; taking the burden off the backs of the weak, and laying it on
+those of the strong. Your mere puny stripling, that winced at the least
+flourish of the rod, was passed by with indulgence; but the claims of
+justice were satisfied by inflicting a double portion on some little
+tough wrong-headed, broad-skirted Dutch urchin, who sulked and swelled
+and grew dogged and sullen beneath the birch. All this he called “doing
+his duty by their parents;” and he never inflicted a chastisement
+without following it by the assurance, so consolatory to the smarting
+urchin, that “he would remember it and thank him for it the longest day
+he had to live.”
+
+When school hours were over, he was even the companion and playmate
+of the larger boys; and on holiday afternoons would convoy some of
+the smaller ones home, who happened to have pretty sisters, or good
+housewives for mothers, noted for the comforts of the cupboard. Indeed,
+it behooved him to keep on good terms with his pupils.
+[2023-10-14 08:32:39,962: WARNING/ForkPoolWorker-3] The
+[2023-10-14 08:32:40,043: WARNING/ForkPoolWorker-3]  En
+[2023-10-14 08:32:40,135: WARNING/ForkPoolWorker-3] igmatic
+[2023-10-14 08:32:40,219: WARNING/ForkPoolWorker-3]  School
+[2023-10-14 08:32:40,323: WARNING/ForkPoolWorker-3] master
+[2023-10-14 08:32:40,425: WARNING/ForkPoolWorker-3]  ////
+[2023-10-14 08:32:40,507: WARNING/ForkPoolWorker-3]  In
+[2023-10-14 08:32:40,602: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 08:32:40,688: WARNING/ForkPoolWorker-3]  secluded
+[2023-10-14 08:32:40,782: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 08:32:40,892: WARNING/ForkPoolWorker-3]  picturesque
+[2023-10-14 08:32:40,967: WARNING/ForkPoolWorker-3]  corner
+[2023-10-14 08:32:41,082: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 08:32:41,179: WARNING/ForkPoolWorker-3]  Sleep
+[2023-10-14 08:32:41,262: WARNING/ForkPoolWorker-3] y
+[2023-10-14 08:32:41,358: WARNING/ForkPoolWorker-3]  Hollow
+[2023-10-14 08:32:41,441: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 08:32:41,540: WARNING/ForkPoolWorker-3]  nestled
+[2023-10-14 08:32:41,636: WARNING/ForkPoolWorker-3]  amidst
+[2023-10-14 08:32:41,727: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 08:32:41,811: WARNING/ForkPoolWorker-3]  tranquil
+[2023-10-14 08:32:41,899: WARNING/ForkPoolWorker-3]  Dutch
+[2023-10-14 08:32:41,988: WARNING/ForkPoolWorker-3]  valleys
+[2023-10-14 08:32:42,068: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 08:32:42,155: WARNING/ForkPoolWorker-3]  there
+[2023-10-14 08:32:42,253: WARNING/ForkPoolWorker-3]  res
+[2023-10-14 08:32:42,352: WARNING/ForkPoolWorker-3] ided
+[2023-10-14 08:32:42,992: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 08:32:43,025: WARNING/ForkPoolWorker-3]  peculiar
+[2023-10-14 08:32:43,072: WARNING/ForkPoolWorker-3]  educator
+[2023-10-14 08:32:43,119: WARNING/ForkPoolWorker-3]  named
+[2023-10-14 08:32:43,289: WARNING/ForkPoolWorker-3]  Ich
+[2023-10-14 08:32:43,318: WARNING/ForkPoolWorker-3] ab
+[2023-10-14 08:32:43,353: WARNING/ForkPoolWorker-3] od
+[2023-10-14 08:32:43,402: WARNING/ForkPoolWorker-3]  Crane
+[2023-10-14 08:32:43,429: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 08:32:43,440: WARNING/ForkPoolWorker-3]  who
+[2023-10-14 08:32:43,487: WARNING/ForkPoolWorker-3]  had
+[2023-10-14 08:32:43,493: WARNING/ForkPoolWorker-3]  been
+[2023-10-14 08:32:43,650: WARNING/ForkPoolWorker-3]  appointed
+[2023-10-14 08:32:43,656: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 08:32:43,750: WARNING/ForkPoolWorker-3]  impart
+[2023-10-14 08:32:43,857: WARNING/ForkPoolWorker-3]  knowledge
+[2023-10-14 08:32:43,959: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 08:32:44,054: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 08:32:44,138: WARNING/ForkPoolWorker-3]  village
+[2023-10-14 08:32:44,222: WARNING/ForkPoolWorker-3]  children
+[2023-10-14 08:32:44,304: WARNING/ForkPoolWorker-3] .
+[2023-10-14 08:32:44,394: WARNING/ForkPoolWorker-3]  Ich
+[2023-10-14 08:32:44,489: WARNING/ForkPoolWorker-3] ab
+[2023-10-14 08:32:44,571: WARNING/ForkPoolWorker-3] od
+[2023-10-14 08:32:44,653: WARNING/ForkPoolWorker-3]  had
+[2023-10-14 08:32:44,837: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 08:32:44,859: WARNING/ForkPoolWorker-3]  physical
+[2023-10-14 08:32:44,904: WARNING/ForkPoolWorker-3]  appearance
+[2023-10-14 08:32:44,994: WARNING/ForkPoolWorker-3]  that
+[2023-10-14 08:32:45,197: WARNING/ForkPoolWorker-3]  mirrored
+[2023-10-14 08:32:45,215: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 08:32:45,262: WARNING/ForkPoolWorker-3]  unconventional
+[2023-10-14 08:32:45,351: WARNING/ForkPoolWorker-3]  personality
+[2023-10-14 08:32:45,595: WARNING/ForkPoolWorker-3] .
+[2023-10-14 08:32:45,687: WARNING/ForkPoolWorker-3]  He
+[2023-10-14 08:32:45,772: WARNING/ForkPoolWorker-3]  stood
+[2023-10-14 08:32:45,858: WARNING/ForkPoolWorker-3]  tall
+[2023-10-14 08:32:45,944: WARNING/ForkPoolWorker-3]  but
+[2023-10-14 08:32:46,356: WARNING/ForkPoolWorker-3]  em
+[2023-10-14 08:32:46,360: WARNING/ForkPoolWorker-3] ac
+[2023-10-14 08:32:46,364: WARNING/ForkPoolWorker-3] iated
+[2023-10-14 08:32:46,368: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 08:32:46,463: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 08:32:46,587: WARNING/ForkPoolWorker-3]  narrow
+[2023-10-14 08:32:46,706: WARNING/ForkPoolWorker-3]  shoulders
+[2023-10-14 08:32:46,742: WARNING/ForkPoolWorker-3]  accent
+[2023-10-14 08:32:46,822: WARNING/ForkPoolWorker-3] uating
+[2023-10-14 08:32:46,910: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 08:32:47,188: WARNING/ForkPoolWorker-3]  elong
+[2023-10-14 08:32:47,192: WARNING/ForkPoolWorker-3] ated
+[2023-10-14 08:32:47,390: WARNING/ForkPoolWorker-3]  limbs
+[2023-10-14 08:32:47,409: WARNING/ForkPoolWorker-3] .
+[2023-10-14 08:32:47,438: WARNING/ForkPoolWorker-3]  His
+[2023-10-14 08:32:47,452: WARNING/ForkPoolWorker-3]  hands
+[2023-10-14 08:32:47,520: WARNING/ForkPoolWorker-3]  hung
+[2023-10-14 08:32:47,610: WARNING/ForkPoolWorker-3]  awkward
+[2023-10-14 08:32:47,690: WARNING/ForkPoolWorker-3] ly
+[2023-10-14 08:32:47,822: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 08:32:48,043: WARNING/ForkPoolWorker-3]  extending
+[2023-10-14 08:32:48,256: WARNING/ForkPoolWorker-3]  far
+[2023-10-14 08:32:48,298: WARNING/ForkPoolWorker-3]  beyond
+[2023-10-14 08:32:48,412: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 08:32:48,419: WARNING/ForkPoolWorker-3]  confines
+[2023-10-14 08:32:48,424: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 08:32:48,594: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 08:32:48,601: WARNING/ForkPoolWorker-3]  sleeves
+[2023-10-14 08:32:48,678: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 08:32:48,840: WARNING/ForkPoolWorker-3]  while
+[2023-10-14 08:32:48,856: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 08:32:49,027: WARNING/ForkPoolWorker-3]  feet
+[2023-10-14 08:32:49,031: WARNING/ForkPoolWorker-3]  resembled
+[2023-10-14 08:32:49,114: WARNING/ForkPoolWorker-3]  large
+[2023-10-14 08:32:49,203: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 08:32:49,283: WARNING/ForkPoolWorker-3]  sp
+[2023-10-14 08:32:49,377: WARNING/ForkPoolWorker-3] ade
+[2023-10-14 08:32:49,452: WARNING/ForkPoolWorker-3] -like
+[2023-10-14 08:32:49,541: WARNING/ForkPoolWorker-3]  append
+[2023-10-14 08:32:49,634: WARNING/ForkPoolWorker-3] ages
+[2023-10-14 08:32:49,710: WARNING/ForkPoolWorker-3] .
+[2023-10-14 08:32:49,797: WARNING/ForkPoolWorker-3]  His
+[2023-10-14 08:32:49,888: WARNING/ForkPoolWorker-3]  entire
+[2023-10-14 08:32:49,969: WARNING/ForkPoolWorker-3]  frame
+[2023-10-14 08:32:50,056: WARNING/ForkPoolWorker-3]  seemed
+[2023-10-14 08:32:50,139: WARNING/ForkPoolWorker-3]  loosely
+[2023-10-14 08:32:50,242: WARNING/ForkPoolWorker-3]  str
+[2023-10-14 08:32:50,322: WARNING/ForkPoolWorker-3] ung
+[2023-10-14 08:32:50,424: WARNING/ForkPoolWorker-3]  together
+[2023-10-14 08:32:50,527: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 08:32:50,592: WARNING/ForkPoolWorker-3]  as
+[2023-10-14 08:32:50,695: WARNING/ForkPoolWorker-3]  if
+[2023-10-14 08:32:50,797: WARNING/ForkPoolWorker-3]  threatening
+[2023-10-14 08:32:50,886: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 08:32:50,998: WARNING/ForkPoolWorker-3]  unravel
+[2023-10-14 08:32:51,077: WARNING/ForkPoolWorker-3]  at
+[2023-10-14 08:32:51,176: WARNING/ForkPoolWorker-3]  any
+[2023-10-14 08:32:51,261: WARNING/ForkPoolWorker-3]  moment
+[2023-10-14 08:32:51,351: WARNING/ForkPoolWorker-3] .
+[2023-10-14 08:32:51,456: WARNING/ForkPoolWorker-3] Ich
+[2023-10-14 08:32:51,546: WARNING/ForkPoolWorker-3] ab
+[2023-10-14 08:32:51,636: WARNING/ForkPoolWorker-3] od
+[2023-10-14 08:32:51,731: WARNING/ForkPoolWorker-3] 's
+[2023-10-14 08:32:51,834: WARNING/ForkPoolWorker-3]  face
+[2023-10-14 08:32:51,901: WARNING/ForkPoolWorker-3]  was
+[2023-10-14 08:32:51,983: WARNING/ForkPoolWorker-3]  marked
+[2023-10-14 08:32:52,073: WARNING/ForkPoolWorker-3]  by
+[2023-10-14 08:32:52,314: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 08:32:52,390: WARNING/ForkPoolWorker-3]  small
+[2023-10-14 08:32:52,494: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 08:32:52,580: WARNING/ForkPoolWorker-3]  flat
+[2023-10-14 08:32:52,670: WARNING/ForkPoolWorker-3]  head
+[2023-10-14 08:32:52,748: WARNING/ForkPoolWorker-3]  adorned
+[2023-10-14 08:32:52,881: WARNING/ForkPoolWorker-3]  with
+[2023-10-14 08:32:52,927: WARNING/ForkPoolWorker-3]  oversized
+[2023-10-14 08:32:53,016: WARNING/ForkPoolWorker-3]  ears
+[2023-10-14 08:32:53,092: WARNING/ForkPoolWorker-3] .
+[2023-10-14 08:32:53,185: WARNING/ForkPoolWorker-3]  His
+[2023-10-14 08:32:53,265: WARNING/ForkPoolWorker-3]  large
+[2023-10-14 08:32:53,453: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 08:32:53,467: WARNING/ForkPoolWorker-3]  green

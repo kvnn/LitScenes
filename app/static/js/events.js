@@ -81,27 +81,7 @@ async function processNextMessage() {
     }
 }
 
-
-function processNextMessage() {
-    if (messageQueue.length > 0) {
-        const data = messageQueue.shift();
-        sceneGenerateBlock = true;
-        scene_generate_tasks[data.task_id] = scene_generate_tasks[data.task_id] || {};
-        scene_generate_tasks[data.task_id].content = scene_generate_tasks[data.task_id].content || '';
-        let lengthDiff = data.task_results.content.length - scene_generate_tasks[data.task_id].content.length;
-        let newContent = data.task_results.content.slice(lengthDiff);
-        console.log('newContent is ', newContent);
-
-        addTextByDelay(newContent, $('#generate_scene_content'), 20, () => {
-            sceneGenerateBlock = false;
-            processNextMessage(); // Process the next message in the queue
-        });
-
-        scene_generate_tasks[data.task_id].content = data.task_results.content;
-        console.log('try finished');
-    }
-}
-
+alert('ye');
 
 window.socket = socket;
 
