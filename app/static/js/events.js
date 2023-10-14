@@ -19,21 +19,25 @@ scene_generate_tasks = {
 
 }
 
-var addTextByDelay = function (text, elem, delay, finishCallback) {
+async function addTextByDelay(text, elem, charactersPerInterval, delay, finishCallback) {
     let currentIndex = 0;
-    
-    const animate = () => {
-        if (currentIndex < text.length) {
+
+    async function appendCharactersBatch() {
+        for (let i = 0; i < charactersPerInterval && currentIndex < text.length; i++) {
             elem.append(text[currentIndex]);
             currentIndex++;
-            requestAnimationFrame(animate);
+        }
+
+        if (currentIndex < text.length) {
+            await new Promise(resolve => setTimeout(resolve, delay));
+            await appendCharactersBatch();
         } else {
             finishCallback && finishCallback();
         }
-    };
-    
-    animate();
-};
+    }
+
+    await appendCharactersBatch();
+}
 
 
 let sceneGenerateBlock = false;
@@ -66,11 +70,8 @@ async function processNextMessage() {
         let newContent = data.task_results.content.slice(lengthDiff);
         console.log('newContent is ', newContent);
 
-        await new Promise(resolve => {
-            addTextByDelay(newContent, $('#generate_scene_content'), 1, () => {
-                sceneGenerateBlock = false;
-                resolve(); // Resolve the promise to continue processing the next message
-            });
+        addTextByDelay(newContent, $('#generate_scene_content'), 1, 10, () => {
+            sceneGenerateBlock = false;
         });
 
         scene_generate_tasks[data.task_id].content = data.task_results.content;
@@ -80,8 +81,6 @@ async function processNextMessage() {
         await processNextMessage();
     }
 }
-
-alert('ye');
 
 window.socket = socket;
 
