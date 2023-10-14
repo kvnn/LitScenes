@@ -8,8 +8,6 @@ from celery import shared_task
 from fastapi import Depends
 import requests
 
-from sql_app.database import get_db
-from sql_app.models import Book, Chunk
 from sql_app.crud import create_book, create_chunk, get_book_by_gutenburg_id
 from sql_app.schemas import BookCreate, ChunkCreate
 

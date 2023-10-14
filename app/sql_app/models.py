@@ -9,7 +9,7 @@ from .database import Base
 from config import settings
 
 
-
+''' Define our models '''
 class TimestampMixin:
     dateadded = Column(DateTime, default=datetime.utcnow, nullable=False)
     dateupdated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
@@ -26,6 +26,8 @@ class Book(Base, TimestampMixin):
     title = Column(String(255), nullable=False)
     author = Column(String(255), nullable=False)
     status = Column(String(255), nullable=False, default='pending')
+
+    chunks = relationship('Chunk', backref='book', lazy=True)
     
     @property
     def dict(self):
@@ -59,30 +61,29 @@ class Chunk(Base, TimestampMixin):
 
 
 
-# class SceneAesthetic(db.Model, TimestampMixin):
-#     __tablename__ = 'scene_aesthetics'
-#     id = db.Column(db.Integer, primary_key=True)
-#     title = db.Column(db.String(255), nullable=False)
+class SceneAesthetic(Base, TimestampMixin):
+    __tablename__ = 'scene_aesthetics'
+    id = Column(Integer, primary_key=True)
+    title = Column(String(255), nullable=False)
 
 
-# class ScenePrompt(db.Model, TimestampMixin):
-#     __tablename__ = 'scene_prompts'
-#     id = db.Column(db.Integer, primary_key=True)
-#     title = db.Column(db.String(255), nullable=False)
-#     content = db.Column(db.Text, nullable=False)
+class ScenePrompt(Base, TimestampMixin):
+    __tablename__ = 'scene_prompts'
+    id = Column(Integer, primary_key=True)
+    title = Column(String(255), nullable=False)
+    max_length = Column(Integer, nullable=True, default=1800)
+    content = Column(Text, nullable=False)
     
 
-# # Define the Scene model
-# class Scene(db.Model, TimestampMixin):
-#     __tablename__ = 'scenes'
+# Define the Scene model
+class Scene(Base, TimestampMixin):
+    __tablename__ = 'scenes'
     
-#     id = db.Column(db.Integer, primary_key=True)
-#     chunk_id = db.Column(db.Integer, db.ForeignKey('chunks.id'), nullable=False)
-#     scene_prompt_id = db.Column(db.Integer, db.ForeignKey('scene_prompts.id'), nullable=False)
-#     aesthetic_id = db.Column(db.Integer, db.ForeignKey('scene_aesthetics.id'), nullable=False)
-#     scene_content = db.Column(db.Text, nullable=False)
-    
-#     prompts = db.relationship('ImagePrompt', backref='scene', lazy=True)
+    id = Column(Integer, primary_key=True)
+    chunk_id = Column(Integer, ForeignKey('chunks.id'), nullable=False)
+    scene_prompt_id = Column(Integer, ForeignKey('scene_prompts.id'), nullable=False)
+    aesthetic_id = Column(Integer, ForeignKey('scene_aesthetics.id'), nullable=False)
+    scene_content = Column(Text, nullable=False)
 
 # # Define the ImagePrompt model
 # class ImagePrompt(db.Model, TimestampMixin):

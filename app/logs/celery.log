@@ -1,0 +1,796 @@
+[2023-10-14 03:19:50,385: INFO/MainProcess] mingle: searching for neighbors
+[2023-10-14 03:19:51,419: INFO/MainProcess] mingle: all alone
+[2023-10-14 03:19:51,437: INFO/MainProcess] celery@dbce8577b93e ready.
+[2023-10-14 03:19:58,068: INFO/MainProcess] Task generate_scene_prompt[737e02d5-ae48-43c1-b2e2-5afd5c56c4be] received
+[2023-10-14 03:19:58,089: WARNING/ForkPoolWorker-3] generate_scene_task for You were a witness to the following scene from the book "The Legend of Sleepy Hollow".You are asked to provide a detailed visual description of what you saw to a reknowned artist who will be painting it for the masses.Please write vividly and with specific visual details.As much as possible, describe the physical characteristics of the characters and the details of the location, and anything else thatwould need to be conveyed to capture what happened in a painting.Also generate a concise, captivating title. Please return the content in this format, in less than 1800 characters: {Title} //// {Description}Here is the content from "The Legend of Sleepy Hollow" : THE LEGEND OF SLEEPY HOLLOW ***
+
+
+
+The Legend of Sleepy Hollow
+
+by Washington Irving
+
+
+
+
+FOUND AMONG THE PAPERS OF THE LATE DIEDRICH KNICKERBOCKER.
+
+
+        A pleasing land of drowsy head it was,
+          Of dreams that wave before the half-shut eye;
+        And of gay castles in the clouds that pass,
+          Forever flushing round a summer sky.
+                                         CASTLE OF INDOLENCE.
+
+
+In the bosom of one of those spacious coves which indent the eastern
+shore of the Hudson, at that broad expansion of the river denominated
+by the ancient Dutch navigators the Tappan Zee, and where they always
+prudently shortened sail and implored the protection of St. Nicholas
+when they crossed, there lies a small market town or rural port, which
+by some is called Greensburgh, but which is more generally and properly
+known by the name of Tarry Town. This name was given, we are told, in
+former days, by the good housewives of the adjacent country, from the
+inveterate propensity of their husbands to linger about the village
+tavern on market days. Be that as it may, I do not vouch for the fact,
+but merely advert to it, for the sake of being precise and authentic.
+Not far from this village, perhaps about two miles, there is a little
+valley or rather lap of land among high hills, which is one of the
+quietest places in the whole world. A small brook glides through it,
+with just murmur enough to lull one to repose; and the occasional
+whistle of a quail or tapping of a woodpecker is almost the only sound
+that ever breaks in upon the uniform tranquillity.
+
+I recollect that, when a stripling, my first exploit in
+squirrel-shooting was in a grove of tall walnut-trees that shades one
+side of the valley. I had wandered into it at noontime, when all nature
+is peculiarly quiet, and was startled by the roar of my own gun, as it
+broke the Sabbath stillness around and was prolonged and reverberated
+by the angry echoes. If ever I should wish for a retreat whither I might
+steal from the world and its distractions, and dream quietly away the
+remnant of a troubled life, I know of none more promising than this
+little valley.
+
+From the listless repose of the place, and the peculiar character of its
+inhabitants, who are descendants from the original Dutch settlers, this
+sequestered glen has long been known by the name of SLEEPY HOLLOW, and
+its rustic lads are called the Sleepy Hollow Boys throughout all the
+neighboring country. A drowsy, dreamy influence seems to hang over the
+land, and to pervade the very atmosphere. Some say that the place
+was bewitched by a High German doctor, during the early days of the
+settlement; others, that an old Indian chief, the prophet or wizard of
+his tribe, held his powwows there before the country was discovered by
+Master Hendrick Hudson. Certain it is, the place still continues under
+the sway of some witching power, that holds a spell over the minds of
+the good people, causing them to walk in a continual reverie. They are
+given to all kinds of marvellous beliefs, are subject to trances and
+visions, and frequently see strange sights, and hear music and voices in
+the air. The whole neighborhood abounds with local tales, haunted spots,
+and twilight superstitions; stars shoot and meteors glare oftener across
+the valley than in any other part of the country, and the nightmare,
+with her whole ninefold, seems to make it the favorite scene of her
+gambols.
+
+The dominant spirit, however, that haunts this enchanted region, and
+seems to be commander-in-chief of all the powers of the air, is the
+apparition of a figure on horseback, without a head. It is said by some
+to be the ghost of a Hessian trooper, whose head had been carried away
+by a cannon-ball, in some nameless battle during the Revolutionary War,
+and who is ever and anon seen by the country folk hurrying along in
+the gloom of night, as if on the wings of the wind. His haunts are not
+confined to the valley, but extend at times to the adjacent roads, and
+especially to the vicinity of a church at no great distance. Indeed,
+certain of the most authentic historians of those parts, who have been
+careful in collecting and collating the floating facts concerning this
+spectre, allege that the body of the trooper having been buried in the
+churchyard, the ghost rides forth to the scene of battle in nightly
+quest of his head, and that the rushing speed with which he sometimes
+passes along the Hollow, like a midnight blast, is owing to his being
+belated, and in a hurry to get back to the churchyard before daybreak.
+
+Such is the general purport of this legendary superstition, which has
+furnished materials for many a wild story in that region of shadows; and
+the spectre is known at all the country firesides, by the name of the
+Headless Horseman of Sleepy Hollow.
+[2023-10-14 03:20:00,762: WARNING/ForkPoolWorker-3] The
+[2023-10-14 03:20:00,767: WARNING/ForkPoolWorker-3]  Head
+[2023-10-14 03:20:00,823: WARNING/ForkPoolWorker-3] less
+[2023-10-14 03:20:00,908: WARNING/ForkPoolWorker-3]  Horse
+[2023-10-14 03:20:01,069: WARNING/ForkPoolWorker-3] man
+[2023-10-14 03:20:01,091: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:01,178: WARNING/ForkPoolWorker-3]  Sleep
+[2023-10-14 03:20:01,359: WARNING/ForkPoolWorker-3] y
+[2023-10-14 03:20:01,374: WARNING/ForkPoolWorker-3]  Hollow
+[2023-10-14 03:20:01,463: WARNING/ForkPoolWorker-3]  ////
+[2023-10-14 03:20:01,748: WARNING/ForkPoolWorker-3]  In
+[2023-10-14 03:20:01,753: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:01,756: WARNING/ForkPoolWorker-3]  quiet
+[2023-10-14 03:20:01,759: WARNING/ForkPoolWorker-3]  valley
+[2023-10-14 03:20:01,882: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:01,946: WARNING/ForkPoolWorker-3]  Sleep
+[2023-10-14 03:20:02,064: WARNING/ForkPoolWorker-3] y
+[2023-10-14 03:20:02,105: WARNING/ForkPoolWorker-3]  Hollow
+[2023-10-14 03:20:02,171: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:02,255: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:02,316: WARNING/ForkPoolWorker-3]  picturesque
+[2023-10-14 03:20:02,391: WARNING/ForkPoolWorker-3]  scene
+[2023-10-14 03:20:02,460: WARNING/ForkPoolWorker-3]  unfolds
+[2023-10-14 03:20:02,796: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:02,801: WARNING/ForkPoolWorker-3]  The
+[2023-10-14 03:20:02,804: WARNING/ForkPoolWorker-3]  setting
+[2023-10-14 03:20:02,807: WARNING/ForkPoolWorker-3]  is
+[2023-10-14 03:20:02,827: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:02,910: WARNING/ForkPoolWorker-3]  small
+[2023-10-14 03:20:02,992: WARNING/ForkPoolWorker-3]  bro
+[2023-10-14 03:20:03,092: WARNING/ForkPoolWorker-3] ok
+[2023-10-14 03:20:03,189: WARNING/ForkPoolWorker-3]  that
+[2023-10-14 03:20:03,259: WARNING/ForkPoolWorker-3]  me
+[2023-10-14 03:20:03,327: WARNING/ForkPoolWorker-3] anders
+[2023-10-14 03:20:03,423: WARNING/ForkPoolWorker-3]  through
+[2023-10-14 03:20:03,531: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:03,592: WARNING/ForkPoolWorker-3]  valley
+[2023-10-14 03:20:03,676: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:03,735: WARNING/ForkPoolWorker-3]  its
+[2023-10-14 03:20:03,813: WARNING/ForkPoolWorker-3]  gentle
+[2023-10-14 03:20:03,890: WARNING/ForkPoolWorker-3]  murm
+[2023-10-14 03:20:03,956: WARNING/ForkPoolWorker-3] urs
+[2023-10-14 03:20:04,061: WARNING/ForkPoolWorker-3]  creating
+[2023-10-14 03:20:04,140: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:04,216: WARNING/ForkPoolWorker-3]  soothing
+[2023-10-14 03:20:04,307: WARNING/ForkPoolWorker-3]  soundtrack
+[2023-10-14 03:20:04,386: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 03:20:04,442: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:04,515: WARNING/ForkPoolWorker-3]  peaceful
+[2023-10-14 03:20:04,582: WARNING/ForkPoolWorker-3] ness
+[2023-10-14 03:20:04,653: WARNING/ForkPoolWorker-3]  that
+[2023-10-14 03:20:04,734: WARNING/ForkPoolWorker-3]  surrounds
+[2023-10-14 03:20:04,818: WARNING/ForkPoolWorker-3]  it
+[2023-10-14 03:20:04,925: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:05,032: WARNING/ForkPoolWorker-3]  On
+[2023-10-14 03:20:05,126: WARNING/ForkPoolWorker-3]  one
+[2023-10-14 03:20:05,211: WARNING/ForkPoolWorker-3]  side
+[2023-10-14 03:20:05,276: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:05,456: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:05,461: WARNING/ForkPoolWorker-3]  valley
+[2023-10-14 03:20:05,493: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:05,567: WARNING/ForkPoolWorker-3]  tall
+[2023-10-14 03:20:05,636: WARNING/ForkPoolWorker-3]  walnut
+[2023-10-14 03:20:05,720: WARNING/ForkPoolWorker-3] -t
+[2023-10-14 03:20:05,794: WARNING/ForkPoolWorker-3] rees
+[2023-10-14 03:20:05,868: WARNING/ForkPoolWorker-3]  stand
+[2023-10-14 03:20:05,938: WARNING/ForkPoolWorker-3]  maj
+[2023-10-14 03:20:06,014: WARNING/ForkPoolWorker-3] est
+[2023-10-14 03:20:06,080: WARNING/ForkPoolWorker-3] ically
+[2023-10-14 03:20:06,169: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:06,235: WARNING/ForkPoolWorker-3]  casting
+[2023-10-14 03:20:06,326: WARNING/ForkPoolWorker-3]  long
+[2023-10-14 03:20:06,465: WARNING/ForkPoolWorker-3]  shadows
+[2023-10-14 03:20:06,490: WARNING/ForkPoolWorker-3]  over
+[2023-10-14 03:20:06,531: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:06,685: WARNING/ForkPoolWorker-3]  landscape
+[2023-10-14 03:20:06,708: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:06,764: WARNING/ForkPoolWorker-3]  The
+[2023-10-14 03:20:06,871: WARNING/ForkPoolWorker-3]  shades
+[2023-10-14 03:20:06,916: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:06,984: WARNING/ForkPoolWorker-3]  green
+[2023-10-14 03:20:07,073: WARNING/ForkPoolWorker-3]  in
+[2023-10-14 03:20:07,156: WARNING/ForkPoolWorker-3]  their
+[2023-10-14 03:20:07,226: WARNING/ForkPoolWorker-3]  leaves
+[2023-10-14 03:20:07,312: WARNING/ForkPoolWorker-3]  are
+[2023-10-14 03:20:07,462: WARNING/ForkPoolWorker-3]  rich
+[2023-10-14 03:20:07,466: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:07,540: WARNING/ForkPoolWorker-3]  vibrant
+[2023-10-14 03:20:07,645: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:07,719: WARNING/ForkPoolWorker-3]  creating
+[2023-10-14 03:20:07,791: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:07,864: WARNING/ForkPoolWorker-3]  stunning
+[2023-10-14 03:20:08,528: WARNING/ForkPoolWorker-3]  contrast
+[2023-10-14 03:20:08,570: WARNING/ForkPoolWorker-3]  against
+[2023-10-14 03:20:08,648: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:08,731: WARNING/ForkPoolWorker-3]  clear
+[2023-10-14 03:20:08,784: WARNING/ForkPoolWorker-3]  blue
+[2023-10-14 03:20:09,145: WARNING/ForkPoolWorker-3]  sky
+[2023-10-14 03:20:09,150: WARNING/ForkPoolWorker-3]  above
+[2023-10-14 03:20:09,152: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:09,596: WARNING/ForkPoolWorker-3] In
+[2023-10-14 03:20:09,600: WARNING/ForkPoolWorker-3]  this
+[2023-10-14 03:20:09,602: WARNING/ForkPoolWorker-3]  id
+[2023-10-14 03:20:09,604: WARNING/ForkPoolWorker-3] yl
+[2023-10-14 03:20:09,607: WARNING/ForkPoolWorker-3] lic
+[2023-10-14 03:20:09,609: WARNING/ForkPoolWorker-3]  setting
+[2023-10-14 03:20:09,610: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:09,661: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:09,713: WARNING/ForkPoolWorker-3]  characters
+[2023-10-14 03:20:09,785: WARNING/ForkPoolWorker-3]  come
+[2023-10-14 03:20:09,868: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 03:20:09,935: WARNING/ForkPoolWorker-3]  life
+[2023-10-14 03:20:10,006: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:10,375: WARNING/ForkPoolWorker-3]  Ich
+[2023-10-14 03:20:10,382: WARNING/ForkPoolWorker-3] ab
+[2023-10-14 03:20:10,385: WARNING/ForkPoolWorker-3] od
+[2023-10-14 03:20:10,393: WARNING/ForkPoolWorker-3]  Crane
+[2023-10-14 03:20:10,578: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:10,601: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:10,642: WARNING/ForkPoolWorker-3]  tall
+[2023-10-14 03:20:10,698: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:10,766: WARNING/ForkPoolWorker-3]  l
+[2023-10-14 03:20:10,949: WARNING/ForkPoolWorker-3] anky
+[2023-10-14 03:20:11,087: WARNING/ForkPoolWorker-3]  school
+[2023-10-14 03:20:11,091: WARNING/ForkPoolWorker-3] teacher
+[2023-10-14 03:20:11,096: WARNING/ForkPoolWorker-3]  with
+[2023-10-14 03:20:11,122: WARNING/ForkPoolWorker-3]  wild
+[2023-10-14 03:20:11,200: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:11,271: WARNING/ForkPoolWorker-3]  unr
+[2023-10-14 03:20:11,352: WARNING/ForkPoolWorker-3] uly
+[2023-10-14 03:20:11,422: WARNING/ForkPoolWorker-3]  hair
+[2023-10-14 03:20:11,504: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:11,584: WARNING/ForkPoolWorker-3]  stands
+[2023-10-14 03:20:11,665: WARNING/ForkPoolWorker-3]  at
+[2023-10-14 03:20:11,717: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:11,865: WARNING/ForkPoolWorker-3]  edge
+[2023-10-14 03:20:11,874: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:11,948: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:12,023: WARNING/ForkPoolWorker-3]  bro
+[2023-10-14 03:20:12,096: WARNING/ForkPoolWorker-3] ok
+[2023-10-14 03:20:12,164: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:12,247: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:12,320: WARNING/ForkPoolWorker-3]  eyes
+[2023-10-14 03:20:12,389: WARNING/ForkPoolWorker-3]  wide
+[2023-10-14 03:20:12,728: WARNING/ForkPoolWorker-3]  with
+[2023-10-14 03:20:12,733: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:12,736: WARNING/ForkPoolWorker-3]  mix
+[2023-10-14 03:20:12,739: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:12,933: WARNING/ForkPoolWorker-3]  fear
+[2023-10-14 03:20:12,937: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:12,938: WARNING/ForkPoolWorker-3]  curiosity
+[2023-10-14 03:20:12,971: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:13,138: WARNING/ForkPoolWorker-3]  His
+[2023-10-14 03:20:13,144: WARNING/ForkPoolWorker-3]  face
+[2023-10-14 03:20:13,215: WARNING/ForkPoolWorker-3]  is
+[2023-10-14 03:20:13,292: WARNING/ForkPoolWorker-3]  pale
+[2023-10-14 03:20:13,370: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:13,442: WARNING/ForkPoolWorker-3]  framed
+[2023-10-14 03:20:13,515: WARNING/ForkPoolWorker-3]  by
+[2023-10-14 03:20:13,582: WARNING/ForkPoolWorker-3]  prominent
+[2023-10-14 03:20:13,659: WARNING/ForkPoolWorker-3]  cheek
+[2023-10-14 03:20:13,721: WARNING/ForkPoolWorker-3] bones
+[2023-10-14 03:20:13,793: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:13,873: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:14,065: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:14,265: WARNING/ForkPoolWorker-3]  thin
+[2023-10-14 03:20:14,317: WARNING/ForkPoolWorker-3]  lips
+[2023-10-14 03:20:14,331: WARNING/ForkPoolWorker-3]  are
+[2023-10-14 03:20:14,336: WARNING/ForkPoolWorker-3]  slightly
+[2023-10-14 03:20:14,442: WARNING/ForkPoolWorker-3]  ag
+[2023-10-14 03:20:14,457: WARNING/ForkPoolWorker-3] ape
+[2023-10-14 03:20:14,557: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:14,648: WARNING/ForkPoolWorker-3]  He
+[2023-10-14 03:20:14,849: WARNING/ForkPoolWorker-3]  is
+[2023-10-14 03:20:14,853: WARNING/ForkPoolWorker-3]  dressed
+[2023-10-14 03:20:14,857: WARNING/ForkPoolWorker-3]  in
+[2023-10-14 03:20:14,860: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:14,929: WARNING/ForkPoolWorker-3]  Sunday
+[2023-10-14 03:20:15,425: WARNING/ForkPoolWorker-3]  best
+[2023-10-14 03:20:15,431: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:15,434: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:15,437: WARNING/ForkPoolWorker-3]  coat
+[2023-10-14 03:20:15,441: WARNING/ForkPoolWorker-3]  button
+[2023-10-14 03:20:15,443: WARNING/ForkPoolWorker-3] ed
+[2023-10-14 03:20:15,446: WARNING/ForkPoolWorker-3]  up
+[2023-10-14 03:20:15,677: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 03:20:15,682: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:15,686: WARNING/ForkPoolWorker-3]  neck
+[2023-10-14 03:20:15,740: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:15,998: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:16,002: WARNING/ForkPoolWorker-3]  sign
+[2023-10-14 03:20:16,005: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:16,065: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:16,134: WARNING/ForkPoolWorker-3]  intent
+[2023-10-14 03:20:16,200: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 03:20:16,297: WARNING/ForkPoolWorker-3]  impress
+[2023-10-14 03:20:16,343: WARNING/ForkPoolWorker-3]  Katrina
+[2023-10-14 03:20:16,433: WARNING/ForkPoolWorker-3]  Van
+[2023-10-14 03:20:16,490: WARNING/ForkPoolWorker-3]  T
+[2023-10-14 03:20:16,646: WARNING/ForkPoolWorker-3] assel
+[2023-10-14 03:20:16,668: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:16,907: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:16,910: WARNING/ForkPoolWorker-3]  beautiful
+[2023-10-14 03:20:16,912: WARNING/ForkPoolWorker-3]  daughter
+[2023-10-14 03:20:16,976: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:17,044: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:17,105: WARNING/ForkPoolWorker-3]  wealthy
+[2023-10-14 03:20:17,216: WARNING/ForkPoolWorker-3]  farmer
+[2023-10-14 03:20:17,268: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:17,490: WARNING/ForkPoolWorker-3] Opp
+[2023-10-14 03:20:17,494: WARNING/ForkPoolWorker-3] osite
+[2023-10-14 03:20:17,496: WARNING/ForkPoolWorker-3]  Ich
+[2023-10-14 03:20:17,565: WARNING/ForkPoolWorker-3] ab
+[2023-10-14 03:20:17,645: WARNING/ForkPoolWorker-3] od
+[2023-10-14 03:20:17,715: WARNING/ForkPoolWorker-3]  Crane
+[2023-10-14 03:20:17,787: WARNING/ForkPoolWorker-3]  stands
+[2023-10-14 03:20:17,876: WARNING/ForkPoolWorker-3]  Brom
+[2023-10-14 03:20:17,945: WARNING/ForkPoolWorker-3]  Bones
+[2023-10-14 03:20:18,033: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:18,088: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:18,165: WARNING/ForkPoolWorker-3]  val
+[2023-10-14 03:20:18,238: WARNING/ForkPoolWorker-3] iant
+[2023-10-14 03:20:18,310: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:18,383: WARNING/ForkPoolWorker-3]  mis
+[2023-10-14 03:20:18,507: WARNING/ForkPoolWorker-3] chie
+[2023-10-14 03:20:18,552: WARNING/ForkPoolWorker-3] vous
+[2023-10-14 03:20:18,633: WARNING/ForkPoolWorker-3]  rival
+[2023-10-14 03:20:18,706: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:18,789: WARNING/ForkPoolWorker-3]  Brom
+[2023-10-14 03:20:18,889: WARNING/ForkPoolWorker-3]  towers
+[2023-10-14 03:20:18,990: WARNING/ForkPoolWorker-3]  over
+[2023-10-14 03:20:19,109: WARNING/ForkPoolWorker-3]  Crane
+[2023-10-14 03:20:19,190: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:19,274: WARNING/ForkPoolWorker-3]  with
+[2023-10-14 03:20:19,382: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:19,440: WARNING/ForkPoolWorker-3]  solid
+[2023-10-14 03:20:19,640: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:19,773: WARNING/ForkPoolWorker-3]  muscular
+[2023-10-14 03:20:19,798: WARNING/ForkPoolWorker-3]  build
+[2023-10-14 03:20:19,820: WARNING/ForkPoolWorker-3]  that
+[2023-10-14 03:20:19,826: WARNING/ForkPoolWorker-3]  hints
+[2023-10-14 03:20:20,014: WARNING/ForkPoolWorker-3]  at
+[2023-10-14 03:20:20,083: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:20,169: WARNING/ForkPoolWorker-3]  strength
+[2023-10-14 03:20:20,192: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:20,300: WARNING/ForkPoolWorker-3]  athletic
+[2023-10-14 03:20:20,385: WARNING/ForkPoolWorker-3]  ability
+[2023-10-14 03:20:20,470: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:20,645: WARNING/ForkPoolWorker-3]  He
+[2023-10-14 03:20:20,649: WARNING/ForkPoolWorker-3]  has
+[2023-10-14 03:20:20,836: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:20,838: WARNING/ForkPoolWorker-3]  broad
+[2023-10-14 03:20:20,841: WARNING/ForkPoolWorker-3]  smile
+[2023-10-14 03:20:20,981: WARNING/ForkPoolWorker-3]  on
+[2023-10-14 03:20:21,009: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:21,051: WARNING/ForkPoolWorker-3]  face
+[2023-10-14 03:20:21,119: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:21,311: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:21,507: WARNING/ForkPoolWorker-3]  mis
+[2023-10-14 03:20:21,511: WARNING/ForkPoolWorker-3] chie
+[2023-10-14 03:20:21,514: WARNING/ForkPoolWorker-3] vous
+[2023-10-14 03:20:21,516: WARNING/ForkPoolWorker-3]  eyes
+[2023-10-14 03:20:21,568: WARNING/ForkPoolWorker-3]  sparking
+[2023-10-14 03:20:21,640: WARNING/ForkPoolWorker-3]  with
+[2023-10-14 03:20:21,708: WARNING/ForkPoolWorker-3]  amusement
+[2023-10-14 03:20:21,777: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:21,896: WARNING/ForkPoolWorker-3]  His
+[2023-10-14 03:20:21,978: WARNING/ForkPoolWorker-3]  r
+[2023-10-14 03:20:22,060: WARNING/ForkPoolWorker-3] uffled
+[2023-10-14 03:20:22,123: WARNING/ForkPoolWorker-3]  hair
+[2023-10-14 03:20:22,266: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:22,290: WARNING/ForkPoolWorker-3]  swept
+[2023-10-14 03:20:22,338: WARNING/ForkPoolWorker-3]  by
+[2023-10-14 03:20:22,415: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:22,485: WARNING/ForkPoolWorker-3]  wind
+[2023-10-14 03:20:22,689: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:22,696: WARNING/ForkPoolWorker-3]  adds
+[2023-10-14 03:20:22,722: WARNING/ForkPoolWorker-3]  an
+[2023-10-14 03:20:22,812: WARNING/ForkPoolWorker-3]  air
+[2023-10-14 03:20:23,157: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:23,162: WARNING/ForkPoolWorker-3]  unt
+[2023-10-14 03:20:23,164: WARNING/ForkPoolWorker-3] amed
+[2023-10-14 03:20:23,167: WARNING/ForkPoolWorker-3]  charm
+[2023-10-14 03:20:23,177: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 03:20:23,232: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:23,306: WARNING/ForkPoolWorker-3]  rugged
+[2023-10-14 03:20:23,392: WARNING/ForkPoolWorker-3]  appearance
+[2023-10-14 03:20:23,517: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:23,545: WARNING/ForkPoolWorker-3] Hover
+[2023-10-14 03:20:23,603: WARNING/ForkPoolWorker-3] ing
+[2023-10-14 03:20:23,675: WARNING/ForkPoolWorker-3]  above
+[2023-10-14 03:20:23,744: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:23,840: WARNING/ForkPoolWorker-3]  scene
+[2023-10-14 03:20:23,941: WARNING/ForkPoolWorker-3]  is
+[2023-10-14 03:20:24,032: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:24,111: WARNING/ForkPoolWorker-3]  appar
+[2023-10-14 03:20:24,174: WARNING/ForkPoolWorker-3] ition
+[2023-10-14 03:20:24,272: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:24,370: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:24,471: WARNING/ForkPoolWorker-3]  Head
+[2023-10-14 03:20:24,549: WARNING/ForkPoolWorker-3] less
+[2023-10-14 03:20:24,631: WARNING/ForkPoolWorker-3]  Horse
+[2023-10-14 03:20:24,709: WARNING/ForkPoolWorker-3] man
+[2023-10-14 03:20:24,862: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:24,867: WARNING/ForkPoolWorker-3]  On
+[2023-10-14 03:20:24,922: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:24,995: WARNING/ForkPoolWorker-3]  ghost
+[2023-10-14 03:20:25,072: WARNING/ForkPoolWorker-3] ly
+[2023-10-14 03:20:25,144: WARNING/ForkPoolWorker-3]  horse
+[2023-10-14 03:20:25,224: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:25,303: WARNING/ForkPoolWorker-3]  he
+[2023-10-14 03:20:25,444: WARNING/ForkPoolWorker-3]  gal
+[2023-10-14 03:20:25,450: WARNING/ForkPoolWorker-3] lops
+[2023-10-14 03:20:25,528: WARNING/ForkPoolWorker-3]  through
+[2023-10-14 03:20:25,613: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:25,688: WARNING/ForkPoolWorker-3]  valley
+[2023-10-14 03:20:25,763: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:25,839: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:25,908: WARNING/ForkPoolWorker-3]  body
+[2023-10-14 03:20:25,989: WARNING/ForkPoolWorker-3]  completely
+[2023-10-14 03:20:26,337: WARNING/ForkPoolWorker-3]  sh
+[2023-10-14 03:20:26,365: WARNING/ForkPoolWorker-3] rou
+[2023-10-14 03:20:26,532: WARNING/ForkPoolWorker-3] ded
+[2023-10-14 03:20:26,554: WARNING/ForkPoolWorker-3]  in
+[2023-10-14 03:20:26,638: WARNING/ForkPoolWorker-3]  darkness
+[2023-10-14 03:20:26,670: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:26,672: WARNING/ForkPoolWorker-3]  The
+[2023-10-14 03:20:26,673: WARNING/ForkPoolWorker-3]  absence
+[2023-10-14 03:20:26,710: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:26,783: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:26,884: WARNING/ForkPoolWorker-3]  head
+[2023-10-14 03:20:26,984: WARNING/ForkPoolWorker-3]  is
+[2023-10-14 03:20:27,061: WARNING/ForkPoolWorker-3]  eerie
+[2023-10-14 03:20:27,130: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:27,295: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:27,304: WARNING/ForkPoolWorker-3]  gaping
+[2023-10-14 03:20:27,351: WARNING/ForkPoolWorker-3]  void
+[2023-10-14 03:20:27,446: WARNING/ForkPoolWorker-3]  that
+[2023-10-14 03:20:27,545: WARNING/ForkPoolWorker-3]  leaves
+[2023-10-14 03:20:27,631: WARNING/ForkPoolWorker-3]  on
+[2023-10-14 03:20:27,696: WARNING/ForkPoolWorker-3] look
+[2023-10-14 03:20:27,775: WARNING/ForkPoolWorker-3] ers
+[2023-10-14 03:20:27,853: WARNING/ForkPoolWorker-3]  with
+[2023-10-14 03:20:27,935: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:28,012: WARNING/ForkPoolWorker-3]  sense
+[2023-10-14 03:20:28,073: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:28,148: WARNING/ForkPoolWorker-3]  both
+[2023-10-14 03:20:28,226: WARNING/ForkPoolWorker-3]  terror
+[2023-10-14 03:20:28,296: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:28,376: WARNING/ForkPoolWorker-3]  fascination
+[2023-10-14 03:20:28,528: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:28,546: WARNING/ForkPoolWorker-3]  The
+[2023-10-14 03:20:28,643: WARNING/ForkPoolWorker-3]  spectral
+[2023-10-14 03:20:28,674: WARNING/ForkPoolWorker-3]  figure
+[2023-10-14 03:20:28,776: WARNING/ForkPoolWorker-3]  is
+[2023-10-14 03:20:28,826: WARNING/ForkPoolWorker-3]  illuminated
+[2023-10-14 03:20:28,962: WARNING/ForkPoolWorker-3]  by
+[2023-10-14 03:20:28,976: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:29,059: WARNING/ForkPoolWorker-3]  moon
+[2023-10-14 03:20:29,165: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:29,250: WARNING/ForkPoolWorker-3]  creating
+[2023-10-14 03:20:29,326: WARNING/ForkPoolWorker-3]  an
+[2023-10-14 03:20:29,412: WARNING/ForkPoolWorker-3]  eth
+[2023-10-14 03:20:29,507: WARNING/ForkPoolWorker-3] ereal
+[2023-10-14 03:20:29,652: WARNING/ForkPoolWorker-3]  glow
+[2023-10-14 03:20:29,657: WARNING/ForkPoolWorker-3]  around
+[2023-10-14 03:20:29,726: WARNING/ForkPoolWorker-3]  him
+[2023-10-14 03:20:29,797: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:29,981: WARNING/ForkPoolWorker-3]  The
+[2023-10-14 03:20:30,009: WARNING/ForkPoolWorker-3]  horse
+[2023-10-14 03:20:30,031: WARNING/ForkPoolWorker-3] ’s
+[2023-10-14 03:20:30,096: WARNING/ForkPoolWorker-3]  eyes
+[2023-10-14 03:20:30,169: WARNING/ForkPoolWorker-3]  burn
+[2023-10-14 03:20:30,241: WARNING/ForkPoolWorker-3]  with
+[2023-10-14 03:20:30,313: WARNING/ForkPoolWorker-3]  an
+[2023-10-14 03:20:30,650: WARNING/ForkPoolWorker-3]  other
+[2023-10-14 03:20:30,655: WARNING/ForkPoolWorker-3] world
+[2023-10-14 03:20:30,658: WARNING/ForkPoolWorker-3] ly
+[2023-10-14 03:20:30,661: WARNING/ForkPoolWorker-3]  fire
+[2023-10-14 03:20:30,685: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:30,747: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:30,841: WARNING/ForkPoolWorker-3]  its
+[2023-10-14 03:20:30,910: WARNING/ForkPoolWorker-3]  ho
+[2023-10-14 03:20:30,986: WARNING/ForkPoolWorker-3] oves
+[2023-10-14 03:20:31,248: WARNING/ForkPoolWorker-3]  barely
+[2023-10-14 03:20:31,297: WARNING/ForkPoolWorker-3]  touch
+[2023-10-14 03:20:31,367: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:31,440: WARNING/ForkPoolWorker-3]  ground
+[2023-10-14 03:20:31,522: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:31,657: WARNING/ForkPoolWorker-3]  creating
+[2023-10-14 03:20:31,662: WARNING/ForkPoolWorker-3]  an
+[2023-10-14 03:20:31,824: WARNING/ForkPoolWorker-3]  eerie
+[2023-10-14 03:20:31,828: WARNING/ForkPoolWorker-3]  aura
+[2023-10-14 03:20:31,905: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:31,963: WARNING/ForkPoolWorker-3]  weight
+[2023-10-14 03:20:32,041: WARNING/ForkPoolWorker-3] lessness
+[2023-10-14 03:20:32,113: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:32,183: WARNING/ForkPoolWorker-3] Around
+[2023-10-14 03:20:32,251: WARNING/ForkPoolWorker-3]  this
+[2023-10-14 03:20:32,336: WARNING/ForkPoolWorker-3]  trio
+[2023-10-14 03:20:32,413: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:32,485: WARNING/ForkPoolWorker-3]  characters
+[2023-10-14 03:20:32,552: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:32,630: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:32,699: WARNING/ForkPoolWorker-3]  landscape
+[2023-10-14 03:20:32,787: WARNING/ForkPoolWorker-3]  comes
+[2023-10-14 03:20:32,864: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 03:20:32,925: WARNING/ForkPoolWorker-3]  life
+[2023-10-14 03:20:33,000: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:33,263: WARNING/ForkPoolWorker-3]  The
+[2023-10-14 03:20:33,340: WARNING/ForkPoolWorker-3]  trees
+[2023-10-14 03:20:33,410: WARNING/ForkPoolWorker-3]  in
+[2023-10-14 03:20:33,488: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:33,563: WARNING/ForkPoolWorker-3]  gro
+[2023-10-14 03:20:33,638: WARNING/ForkPoolWorker-3] ve
+[2023-10-14 03:20:33,792: WARNING/ForkPoolWorker-3]  stand
+[2023-10-14 03:20:33,923: WARNING/ForkPoolWorker-3]  tall
+[2023-10-14 03:20:33,936: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:33,947: WARNING/ForkPoolWorker-3]  ancient
+[2023-10-14 03:20:34,048: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:34,291: WARNING/ForkPoolWorker-3]  their
+[2023-10-14 03:20:34,399: WARNING/ForkPoolWorker-3]  sprawling
+[2023-10-14 03:20:34,467: WARNING/ForkPoolWorker-3]  branches
+[2023-10-14 03:20:34,589: WARNING/ForkPoolWorker-3]  reaching
+[2023-10-14 03:20:34,633: WARNING/ForkPoolWorker-3]  towards
+[2023-10-14 03:20:34,709: WARNING/ForkPoolWorker-3]  each
+[2023-10-14 03:20:34,785: WARNING/ForkPoolWorker-3]  other
+[2023-10-14 03:20:34,867: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:34,929: WARNING/ForkPoolWorker-3]  forming
+[2023-10-14 03:20:35,002: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:35,079: WARNING/ForkPoolWorker-3]  natural
+[2023-10-14 03:20:35,148: WARNING/ForkPoolWorker-3]  canopy
+[2023-10-14 03:20:35,233: WARNING/ForkPoolWorker-3]  over
+[2023-10-14 03:20:35,409: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:35,423: WARNING/ForkPoolWorker-3]  valley
+[2023-10-14 03:20:35,471: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:35,548: WARNING/ForkPoolWorker-3]  The
+[2023-10-14 03:20:35,612: WARNING/ForkPoolWorker-3]  leaves
+[2023-10-14 03:20:35,688: WARNING/ForkPoolWorker-3]  on
+[2023-10-14 03:20:35,772: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:35,832: WARNING/ForkPoolWorker-3]  ground
+[2023-10-14 03:20:35,912: WARNING/ForkPoolWorker-3]  create
+[2023-10-14 03:20:35,981: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:36,049: WARNING/ForkPoolWorker-3]  carpet
+[2023-10-14 03:20:36,122: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:36,203: WARNING/ForkPoolWorker-3]  rust
+[2023-10-14 03:20:36,283: WARNING/ForkPoolWorker-3] -colored
+[2023-10-14 03:20:36,361: WARNING/ForkPoolWorker-3]  hues
+[2023-10-14 03:20:36,443: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:36,512: WARNING/ForkPoolWorker-3]  hint
+[2023-10-14 03:20:36,586: WARNING/ForkPoolWorker-3] ing
+[2023-10-14 03:20:36,653: WARNING/ForkPoolWorker-3]  at
+[2023-10-14 03:20:36,736: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:36,793: WARNING/ForkPoolWorker-3]  arrival
+[2023-10-14 03:20:36,862: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:36,937: WARNING/ForkPoolWorker-3]  autumn
+[2023-10-14 03:20:37,018: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:37,139: WARNING/ForkPoolWorker-3]  The
+[2023-10-14 03:20:37,278: WARNING/ForkPoolWorker-3]  bro
+[2023-10-14 03:20:37,298: WARNING/ForkPoolWorker-3] ok
+[2023-10-14 03:20:37,337: WARNING/ForkPoolWorker-3]  gl
+[2023-10-14 03:20:37,419: WARNING/ForkPoolWorker-3] immers
+[2023-10-14 03:20:37,485: WARNING/ForkPoolWorker-3]  under
+[2023-10-14 03:20:37,559: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:37,646: WARNING/ForkPoolWorker-3]  sunlight
+[2023-10-14 03:20:37,719: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:37,973: WARNING/ForkPoolWorker-3]  its
+[2023-10-14 03:20:37,999: WARNING/ForkPoolWorker-3]  clear
+[2023-10-14 03:20:38,008: WARNING/ForkPoolWorker-3]  waters
+[2023-10-14 03:20:38,172: WARNING/ForkPoolWorker-3]  reflecting
+[2023-10-14 03:20:38,192: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:38,205: WARNING/ForkPoolWorker-3]  golden
+[2023-10-14 03:20:38,243: WARNING/ForkPoolWorker-3]  colors
+[2023-10-14 03:20:38,314: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:38,389: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:38,458: WARNING/ForkPoolWorker-3]  surrounding
+[2023-10-14 03:20:38,525: WARNING/ForkPoolWorker-3]  foliage
+[2023-10-14 03:20:38,599: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:38,669: WARNING/ForkPoolWorker-3] In
+[2023-10-14 03:20:38,744: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:38,815: WARNING/ForkPoolWorker-3]  distance
+[2023-10-14 03:20:39,000: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:39,011: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:39,027: WARNING/ForkPoolWorker-3]  old
+[2023-10-14 03:20:39,124: WARNING/ForkPoolWorker-3]  church
+[2023-10-14 03:20:39,244: WARNING/ForkPoolWorker-3]  stands
+[2023-10-14 03:20:39,289: WARNING/ForkPoolWorker-3]  as
+[2023-10-14 03:20:39,356: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:39,444: WARNING/ForkPoolWorker-3]  haunting
+[2023-10-14 03:20:39,506: WARNING/ForkPoolWorker-3]  silhouette
+[2023-10-14 03:20:39,584: WARNING/ForkPoolWorker-3]  against
+[2023-10-14 03:20:39,663: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:39,732: WARNING/ForkPoolWorker-3]  fading
+[2023-10-14 03:20:39,825: WARNING/ForkPoolWorker-3]  light
+[2023-10-14 03:20:39,890: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:40,036: WARNING/ForkPoolWorker-3]  Its
+[2023-10-14 03:20:40,042: WARNING/ForkPoolWorker-3]  aged
+[2023-10-14 03:20:40,125: WARNING/ForkPoolWorker-3]  stone
+[2023-10-14 03:20:40,187: WARNING/ForkPoolWorker-3]  walls
+[2023-10-14 03:20:40,376: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:40,452: WARNING/ForkPoolWorker-3]  tower
+[2023-10-14 03:20:40,499: WARNING/ForkPoolWorker-3]  cast
+[2023-10-14 03:20:40,567: WARNING/ForkPoolWorker-3]  long
+[2023-10-14 03:20:40,677: WARNING/ForkPoolWorker-3]  shadows
+[2023-10-14 03:20:40,854: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:40,859: WARNING/ForkPoolWorker-3]  adding
+[2023-10-14 03:20:40,887: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 03:20:40,956: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:41,135: WARNING/ForkPoolWorker-3]  overall
+[2023-10-14 03:20:41,158: WARNING/ForkPoolWorker-3]  sense
+[2023-10-14 03:20:41,170: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:41,267: WARNING/ForkPoolWorker-3]  mystery
+[2023-10-14 03:20:41,311: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:41,411: WARNING/ForkPoolWorker-3]  fore
+[2023-10-14 03:20:41,465: WARNING/ForkPoolWorker-3] b
+[2023-10-14 03:20:41,537: WARNING/ForkPoolWorker-3] oding
+[2023-10-14 03:20:41,626: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:41,725: WARNING/ForkPoolWorker-3]  Even
+[2023-10-14 03:20:41,826: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:41,886: WARNING/ForkPoolWorker-3]  air
+[2023-10-14 03:20:41,966: WARNING/ForkPoolWorker-3]  seems
+[2023-10-14 03:20:42,207: WARNING/ForkPoolWorker-3]  to
+[2023-10-14 03:20:42,212: WARNING/ForkPoolWorker-3]  hold
+[2023-10-14 03:20:42,215: WARNING/ForkPoolWorker-3]  its
+[2023-10-14 03:20:42,245: WARNING/ForkPoolWorker-3]  breath
+[2023-10-14 03:20:42,346: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:42,734: WARNING/ForkPoolWorker-3]  as
+[2023-10-14 03:20:42,736: WARNING/ForkPoolWorker-3]  if
+[2023-10-14 03:20:42,738: WARNING/ForkPoolWorker-3]  awaiting
+[2023-10-14 03:20:42,739: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:42,741: WARNING/ForkPoolWorker-3]  next
+[2023-10-14 03:20:42,805: WARNING/ForkPoolWorker-3]  turn
+[2023-10-14 03:20:42,878: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:43,067: WARNING/ForkPoolWorker-3]  events
+[2023-10-14 03:20:43,081: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:43,112: WARNING/ForkPoolWorker-3] The
+[2023-10-14 03:20:43,165: WARNING/ForkPoolWorker-3]  scene
+[2023-10-14 03:20:43,236: WARNING/ForkPoolWorker-3]  captures
+[2023-10-14 03:20:43,368: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:43,386: WARNING/ForkPoolWorker-3]  supernatural
+[2023-10-14 03:20:43,452: WARNING/ForkPoolWorker-3]  essence
+[2023-10-14 03:20:43,604: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:43,625: WARNING/ForkPoolWorker-3]  Sleep
+[2023-10-14 03:20:43,778: WARNING/ForkPoolWorker-3] y
+[2023-10-14 03:20:43,910: WARNING/ForkPoolWorker-3]  Hollow
+[2023-10-14 03:20:43,940: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:44,008: WARNING/ForkPoolWorker-3]  where
+[2023-10-14 03:20:44,188: WARNING/ForkPoolWorker-3]  myth
+[2023-10-14 03:20:44,210: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:44,233: WARNING/ForkPoolWorker-3]  reality
+[2023-10-14 03:20:44,334: WARNING/ForkPoolWorker-3]  blend
+[2023-10-14 03:20:44,360: WARNING/ForkPoolWorker-3]  seamlessly
+[2023-10-14 03:20:44,423: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:44,511: WARNING/ForkPoolWorker-3]  It
+[2023-10-14 03:20:44,596: WARNING/ForkPoolWorker-3]  is
+[2023-10-14 03:20:44,658: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:44,725: WARNING/ForkPoolWorker-3]  place
+[2023-10-14 03:20:44,801: WARNING/ForkPoolWorker-3]  where
+[2023-10-14 03:20:45,159: WARNING/ForkPoolWorker-3]  legend
+[2023-10-14 03:20:45,250: WARNING/ForkPoolWorker-3]  meets
+[2023-10-14 03:20:45,254: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:45,371: WARNING/ForkPoolWorker-3]  everyday
+[2023-10-14 03:20:45,390: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:45,428: WARNING/ForkPoolWorker-3]  leaving
+[2023-10-14 03:20:45,432: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:45,471: WARNING/ForkPoolWorker-3]  lasting
+[2023-10-14 03:20:45,547: WARNING/ForkPoolWorker-3]  impression
+[2023-10-14 03:20:45,905: WARNING/ForkPoolWorker-3]  on
+[2023-10-14 03:20:45,909: WARNING/ForkPoolWorker-3]  those
+[2023-10-14 03:20:45,911: WARNING/ForkPoolWorker-3]  who
+[2023-10-14 03:20:45,913: WARNING/ForkPoolWorker-3]  enter
+[2023-10-14 03:20:45,915: WARNING/ForkPoolWorker-3]  its
+[2023-10-14 03:20:46,118: WARNING/ForkPoolWorker-3]  enchant
+[2023-10-14 03:20:46,121: WARNING/ForkPoolWorker-3] ing
+[2023-10-14 03:20:46,123: WARNING/ForkPoolWorker-3]  embrace
+[2023-10-14 03:20:46,197: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:47,183: WARNING/ForkPoolWorker-3] In
+[2023-10-14 03:20:47,227: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:47,306: WARNING/ForkPoolWorker-3]  quiet
+[2023-10-14 03:20:47,395: WARNING/ForkPoolWorker-3]  valley
+[2023-10-14 03:20:47,526: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:47,554: WARNING/ForkPoolWorker-3]  Sleep
+[2023-10-14 03:20:47,597: WARNING/ForkPoolWorker-3] y
+[2023-10-14 03:20:47,658: WARNING/ForkPoolWorker-3]  Hollow
+[2023-10-14 03:20:47,736: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:47,825: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:47,918: WARNING/ForkPoolWorker-3]  picturesque
+[2023-10-14 03:20:47,997: WARNING/ForkPoolWorker-3]  scene
+[2023-10-14 03:20:48,065: WARNING/ForkPoolWorker-3]  unfolds
+[2023-10-14 03:20:48,136: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:48,217: WARNING/ForkPoolWorker-3]  A
+[2023-10-14 03:20:48,283: WARNING/ForkPoolWorker-3]  small
+[2023-10-14 03:20:48,355: WARNING/ForkPoolWorker-3]  bro
+[2023-10-14 03:20:48,433: WARNING/ForkPoolWorker-3] ok
+[2023-10-14 03:20:48,513: WARNING/ForkPoolWorker-3]  me
+[2023-10-14 03:20:48,587: WARNING/ForkPoolWorker-3] anders
+[2023-10-14 03:20:48,680: WARNING/ForkPoolWorker-3]  through
+[2023-10-14 03:20:48,728: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:48,803: WARNING/ForkPoolWorker-3]  valley
+[2023-10-14 03:20:48,878: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:49,025: WARNING/ForkPoolWorker-3]  its
+[2023-10-14 03:20:49,043: WARNING/ForkPoolWorker-3]  gentle
+[2023-10-14 03:20:49,138: WARNING/ForkPoolWorker-3]  murm
+[2023-10-14 03:20:49,333: WARNING/ForkPoolWorker-3] urs
+[2023-10-14 03:20:49,339: WARNING/ForkPoolWorker-3]  creating
+[2023-10-14 03:20:49,360: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:49,419: WARNING/ForkPoolWorker-3]  soothing
+[2023-10-14 03:20:49,523: WARNING/ForkPoolWorker-3]  soundtrack
+[2023-10-14 03:20:49,640: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:49,733: WARNING/ForkPoolWorker-3]  Opp
+[2023-10-14 03:20:49,743: WARNING/ForkPoolWorker-3] osite
+[2023-10-14 03:20:49,796: WARNING/ForkPoolWorker-3]  each
+[2023-10-14 03:20:49,876: WARNING/ForkPoolWorker-3]  other
+[2023-10-14 03:20:49,968: WARNING/ForkPoolWorker-3]  are
+[2023-10-14 03:20:50,073: WARNING/ForkPoolWorker-3]  Ich
+[2023-10-14 03:20:50,102: WARNING/ForkPoolWorker-3] ab
+[2023-10-14 03:20:50,164: WARNING/ForkPoolWorker-3] od
+[2023-10-14 03:20:50,258: WARNING/ForkPoolWorker-3]  Crane
+[2023-10-14 03:20:50,350: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:50,449: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:50,529: WARNING/ForkPoolWorker-3]  l
+[2023-10-14 03:20:50,608: WARNING/ForkPoolWorker-3] anky
+[2023-10-14 03:20:50,681: WARNING/ForkPoolWorker-3]  school
+[2023-10-14 03:20:50,794: WARNING/ForkPoolWorker-3] teacher
+[2023-10-14 03:20:50,833: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:50,908: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:51,007: WARNING/ForkPoolWorker-3]  Brom
+[2023-10-14 03:20:51,078: WARNING/ForkPoolWorker-3]  Bones
+[2023-10-14 03:20:51,436: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:51,440: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:51,472: WARNING/ForkPoolWorker-3]  muscular
+[2023-10-14 03:20:51,554: WARNING/ForkPoolWorker-3]  rival
+[2023-10-14 03:20:51,679: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:51,699: WARNING/ForkPoolWorker-3]  Above
+[2023-10-14 03:20:51,790: WARNING/ForkPoolWorker-3]  them
+[2023-10-14 03:20:51,841: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:51,995: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:52,142: WARNING/ForkPoolWorker-3]  Head
+[2023-10-14 03:20:52,175: WARNING/ForkPoolWorker-3] less
+[2023-10-14 03:20:52,199: WARNING/ForkPoolWorker-3]  Horse
+[2023-10-14 03:20:52,274: WARNING/ForkPoolWorker-3] man
+[2023-10-14 03:20:52,360: WARNING/ForkPoolWorker-3]  gal
+[2023-10-14 03:20:52,438: WARNING/ForkPoolWorker-3] lops
+[2023-10-14 03:20:52,503: WARNING/ForkPoolWorker-3]  on
+[2023-10-14 03:20:52,579: WARNING/ForkPoolWorker-3]  his
+[2023-10-14 03:20:52,661: WARNING/ForkPoolWorker-3]  ghost
+[2023-10-14 03:20:52,742: WARNING/ForkPoolWorker-3] ly
+[2023-10-14 03:20:52,790: WARNING/ForkPoolWorker-3]  horse
+[2023-10-14 03:20:52,890: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:52,987: WARNING/ForkPoolWorker-3]  creating
+[2023-10-14 03:20:53,070: WARNING/ForkPoolWorker-3]  an
+[2023-10-14 03:20:53,134: WARNING/ForkPoolWorker-3]  eerie
+[2023-10-14 03:20:53,294: WARNING/ForkPoolWorker-3]  aura
+[2023-10-14 03:20:53,298: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:53,383: WARNING/ForkPoolWorker-3]  The
+[2023-10-14 03:20:53,450: WARNING/ForkPoolWorker-3]  landscape
+[2023-10-14 03:20:53,525: WARNING/ForkPoolWorker-3]  features
+[2023-10-14 03:20:53,599: WARNING/ForkPoolWorker-3]  ancient
+[2023-10-14 03:20:53,687: WARNING/ForkPoolWorker-3]  walnut
+[2023-10-14 03:20:53,793: WARNING/ForkPoolWorker-3]  trees
+[2023-10-14 03:20:53,856: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:53,939: WARNING/ForkPoolWorker-3]  rust
+[2023-10-14 03:20:54,198: WARNING/ForkPoolWorker-3] -colored
+[2023-10-14 03:20:54,204: WARNING/ForkPoolWorker-3]  leaves
+[2023-10-14 03:20:54,207: WARNING/ForkPoolWorker-3] ,
+[2023-10-14 03:20:54,254: WARNING/ForkPoolWorker-3]  and
+[2023-10-14 03:20:54,331: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:54,452: WARNING/ForkPoolWorker-3]  gl
+[2023-10-14 03:20:54,507: WARNING/ForkPoolWorker-3] immer
+[2023-10-14 03:20:54,557: WARNING/ForkPoolWorker-3] ing
+[2023-10-14 03:20:54,633: WARNING/ForkPoolWorker-3]  bro
+[2023-10-14 03:20:54,965: WARNING/ForkPoolWorker-3] ok
+[2023-10-14 03:20:54,986: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:55,007: WARNING/ForkPoolWorker-3]  The
+[2023-10-14 03:20:55,020: WARNING/ForkPoolWorker-3]  old
+[2023-10-14 03:20:55,085: WARNING/ForkPoolWorker-3]  church
+[2023-10-14 03:20:55,237: WARNING/ForkPoolWorker-3]  stands
+[2023-10-14 03:20:55,400: WARNING/ForkPoolWorker-3]  as
+[2023-10-14 03:20:55,427: WARNING/ForkPoolWorker-3]  a
+[2023-10-14 03:20:55,437: WARNING/ForkPoolWorker-3]  haunting
+[2023-10-14 03:20:55,463: WARNING/ForkPoolWorker-3]  silhouette
+[2023-10-14 03:20:55,535: WARNING/ForkPoolWorker-3]  against
+[2023-10-14 03:20:55,736: WARNING/ForkPoolWorker-3]  fading
+[2023-10-14 03:20:55,747: WARNING/ForkPoolWorker-3]  light
+[2023-10-14 03:20:55,819: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:20:56,011: WARNING/ForkPoolWorker-3]  Capt
+[2023-10-14 03:20:56,016: WARNING/ForkPoolWorker-3] uring
+[2023-10-14 03:20:56,020: WARNING/ForkPoolWorker-3]  the
+[2023-10-14 03:20:56,092: WARNING/ForkPoolWorker-3]  supernatural
+[2023-10-14 03:20:56,172: WARNING/ForkPoolWorker-3]  essence
+[2023-10-14 03:20:56,249: WARNING/ForkPoolWorker-3]  of
+[2023-10-14 03:20:56,323: WARNING/ForkPoolWorker-3]  Sleep
+[2023-10-14 03:20:56,381: WARNING/ForkPoolWorker-3] y
+[2023-10-14 03:20:56,465: WARNING/ForkPoolWorker-3]  Hollow
+[2023-10-14 03:20:56,548: WARNING/ForkPoolWorker-3]  where
+[2023-10-14 03:20:56,638: WARNING/ForkPoolWorker-3]  legend
+[2023-10-14 03:20:56,689: WARNING/ForkPoolWorker-3]  meets
+[2023-10-14 03:20:56,775: WARNING/ForkPoolWorker-3]  reality
+[2023-10-14 03:20:56,857: WARNING/ForkPoolWorker-3] .
+[2023-10-14 03:21:06,677: WARNING/ForkPoolWorker-3] img_prompt=In the quiet valley of Sleepy Hollow, a picturesque scene unfolds. A small brook meanders through the valley, its gentle murmurs creating a soothing soundtrack. Opposite each other are Ichabod Crane, a lanky schoolteacher, and Brom Bones, a muscular rival. Above them, the Headless Horseman gallops on his ghostly horse, creating an eerie aura. The landscape features ancient walnut trees, rust-colored leaves, and a glimmering brook. The old church stands as a haunting silhouette against fading light. Capturing the supernatural essence of Sleepy Hollow where legend meets reality., charcoul illustration style
+[2023-10-14 03:21:06,678: WARNING/ForkPoolWorker-3] generate_scene_task done
+[2023-10-14 03:21:06,685: INFO/ForkPoolWorker-3] Task generate_scene_prompt[737e02d5-ae48-43c1-b2e2-5afd5c56c4be] succeeded in 68.60128803100088s: None

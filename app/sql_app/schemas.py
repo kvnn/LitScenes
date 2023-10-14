@@ -12,8 +12,7 @@ class Book(BookCreate):
     id: int
     status: str
 
-
-class GutenburgBookUrl(BaseModel):
+class ImportGutenburgBookRequest(BaseModel):
     book_url: str
 
 class ChunkCreate(BaseModel):
@@ -23,3 +22,8 @@ class ChunkCreate(BaseModel):
 
 class Chunk(ChunkCreate):
     id: int
+
+class CreateSceneRequest(BaseModel):
+    chunk_id: int
+    prompt_id: int
+    aesthetic_id: int
