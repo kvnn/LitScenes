@@ -84,7 +84,7 @@ class Scene(Base, TimestampMixin):
     scene_prompt_id = Column(Integer, ForeignKey('scene_prompts.id'), nullable=False)
     aesthetic_id = Column(Integer, ForeignKey('scene_aesthetics.id'), nullable=False)
     title = Column(Text, nullable=False)
-    scene_content = Column(Text, nullable=False)
+    content = Column(Text, nullable=False)
 
 # # Define the ImagePrompt model
 # class ImagePrompt(db.Model, TimestampMixin):

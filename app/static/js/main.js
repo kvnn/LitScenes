@@ -61,6 +61,7 @@ $(document).ready(function() {
     let $chunkContainer = $('#chunk-container');
     let $generateSceneContainer = $('#generate-scene-container');
     let $generateSceneContainerLabel = $('#generate-scene-container-label');
+    let $generateSceneContent = $('#generate_scene_content');
     let $generateSceneError = $('#generate-scene-error');
     let $generateSceneLoader = $('#generate-scene-loader');
     let $generateSceneButton = $('#generate-scene-btn');
@@ -98,7 +99,7 @@ $(document).ready(function() {
 
             $currentScenesLoader.show();
 
-            $.get('/scenes/current/' + $chunk.data('chunkId'), function(data) {
+            $.get('/scenes/' + $chunk.data('chunkId'), function(data) {
                 console.log('data', data);
                 $currentScenes.html(data);
                 $currentScenesError.hide();
@@ -148,6 +149,13 @@ $(document).ready(function() {
             data: JSON.stringify(data),
             success: function(response) {
                 console.log(response);
+                getGenerateSceneUpdates(
+                    response.task_id,
+                    $generateSceneContent,
+                    $generateSceneError,
+                    $generateSceneLoader,
+                    $generateSceneButton,
+                );
                 $generateSceneError.hide();
             }
         }).fail(function(jqXHR, textStatus, errorThrown) {

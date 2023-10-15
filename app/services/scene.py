@@ -7,7 +7,7 @@ import redis
 
 from sql_app.models import Chunk, ScenePrompt, SceneAesthetic
 from sql_app.schemas import CreateSceneRequest
-from config_defaults import scene_prompt_format
+from sql_app.seed_values import scene_prompt_format
 
 redis_url = os.environ.get("REDIS_URL")
 redis_client = redis.from_url(redis_url)
@@ -40,9 +40,10 @@ class SceneService:
                 prompt_max_length=scene_prompt.max_length,
                 aesthetic_title=aesthetic.title,
                 aesthetic_id=aesthetic.id,
-                chunk_id=chunk.id
+                chunk_id=chunk.id,
+                scene_prompt_id=scene_prompt.id
             )
-            redis_client.set('generate_scene_task_id', task.id)
+            redis_client.set(task.id, 'init')
             return task.id, 'Task created'
         else:
             return False, 'Prompt or chunk not found'

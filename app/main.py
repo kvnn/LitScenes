@@ -4,7 +4,7 @@ import logging
 import os
 
 from celery.result import AsyncResult
-from fastapi import Depends, FastAPI, Body, Request, WebSocket
+from fastapi import Depends, FastAPI, Body, Request, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -39,12 +39,13 @@ print(f'settings={settings}')
 ''' Seed our db '''
 db = SessionLocal()
 if not db.query(models.ScenePrompt).first():
-    scene_prompt = models.ScenePrompt(
-        title=seeds.chunk_to_scene_prompt_01['title'],
-        content=seeds.chunk_to_scene_prompt_01['content'],
-        max_length=seeds.chunk_to_scene_prompt_01['max_length']
-    )
-    db.add(scene_prompt)
+    for key, scene_prompt in seeds.scene_prompts.items:
+        db_item = models.ScenePrompt(
+            title=scene_prompt['title'],
+            content=scene_prompt['content'],
+            max_length=scene_prompt['max_length']
+        )
+    db.add(db_item)
     db.commit()
 
 if not db.query(models.SceneAesthetic).first():
@@ -85,6 +86,10 @@ def book(request: Request, id: int, db: Session = Depends(get_db)):
             'scene_aesthetics': crud.get_scene_aesthetics(db)
         })
 
+@app.get('/scenes/{id}')
+async def get_scene(id: int, db: Session = Depends(get_db)):
+    return crud.get_scene_prompt_by_id(db, id)
+
 @app.post('/books/import')
 async def import_book(data: ImportGutenburgBookRequest, db: Session = Depends(get_db)):
     book, status = await BookService.import_from_gutenburg_url(db, data.book_url)
@@ -100,53 +105,71 @@ def generate_scene(data: CreateSceneRequest, db: Session = Depends(get_db)):
         return JSONResponse(content={"task_id": task_id})
     return JSONResponse(content={"error": error})
 
-@app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):
-    error_stack = {}
+
+@app.websocket("/ws/{task_id}")
+async def websocket_endpoint(websocket: WebSocket, task_id: str):
+    print('WEB SOCKETTTT')
     await websocket.accept()
-    while True:
-        data = await websocket.receive_text()
-        logger.info(f"websocket receive_text() Message text was: {data}")
-        async def loop():
-            try:
-                generate_scene_task_id = redis_client.get('generate_scene_task_id')
-                generate_scene_task_id = generate_scene_task_id.decode('utf-8') if generate_scene_task_id else None
-                print(f'generate_scene_task_id={generate_scene_task_id}')
-                if generate_scene_task_id:
-                    print(f'generate_scene_task_id exists and is {generate_scene_task_id}')
-                    task_details = AsyncResult(generate_scene_task_id)
+    try:
+        if not await is_valid_task_id(task_id):
+            await websocket.send_text(json.dumps({"error": f"Invalid task ID {task_id}"}))
+            return
 
-                    if task_details and task_details.result and 'content' in task_details.result:
-                        await websocket.send_text(json.dumps({
-                            "type": "scene_generate",
-                            "task_id": generate_scene_task_id,
-                            "task_results": task_details.result
-                        }))
-                    else:
-                        logger.info(f'result not in task_details. task_details={task_details}')
+        await subscribe_to_task_updates(websocket, task_id)
+    except WebSocketDisconnect:
+        logger.info("WebSocket disconnected")
 
-                    if task_details and task_details.ready():
-                        logger.info(f'task complete task_details={task_details}')
-                        await websocket.send_text(json.dumps({
-                            "type": "scene_generate",
-                            "task_id": generate_scene_task_id,
-                            "task_results": task_details.result,
-                            "completed": True
-                        }))
-                        redis_client.delete('generate_scene_task_id')
+async def is_valid_task_id(task_id):
+    try:
+        return redis_client.exists(task_id)
+    except Exception as e:
+        logger.error(f"Error while validating task ID: {e}")
+        return False
 
-            except Exception as e:
-                # import pdb; pdb.set_trace()
-                logger.info(f'[error] generate_scene_task_id={generate_scene_task_id}')
-                if generate_scene_task_id:
-                    error_stack[generate_scene_task_id] = error_stack.get(generate_scene_task_id, 0) + 1
-                    if error_stack[generate_scene_task_id] > 5:
-                        redis_client.delete('generate_scene_task_id')
-                        error_stack[generate_scene_task_id] = 0
-                        logger.info(f'Too many errors for {generate_scene_task_id}, deleted')
-                    logger.info(f'[error] AsyncResult(generate_scene_task_id)={AsyncResult(generate_scene_task_id)}')
-                logger.error(f'[error] generate_scene_task websocket send error: {e}')
+async def subscribe_to_task_updates(websocket, task_id):
+    try:
+        # Start a separate task to send updates while the task is running
+        await asyncio.create_task(send_task_updates(websocket, task_id))
+    except Exception as e:
+        logger.error(f"Error while subscribing to task updates: {e}")
+
+async def send_task_updates(websocket, task_id):
+    try:
+        while True:
+            task_details = AsyncResult(task_id)
+
+            if task_details.ready():
+                logger.info(f'send_task_updates] clearing task result={task_details.result}')
+                await send_task_result(websocket, task_id, task_details.result, completed=True)
+                await clear_task_id(task_id)
+                break
+            else:
+                await send_task_result(websocket, task_id, task_details.result)
 
             await asyncio.sleep(1)
-            await loop()
-        await loop()
+    except Exception as e:
+        logger.error(f"Error while sending task updates: {e}")
+
+async def send_task_result(websocket, task_id, result, completed=False):
+    try:
+        # Attempt to serialize the result to JSON
+        try:
+            payload = {
+                "type": "scene_generate",
+                "task_id": task_id,
+                "task_results": result,
+                "completed": completed
+            }
+            await websocket.send_text(json.dumps(payload))
+        except Exception as e:
+            logger.warn(f'[send_task_result] send for {result} due to error {e}')
+            result_json = str(result)
+        
+    except Exception as e:
+        logger.error(f"Error sending task result over WebSocket: {e}")
+
+async def clear_task_id(task_id):
+    try:
+        redis_client.delete(task_id)
+    except Exception as e:
+        logger.error(f"Error clearing task ID: {e}")

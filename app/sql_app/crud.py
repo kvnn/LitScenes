@@ -32,15 +32,19 @@ def create_chunk(db: Session, chunk: schemas.ChunkCreate):
 def get_scene_prompts(db: Session):
     return db.query(models.ScenePrompt).all()
 
+def get_scene_prompt_by_id(db: Session, id: int):
+    return db.query(models.ScenePrompt).filter(models.ScenePrompt.id == id).first()
+
 def get_scene_aesthetics(db: Session):
     return db.query(models.SceneAesthetic).all()
 
-def create_scene(db: Session, title: str, content: str, aesthetic_id=int, chunk_id=int):
+def create_scene(db: Session, title: str, content: str, aesthetic_id=int, chunk_id=int, scene_prompt_id=int):
     db_scene = models.Scene(
         title=title,
         content=content,
         aesthetic_id=aesthetic_id,
-        chunk_id=chunk_id
+        chunk_id=chunk_id,
+        scene_prompt_id=scene_prompt_id
     )
     db.add(db_scene)
     db.commit()

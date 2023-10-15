@@ -26,7 +26,8 @@ def generate_scene_prompt(
         prompt_max_length,
         aesthetic_title,
         aesthetic_id,
-        chunk_id
+        chunk_id,
+        scene_prompt_id
     ):
     print(f'generate_scene_task for {prompt}')
 
@@ -68,7 +69,8 @@ def generate_scene_prompt(
         title = title,
         content=content,
         aesthetic_id=aesthetic_id,
-        chunk_id=chunk_id
+        chunk_id=chunk_id,
+        scene_prompt_id=scene_prompt_id
     )
 
     return {
