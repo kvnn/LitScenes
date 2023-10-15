@@ -59,29 +59,54 @@ $(document).ready(function() {
     const defaultCardWidth = '17rem';
     let $chunks = $('.card.chunk');
     let $chunkContainer = $('#chunk-container');
-    let $sceneContainer = $('#scene-container');
-    let $sceneContainerLabel = $('#scene-container-label');
+    let $generateSceneContainer = $('#generate-scene-container');
+    let $generateSceneContainerLabel = $('#generate-scene-container-label');
+    let $generateSceneError = $('#generate-scene-error');
+    let $generateSceneLoader = $('#generate-scene-loader');
+    let $generateSceneButton = $('#generate-scene-btn');
+    let $currentScenes = $('#current-scenes');
+    let $currentScenesLoader = $('#current-scenes-loader')
     let $leftNav = $('#left-nav');
     
     function toggleActivateChunk($chunk) {
         // deactivate
         if ($chunk.hasClass('active')) {
             $chunk.removeClass('active');
-            $sceneContainer.removeClass('show');
+            $generateSceneContainer.removeClass('show');
             $leftNav.width('auto');
             $chunkContainer.width('auto');
         // activate
         } else {
+
             $('.card.chunk.active').removeClass('active');
             $chunk.addClass('active');
-            $sceneContainer.addClass('show');
-            $sceneContainer.data('chunkId', $chunk.data('chunkId'));
+            $generateSceneContainer.addClass('show');
+            $generateSceneContainer.data('chunkId', $chunk.data('chunkId'));
             $chunkContainer.width(315);
             console.log('$chunkContainer', $chunkContainer);
-            $sceneContainerLabel.text($chunk.find('.chunk-title').text());
+            $generateSceneContainerLabel.text($chunk.find('.chunk-title').text());
+            $currentScenesLoader = $('#current-scenes-loader');
+            $currentScenesError = $('#current-scenes-error');
+
             $leftNav.animate({
                 width: 0
-            }, 500);
+            }, 500, function(){
+                $('html, body').animate({
+                    scrollTop: $chunk.position().top - 50
+                }, 500);
+            });
+
+            $currentScenesLoader.show();
+
+            $.get('/scenes/current/' + $chunk.data('chunkId'), function(data) {
+                console.log('data', data);
+                $currentScenes.html(data);
+                $currentScenesError.hide();
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                $currentScenesError.show();
+            }).always(function() {
+                $currentScenesLoader.hide();
+            });
         }
     }
 
@@ -93,71 +118,26 @@ $(document).ready(function() {
         toggleActivateChunk($(this));
     });
 
-    $('#scene-container-close').click(function(evt) {
+    $('#generate-scene-container-close').click(function(evt) {
         evt.preventDefault();
         toggleActivateChunk($('.card.chunk.active'));
     });
 
-    $('.chunk-generate-image').click(function(evt) {
-        evt.preventDefault();
-        const chunkId = $(this).data('chunk-id');
-        alert(chunkId);
-    });
-
-    $('.card.chunk .chunk-expand').click(function(evt) {
-        evt.preventDefault();
-        const card = $(this).closest('.card'); // Get the parent .card of the clicked .expand button
-
-        function animateCard(card) {
-            card.addClass('expanded');
-            card.animate({
-                width: "100%"
-            }, 500, function() {
-                // Once the animation is complete
-                var cardPosition = $('.card.chunk.expanded').offset().top;
-                $('html, body').animate({
-                    scrollTop: cardPosition
-                }, 500);
-            });
-        }
-
-        if (card.hasClass('expanded')) {
-            // If the card is already expanded, collapse it
-            console.log('go');
-            card.animate({
-                width: defaultCardWidth,
-            }, 500, function() {
-                console.log('removing class for card', card);
-                $(this).removeClass('expanded')
-            });
-        } else {
-            // If a different card is already expanded, collapse it
-            const existingExpandedCard = $('.card.chunk.expanded')
-            if (existingExpandedCard.length ) {
-                $('.card.chunk.expanded').animate({
-                    width: defaultCardWidth,
-                }, 500, function() {
-                    $(this).removeClass('expanded');
-                    animateCard(card);
-                });
-            } else {
-                animateCard(card);
-            }
-
-        }
-    });
 
     /*
      * Generate Scene
     */
     $('#form-generate-scene').submit(function(evt) {
         evt.preventDefault();
+
+        $generateSceneLoader.show();
+        $generateSceneButton.prop('disabled', true);
         // Get the form action (URL to which the form would post)
         var postUrl = $(this).attr("action");
 
         // Serialize form data for the post request
         var data = $(this).serializeObject();
-        data['chunk_id'] = $sceneContainer.data('chunkId');
+        data['chunk_id'] = $generateSceneContainer.data('chunkId');
         console.log('data', data);
 
         $.ajax({
@@ -168,15 +148,11 @@ $(document).ready(function() {
             data: JSON.stringify(data),
             success: function(response) {
                 console.log(response);
-
-                if (response.error) {
-                    alert(error);
-                } else {
-                    // console.log('polling for task #', response.task_id)
-                    $('#scene-generation-progress').text('...')
-                }
-        }}).fail(function(jqXHR, textStatus, errorThrown) {
+                $generateSceneError.hide();
+            }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
             // Handle error during the request
+            $generateSceneError.show();
             console.error("Request failed: " + textStatus + ". " + errorThrown);
             var errorMsg = "Request failed: " + textStatus;
             if (errorThrown) {
@@ -184,7 +160,8 @@ $(document).ready(function() {
             }
             alert(errorMsg)
         }).always(function() {
-
+            // $sceneGenerationLoader.hide();
+            // $('#scene-generate-btn').prop('disabled', true);
         });
     });
 

@@ -29,10 +29,10 @@ bookView
     </div>
 </div>
 
-<div class="scene-container offcanvas offcanvas-end" tabindex="-1" id="scene-container" aria-labelledby="scene-container-label">
+<div class="generate-scene-container offcanvas offcanvas-end" tabindex="-1" id="generate-scene-container" aria-labelledby="generate-scene-container-label">
     <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="scene-container-label"></h5>
-      <button id="scene-container-close" type="button" class="btn-close text-reset"></button>
+      <h5 class="offcanvas-title" id="generate-scene-container-label"></h5>
+      <button id="generate-scene-container-close" type="button" class="btn-close text-reset"></button>
     </div>
     <div class="offcanvas-body">
       <!-- CREATE SCENE -->
@@ -44,18 +44,18 @@ bookView
         <div class="collapse mb-3" id="collapseExample">
             <div class="card card-body">
                 <div class="row">
-                    <form id="form-generate-scene" class="form col col-md-6" action="/scenes/generate">
+                    <form id="form-generate-scene" class="form col col-md-3" action="/scenes/generate">
                         <div class="row mb-3">
-                            <div class="col-md-6">
-                                <h5>Aesthetic</h5>
+                            <div class="col-md-12 mb-1">
+                                <label class="form-label">Aesthetic</label>
                                 <select class="form-select" name="aesthetic_id">
                                     {% for aesthetic in scene_aesthetics %}
                                     <option value="{{ aesthetic.id }}">{{ aesthetic.title }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-md-6">
-                                <h5>Scene Prompt</h5>
+                            <div class="col-md-12">
+                                <label class="form-label">Prompt Style</label>
                                 <select class="form-select" name="prompt_id">
                                     {% for prompt in scene_prompts %}
                                     <option value="{{ prompt.id }}">{{ prompt.title }}</option>
@@ -63,19 +63,36 @@ bookView
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" id="scene-generate" type="button" class="btn btn-primary float-end">Generate</button>
-                    </form>
-                    <div class="col col-md-6">
-                        <div id="scene-generation-progress" class="generated-scene">
-                            
+                        <div id="generate-scene-loader" class="spinner-border text-primary" role="status" style="display:none;">
+                            <span class="sr-only">...</span>
                         </div>
+                        <button type="submit" id="generate-scene-btn" type="button" class="btn btn-primary float-end">Generate</button>
+                    </form>
+                    <div class="col col-md-9">
+                        <div id="#generate-scene-error" class="alert alert-warning hide" role="alert">
+                            Sorry, scene generation encountered an error.
+                        </div>
+                        <div id="generate_scene_content"></div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- EXISTING SCENES -->
-        <div id="generate_scene_content"></div>
+        <div class="row">
+            <div class="col-md-6">
+                <div id="current-scenes-loader" class="spinner-border text-primary" role="status" style="display:none;">
+                    <span class="sr-only">...</span>
+                </div>
+                <div id="current-scenes-error" class="alert alert-warning hide" role="alert">
+                    Sorry, scenes for this chunk could not be loaded.
+                </div>
+                <div id="current-scenes">
+
+                </div>
+            </div>
+            
+        </div>
+
     </div>
 </div>
 

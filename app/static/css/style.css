@@ -56,15 +56,10 @@ h2.book-title {
                 bottom: -6px;
                 right: -5px;
             }
-.scene-container.offcanvas-end {
+.generate-scene-container.offcanvas-end {
     width: 80%;
 }
 
-    .scene-selection-prompt a {
-        padding: 10px;
-        color: #333;
-        text-decoration: none;
-    }
 
 /* Config Nav */
 

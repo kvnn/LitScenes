@@ -18,16 +18,18 @@ scene_prompt_aesthetics = [
     ]
 
 chunk_to_scene_prompt_01 = {
-    "title": 'A witness to a reknowned artist',
+    "title": 'An omnipresent witness',
     "max_length": 1800,
     "content": (
-        'You were a witness to the following scene from the book "{book_name}".'
-        'You are asked to provide a detailed visual description of what you saw to a reknowned artist who will be painting it for the masses.'
-        'Please write vividly and with specific visual details.'
-        'As much as possible, describe the physical characteristics of the characters and the details of the location, and anything else that'
-        'would need to be conveyed to capture what happened in a painting.'
+        'Take the following narrative and imagine yourself as an omnipresent witness to its unfolding. '
+        'Believing that it shoudl not be lost to history, you want to reiterate the narrative to allow great '
+        'works of art to be created from it. '
+        'Please write vividly and with specific visual details. '
+        'As much as possible, describe the physical characteristics of the characters and the details of the location, and anything else that '
+        'would need to be conveyed to capture what happened in a visual representation. '
         'Also generate a concise, captivating title. '
-        'Please return the content in this format, in less than {max_length} characters: {scene_format}'
-        'Here is the content from "{book_name}" : {chunk}'
-        )
+        'Please return the content in this format, in less than {max_length} characters: {scene_format} '
+        'Remember, it needs to be concise, so you need to summarize the important parts of the narrative and keep it to a maximum of {max_length} letters. '
+        'Here is the content: {chunk}.'
+    )
 }

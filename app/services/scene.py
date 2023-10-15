@@ -2,11 +2,11 @@ import asyncio
 import os
 from pathlib import Path
 from worker import generate_scene_prompt
-from sql_app.schemas import CreateSceneRequest
-from sql_app.models import Chunk, ScenePrompt, SceneAesthetic
 
 import redis
 
+from sql_app.models import Chunk, ScenePrompt, SceneAesthetic
+from sql_app.schemas import CreateSceneRequest
 from config_defaults import scene_prompt_format
 
 redis_url = os.environ.get("REDIS_URL")
@@ -35,10 +35,12 @@ class SceneService:
             )
             print(f'scene_prompt.max_length={scene_prompt.max_length}')
             task = generate_scene_prompt.delay(
-                images_path,
-                prompt,
-                scene_prompt.max_length,
-                aesthetic.title
+                images_path=images_path,
+                prompt=prompt,
+                prompt_max_length=scene_prompt.max_length,
+                aesthetic_title=aesthetic.title,
+                aesthetic_id=aesthetic.id,
+                chunk_id=chunk.id
             )
             redis_client.set('generate_scene_task_id', task.id)
             return task.id, 'Task created'

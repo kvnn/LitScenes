@@ -83,6 +83,7 @@ class Scene(Base, TimestampMixin):
     chunk_id = Column(Integer, ForeignKey('chunks.id'), nullable=False)
     scene_prompt_id = Column(Integer, ForeignKey('scene_prompts.id'), nullable=False)
     aesthetic_id = Column(Integer, ForeignKey('scene_aesthetics.id'), nullable=False)
+    title = Column(Text, nullable=False)
     scene_content = Column(Text, nullable=False)
 
 # # Define the ImagePrompt model

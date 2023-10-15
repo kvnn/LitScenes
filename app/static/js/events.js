@@ -15,29 +15,51 @@ socket.onclose = ()=>{
     console.log('websocket closed')
 }
 
-scene_generate_tasks = {
-
-}
-
-var addTextByDelay = function (text, elem, delay, finishCallback) {
-    let currentIndex = 0;
-    
-    const animate = () => {
-        if (currentIndex < text.length) {
-            elem.append(text[currentIndex]);
-            currentIndex++;
-            requestAnimationFrame(animate);
-        } else {
-            finishCallback && finishCallback();
-        }
-    };
-    
-    animate();
-};
-
-
 let sceneGenerateBlock = false;
 let messageQueue = [];
+let scene_generate_content = '';
+
+var addTextByDelay = function(text, elem, delay, finishCallback) {
+    if (text.length > 0) {
+        // Append first character 
+        elem.append(text[0]);
+        setTimeout(function () {
+            // Slice text by 1 character and call function again                
+            addTextByDelay(text.slice(1), elem, delay, finishCallback);
+        }, delay);
+    } else {
+        finishCallback && finishCallback();
+    }
+}
+
+async function processNextMessage() {
+    if (messageQueue.length > 0) {
+        const data = messageQueue.shift();
+        sceneGenerateBlock = true;
+        let newContent = data.task_results.content;
+
+        if (scene_generate_content.length) {
+            let lengthDiff = scene_generate_content.length - newContent.length;
+            newContent = data.task_results.content.slice(lengthDiff);
+        }
+
+        console.log('newContent is ', newContent);
+
+        await new Promise(resolve => {
+            addTextByDelay(newContent, $('#generate_scene_content'), 1, () => {
+                sceneGenerateBlock = false;
+                resolve(); // Resolve the promise to continue processing the next message
+            });
+        });
+
+        scene_generate_content = data.task_results.content;
+        console.log('try finished');
+
+        // Process the next message in the queue
+        await processNextMessage();
+    }
+}
+
 
 socket.onmessage = async (msg) => {
     let data = {};
@@ -50,34 +72,14 @@ socket.onmessage = async (msg) => {
             if (!sceneGenerateBlock) {
                 await processNextMessage();
             }
+            if (data.task_results.status == 'SUCCESS') {
+                $('#scene-generation-loader').hide();
+                $('#scene-generate-btn').prop('disabled', false);
+                alert('Scene has finished generating');
+            }
         }
     } catch (err) {
         console.log('websocket is not JSON');
-    }
-}
-
-async function processNextMessage() {
-    if (messageQueue.length > 0) {
-        const data = messageQueue.shift();
-        sceneGenerateBlock = true;
-        scene_generate_tasks[data.task_id] = scene_generate_tasks[data.task_id] || {};
-        scene_generate_tasks[data.task_id].content = scene_generate_tasks[data.task_id].content || '';
-        let lengthDiff = data.task_results.content.length - scene_generate_tasks[data.task_id].content.length;
-        let newContent = data.task_results.content.slice(lengthDiff);
-        console.log('newContent is ', newContent);
-
-        await new Promise(resolve => {
-            addTextByDelay(newContent, $('#generate_scene_content'), 1, () => {
-                sceneGenerateBlock = false;
-                resolve(); // Resolve the promise to continue processing the next message
-            });
-        });
-
-        scene_generate_tasks[data.task_id].content = data.task_results.content;
-        console.log('try finished');
-
-        // Process the next message in the queue
-        await processNextMessage();
     }
 }
 

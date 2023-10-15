@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from . import models, schemas
 
 
+''' Books'''
 def get_books(db: Session):
     return db.query(models.Book).all()
 
@@ -19,6 +20,7 @@ def create_book(db: Session, book: schemas.BookCreate):
     db.refresh(db_book)
     return db_book
 
+''' Chunks '''
 def create_chunk(db: Session, chunk: schemas.ChunkCreate):
     db_chunk = models.Chunk(**chunk.dict())
     db.add(db_chunk)
@@ -26,8 +28,21 @@ def create_chunk(db: Session, chunk: schemas.ChunkCreate):
     db.refresh(db_chunk)
     return db_chunk
 
+''' Scenes '''
 def get_scene_prompts(db: Session):
     return db.query(models.ScenePrompt).all()
 
 def get_scene_aesthetics(db: Session):
     return db.query(models.SceneAesthetic).all()
+
+def create_scene(db: Session, title: str, content: str, aesthetic_id=int, chunk_id=int):
+    db_scene = models.Scene(
+        title=title,
+        content=content,
+        aesthetic_id=aesthetic_id,
+        chunk_id=chunk_id
+    )
+    db.add(db_scene)
+    db.commit()
+    db.refresh(db_scene)
+    return db_scene

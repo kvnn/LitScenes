@@ -101,23 +101,52 @@ def generate_scene(data: CreateSceneRequest, db: Session = Depends(get_db)):
     return JSONResponse(content={"error": error})
 
 @app.websocket("/ws")
-async def websocket_endpoint(websocket: WebSocket):    
+async def websocket_endpoint(websocket: WebSocket):
+    error_stack = {}
     await websocket.accept()
     while True:
         data = await websocket.receive_text()
-        await websocket.send_text(f"Message text was: {data}")
-        
+        logger.info(f"websocket receive_text() Message text was: {data}")
         async def loop():
-            generate_scene_task_id = redis_client.get('generate_scene_task_id').decode('utf-8')
-            print(f'generate_scene_task_id={generate_scene_task_id}')
-            if generate_scene_task_id:
-                task_details = AsyncResult(generate_scene_task_id)
-                if task_details.result and 'content' in task_details.result:
-                    await websocket.send_text(json.dumps({
-                        "type": "scene_generate",
-                        "task_id": generate_scene_task_id,
-                        "task_results": task_details.result
-                    }))
+            try:
+                generate_scene_task_id = redis_client.get('generate_scene_task_id')
+                generate_scene_task_id = generate_scene_task_id.decode('utf-8') if generate_scene_task_id else None
+                print(f'generate_scene_task_id={generate_scene_task_id}')
+                if generate_scene_task_id:
+                    print(f'generate_scene_task_id exists and is {generate_scene_task_id}')
+                    task_details = AsyncResult(generate_scene_task_id)
+
+                    if task_details and task_details.result and 'content' in task_details.result:
+                        await websocket.send_text(json.dumps({
+                            "type": "scene_generate",
+                            "task_id": generate_scene_task_id,
+                            "task_results": task_details.result
+                        }))
+                    else:
+                        logger.info(f'result not in task_details. task_details={task_details}')
+
+                    if task_details and task_details.ready():
+                        logger.info(f'task complete task_details={task_details}')
+                        await websocket.send_text(json.dumps({
+                            "type": "scene_generate",
+                            "task_id": generate_scene_task_id,
+                            "task_results": task_details.result,
+                            "completed": True
+                        }))
+                        redis_client.delete('generate_scene_task_id')
+
+            except Exception as e:
+                # import pdb; pdb.set_trace()
+                logger.info(f'[error] generate_scene_task_id={generate_scene_task_id}')
+                if generate_scene_task_id:
+                    error_stack[generate_scene_task_id] = error_stack.get(generate_scene_task_id, 0) + 1
+                    if error_stack[generate_scene_task_id] > 5:
+                        redis_client.delete('generate_scene_task_id')
+                        error_stack[generate_scene_task_id] = 0
+                        logger.info(f'Too many errors for {generate_scene_task_id}, deleted')
+                    logger.info(f'[error] AsyncResult(generate_scene_task_id)={AsyncResult(generate_scene_task_id)}')
+                logger.error(f'[error] generate_scene_task websocket send error: {e}')
+
             await asyncio.sleep(1)
             await loop()
         await loop()
