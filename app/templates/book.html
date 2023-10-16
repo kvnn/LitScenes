@@ -77,22 +77,40 @@ bookView
                 </div>
             </div>
         </div>
+    </div>
 
-        <div class="row">
-            <div class="col-md-6">
-                <div id="current-scenes-loader" class="spinner-border text-primary" role="status" style="display:none;">
-                    <span class="sr-only">...</span>
-                </div>
-                <div id="current-scenes-error" class="alert alert-warning hide" role="alert">
-                    Sorry, scenes for this chunk could not be loaded.
-                </div>
-                <div id="current-scenes">
-
+    <div class="row">
+        <div class="col-md-6">
+            <div id="current-scenes-loader" class="spinner-border text-primary" role="status" style="display:none;">
+                <span class="sr-only">...</span>
+            </div>
+            <div id="current-scenes-error" class="alert alert-warning hide" role="alert">
+                Sorry, scenes for this chunk could not be loaded.
+            </div>
+            <div x-data="currentScenes" x-on:scenes-load.window="scenes = $event.detail.scenes" id="current-scenes">
+                <div class="accordion">
+                    <template x-for="scene in scenes">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button x-text=scene.title class="accordion-button collapsed"
+                                    type="button" data-bs-toggle="collapse" x-bind:data-bs-target=[`#scene-container-${scene.id}`]>
+                                </button>
+                            </h2>
+                            <div x-bind:id=[`scene-container-${scene.id}`] class="accordion-collapse collapse">
+                                <div class="accordion-body">
+                                    <div class="card" x-bind:data-scene-id=scene.id>
+                                        <div class="card-body">
+                                            <h5 class="card-title" x-text="scene.title"></h5>
+                                            <p class="card-text" x-text="scene.content"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
-            
         </div>
-
     </div>
 </div>
 

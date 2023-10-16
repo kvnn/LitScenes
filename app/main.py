@@ -2,6 +2,7 @@ import asyncio
 import json
 import logging
 import os
+from typing import List
 
 from celery.result import AsyncResult
 from fastapi import Depends, FastAPI, Body, Request, WebSocket, WebSocketDisconnect
@@ -86,10 +87,6 @@ def book(request: Request, id: int, db: Session = Depends(get_db)):
             'scene_aesthetics': crud.get_scene_aesthetics(db)
         })
 
-@app.get('/scenes/{id}')
-async def get_scene(id: int, db: Session = Depends(get_db)):
-    return crud.get_scene_prompt_by_id(db, id)
-
 @app.post('/books/import')
 async def import_book(data: ImportGutenburgBookRequest, db: Session = Depends(get_db)):
     book, status = await BookService.import_from_gutenburg_url(db, data.book_url)
@@ -105,10 +102,12 @@ def generate_scene(data: CreateSceneRequest, db: Session = Depends(get_db)):
         return JSONResponse(content={"task_id": task_id})
     return JSONResponse(content={"error": error})
 
+@app.get('/scenes_from_chunk/{chunk_id}')
+async def scenes_from_chunk(chunk_id: int, db: Session = Depends(get_db)):
+    return crud.get_scenes_by_chunk_id(db, chunk_id)
 
 @app.websocket("/ws/{task_id}")
 async def websocket_endpoint(websocket: WebSocket, task_id: str):
-    print('WEB SOCKETTTT')
     await websocket.accept()
     try:
         if not await is_valid_task_id(task_id):

@@ -1,3 +1,10 @@
+document.addEventListener('alpine:init', () => {
+    // init Alpine data
+    Alpine.data('currentScenes', () => ({
+        scenes: [],
+    }));
+});
+
 $(document).ready(function() {
     // for serializing form data into JSON
     $.fn.serializeObject = function() {
@@ -99,9 +106,14 @@ $(document).ready(function() {
 
             $currentScenesLoader.show();
 
-            $.get('/scenes/' + $chunk.data('chunkId'), function(data) {
+            $.get('/scenes_from_chunk/' + $chunk.data('chunkId'), function(data) {
                 console.log('data', data);
-                $currentScenes.html(data);
+                let event = new CustomEvent("scenes-load", {
+                    detail: {
+                        scenes: data
+                    }
+                });
+                window.dispatchEvent(event);
                 $currentScenesError.hide();
             }).fail(function(jqXHR, textStatus, errorThrown) {
                 $currentScenesError.show();

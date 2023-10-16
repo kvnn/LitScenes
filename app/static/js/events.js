@@ -5,6 +5,11 @@ function getGenerateSceneUpdates(
     $generateSceneLoader,
     $generateSceneButton,
 ) {
+
+    function promoteGeneratedScene(newContent) {
+        $generateSceneContent.text(newContent);
+    }
+
     console.log('[getGenerateSceneUpdates] taskId=', taskId);
 
     const url = `ws://localhost:8004/ws/${taskId}`;
@@ -26,7 +31,7 @@ function getGenerateSceneUpdates(
 
     let sceneGenerateBlock = false;
     let messageQueue = [];
-    let scene_generate_content = '';
+    let sceneGenerateContent = '';
 
     var addTextByDelay = function(text, elem, delay, finishCallback) {
         if (text.length > 0) {
@@ -47,8 +52,8 @@ function getGenerateSceneUpdates(
             sceneGenerateBlock = true;
             let newContent = data.task_results.content;
 
-            if (scene_generate_content.length) {
-                let lengthDiff = scene_generate_content.length - newContent.length;
+            if (sceneGenerateContent.length) {
+                let lengthDiff = sceneGenerateContent.length - newContent.length;
                 newContent = data.task_results.content.slice(lengthDiff);
             }
 
@@ -61,7 +66,7 @@ function getGenerateSceneUpdates(
                 });
             });
 
-            scene_generate_content = data.task_results.content;
+            sceneGenerateContent = data.task_results.content;
             console.log('try finished');
 
             // Process the next message in the queue
@@ -81,10 +86,11 @@ function getGenerateSceneUpdates(
                 if (!sceneGenerateBlock) {
                     await processNextMessage();
                 }
-                if (data.task_results.succeeded) {
+                if (data.succeeded) {
                     console.log('SCENE GENERATION FINISHED');
                     $generateSceneLoader.hide();
                     $generateSceneButton.prop('disabled', false);
+                    promoteGeneratedScene(sceneGenerateContent)
                 }
             }
             
