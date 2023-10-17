@@ -75,6 +75,7 @@ async def root(request: Request, db: Session = Depends(get_db)):
         "books": books
     })
 
+
 @app.get('/books/{id}', response_class=HTMLResponse)
 def book(request: Request, id: int, db: Session = Depends(get_db)):
     books = crud.get_books(db)
@@ -87,6 +88,7 @@ def book(request: Request, id: int, db: Session = Depends(get_db)):
             'scene_aesthetics': crud.get_scene_aesthetics(db)
         })
 
+
 @app.post('/books/import')
 async def import_book(data: ImportGutenburgBookRequest, db: Session = Depends(get_db)):
     book, status = await BookService.import_from_gutenburg_url(db, data.book_url)
@@ -95,6 +97,7 @@ async def import_book(data: ImportGutenburgBookRequest, db: Session = Depends(ge
     else:
         return JSONResponse(content={"error": status})
 
+
 @app.post('/scenes/generate')
 def generate_scene(data: CreateSceneRequest, db: Session = Depends(get_db)):
     task_id, error = SceneService.generate_scene(db, data)
@@ -102,9 +105,11 @@ def generate_scene(data: CreateSceneRequest, db: Session = Depends(get_db)):
         return JSONResponse(content={"task_id": task_id})
     return JSONResponse(content={"error": error})
 
+
 @app.get('/scenes_from_chunk/{chunk_id}')
 async def scenes_from_chunk(chunk_id: int, db: Session = Depends(get_db)):
     return crud.get_scenes_by_chunk_id(db, chunk_id)
+
 
 @app.websocket("/ws/{task_id}")
 async def websocket_endpoint(websocket: WebSocket, task_id: str):
@@ -118,12 +123,14 @@ async def websocket_endpoint(websocket: WebSocket, task_id: str):
     except WebSocketDisconnect:
         logger.info("WebSocket disconnected")
 
+
 async def is_valid_task_id(task_id):
     try:
         return redis_client.exists(task_id)
     except Exception as e:
         logger.error(f"Error while validating task ID: {e}")
         return False
+
 
 async def subscribe_to_task_updates(websocket, task_id):
     try:
@@ -132,9 +139,12 @@ async def subscribe_to_task_updates(websocket, task_id):
     except Exception as e:
         logger.error(f"Error while subscribing to task updates: {e}")
 
+
 async def send_task_updates(websocket, task_id):
     try:
         while True:
+            # TODO: if determine if the celery backend is down / task is not running
+            # and handle appropriately
             task_details = AsyncResult(task_id)
 
             if task_details.ready():
@@ -149,12 +159,12 @@ async def send_task_updates(websocket, task_id):
     except Exception as e:
         logger.error(f"Error while sending task updates: {e}")
 
+
 async def send_task_result(websocket, task_id, result, completed=False):
     try:
         # Attempt to serialize the result to JSON
         try:
             payload = {
-                "type": "scene_generate",
                 "task_id": task_id,
                 "task_results": result,
                 "completed": completed
@@ -162,10 +172,10 @@ async def send_task_result(websocket, task_id, result, completed=False):
             await websocket.send_text(json.dumps(payload))
         except Exception as e:
             logger.warn(f'[send_task_result] send for {result} due to error {e}')
-            result_json = str(result)
         
     except Exception as e:
         logger.error(f"Error sending task result over WebSocket: {e}")
+
 
 async def clear_task_id(task_id):
     try:

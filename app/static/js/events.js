@@ -1,3 +1,35 @@
+function getGenerateImageUpdates(
+    taskId
+) {
+    console.log('[getGenerateImageUpdates]', taskId);
+    const url = `ws://localhost:8004/ws/${taskId}`;
+    const socket = new ReconnectingWebSocket(url);
+
+    socket.debug = true
+
+    socket.onopen = ()=>{
+        // $('#websocket-status').removeClass('reconnecting').addClass('open')
+        console.log('websocket open')
+    }
+
+    socket.onclose = ()=>{
+        // $('#websocket-status').removeClass('open').addClass('reconnecting')
+        console.log('websocket closed')
+    }
+
+    socket.onmessage = async (msg) => {
+        let data = {};
+        console.log('websocket message', msg);
+        if (data.task_results && data.task_results.type == 'scene_image_generate' && data.task_results.content) {
+            console.log('scene_image_generate contents');
+            if (data.completed) {
+                console.log("SCENE IMAGE GENERATION FINISHED");
+                refreshImagesFromScene(data.task_results.scene_id);
+            }
+        }
+    }
+}
+
 function getGenerateSceneUpdates(
     taskId,
     $generateSceneContent,
@@ -6,22 +38,17 @@ function getGenerateSceneUpdates(
     $generateSceneButton,
 ) {
 
-    function promoteGeneratedScene(newContent) {
-        $generateSceneContent.text(newContent);
-    }
-
     console.log('[getGenerateSceneUpdates] taskId=', taskId);
 
     const url = `ws://localhost:8004/ws/${taskId}`;
 
-    socket = new ReconnectingWebSocket(url);
+    const socket = new ReconnectingWebSocket(url);
 
     socket.debug = true
 
     socket.onopen = ()=>{
         // $('#websocket-status').removeClass('reconnecting').addClass('open')
         console.log('websocket open')
-        socket.send('connect')
     }
 
     socket.onclose = ()=>{
@@ -32,6 +59,8 @@ function getGenerateSceneUpdates(
     let sceneGenerateBlock = false;
     let messageQueue = [];
     let sceneGenerateContent = '';
+
+    $generateSceneContent.html('');
 
     var addTextByDelay = function(text, elem, delay, finishCallback) {
         if (text.length > 0) {
@@ -47,27 +76,28 @@ function getGenerateSceneUpdates(
     }
 
     async function processNextMessage() {
+        console.log('processNextMessage, messageQueue is', messageQueue);
         if (messageQueue.length > 0) {
-            const data = messageQueue.shift();
             sceneGenerateBlock = true;
-            let newContent = data.task_results.content;
 
-            if (sceneGenerateContent.length) {
-                let lengthDiff = sceneGenerateContent.length - newContent.length;
-                newContent = data.task_results.content.slice(lengthDiff);
+            const data = messageQueue.shift();
+            const content = data.task_results.content;
+            const lengthDiff = sceneGenerateContent.length - content.length;
+            const newContent = content.slice(lengthDiff);
+
+            // TODO: we may be able to smooth the print effect by increasing 0 here
+            if (newContent.length > 0) {
+                await new Promise(resolve => {
+                    addTextByDelay(newContent, $generateSceneContent, 1, () => {
+                        sceneGenerateBlock = false;
+                        resolve(); // Resolve the promise to continue processing the next message
+                    });
+                });
+            } else {
+                sceneGenerateBlock = false;
             }
 
-            console.log('newContent is ', newContent);
-
-            await new Promise(resolve => {
-                addTextByDelay(newContent, $generateSceneContent, 1, () => {
-                    sceneGenerateBlock = false;
-                    resolve(); // Resolve the promise to continue processing the next message
-                });
-            });
-
             sceneGenerateContent = data.task_results.content;
-            console.log('try finished');
 
             // Process the next message in the queue
             await processNextMessage();
@@ -80,17 +110,25 @@ function getGenerateSceneUpdates(
         console.log('websocket message', msg);
         try {
             data = msg.data && JSON.parse(msg.data);
-            console.log('sceneGenerateBlock', sceneGenerateBlock);
-            if (data.task_results && data.type == 'scene_generate' && data.task_results.content) {
+
+            // Scene Generation Updates
+            if (data.task_results && data.task_results.type == 'scene_generate' && data.task_results.content) {
                 messageQueue.push(data);
                 if (!sceneGenerateBlock) {
                     await processNextMessage();
                 }
-                if (data.succeeded) {
+                if (data.completed) {
                     console.log('SCENE GENERATION FINISHED');
+
+                    // subscribe to image-generation task
+                    sceneImageTaskId = data.task_results.scene_image_task_id;
+                    console.log('calling getGenerateImageDetails', sceneImageTaskId);
+                    getGenerateImageUpdates(sceneImageTaskId);
+
+
                     $generateSceneLoader.hide();
                     $generateSceneButton.prop('disabled', false);
-                    promoteGeneratedScene(sceneGenerateContent)
+                    refreshScenesFromChunk(chunkId)
                 }
             }
             

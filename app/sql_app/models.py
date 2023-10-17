@@ -86,21 +86,20 @@ class Scene(Base, TimestampMixin):
     title = Column(Text, nullable=False)
     content = Column(Text, nullable=False)
 
-# # Define the ImagePrompt model
-# class ImagePrompt(db.Model, TimestampMixin):
-#     __tablename__ = 'image_prompts'
+# Define the ImagePrompt model
+class SceneImagePrompt(Base, TimestampMixin):
+    __tablename__ = 'scene_image_prompts'
     
-#     id = db.Column(db.Integer, primary_key=True)
-#     scene_id = db.Column(db.Integer, db.ForeignKey('scenes.id'), nullable=False)
-#     prompt_content = db.Column(db.Text, nullable=False)
-    
-#     images = db.relationship('Image', backref='prompt', lazy=True)
+    id = Column(Integer, primary_key=True)
+    scene_id = Column(Integer, ForeignKey('scenes.id'), nullable=False)
+    content = Column(Text, nullable=False)
 
-# # Define the Image model
-# class Image(db.Model, TimestampMixin):
-#     __tablename__ = 'images'
+
+# Define the Image model
+class SceneImage(Base, TimestampMixin):
+    __tablename__ = 'scene_images'
     
-#     id = db.Column(db.Integer, primary_key=True)
-#     prompt_id = db.Column(db.Integer, db.ForeignKey('image_prompts.id'), nullable=False)
-#     image_path = db.Column(db.String(255), nullable=False)
+    id = Column(Integer, primary_key=True)
+    scene_image_prompt_id = Column(Integer, ForeignKey('scene_image_prompts.id'), nullable=False)
+    image_path = Column(String(255), nullable=False)
 

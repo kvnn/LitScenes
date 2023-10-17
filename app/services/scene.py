@@ -1,7 +1,7 @@
 import asyncio
 import os
 from pathlib import Path
-from worker import generate_scene_prompt
+from worker import generate_scene
 
 import redis
 
@@ -34,7 +34,7 @@ class SceneService:
                 max_length=scene_prompt.max_length
             )
             print(f'scene_prompt.max_length={scene_prompt.max_length}')
-            task = generate_scene_prompt.delay(
+            task = generate_scene.delay(
                 images_path=images_path,
                 prompt=prompt,
                 prompt_max_length=scene_prompt.max_length,
@@ -43,6 +43,7 @@ class SceneService:
                 chunk_id=chunk.id,
                 scene_prompt_id=scene_prompt.id
             )
+            # TODO: remove. Should be no need.
             redis_client.set(task.id, 'init')
             return task.id, 'Task created'
         else:

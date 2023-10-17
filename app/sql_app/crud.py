@@ -33,7 +33,7 @@ def get_scene_prompts(db: Session):
     return db.query(models.ScenePrompt).all()
 
 def get_scenes_by_chunk_id(db: Session, chunk_id: int):
-    return db.query(models.Scene).filter(models.Scene.chunk_id == chunk_id).all()
+    return db.query(models.Scene).filter(models.Scene.chunk_id == chunk_id).order_by(models.Scene.dateadded.desc()).all()
 
 def get_scene_aesthetics(db: Session):
     return db.query(models.SceneAesthetic).all()
@@ -50,3 +50,22 @@ def create_scene(db: Session, title: str, content: str, aesthetic_id=int, chunk_
     db.commit()
     db.refresh(db_scene)
     return db_scene
+
+''' Scene Prompts and Images '''
+def create_scene_image_prompt(db: Session, scene_id: int, content: str):
+    new = models.SceneImagePrompt(
+        scene_id=scene_id,
+        content=content
+    )
+    db.add(new)
+    db.commit()
+    return new
+
+def create_scene_image(db: Session, scene_image_prompt_id: int, image_path: str):
+    new = models.SceneImage(
+        scene_image_prompt_id=scene_image_prompt_id,
+        image_path=image_path
+    )
+    db.add(new)
+    db.commit()
+    return new

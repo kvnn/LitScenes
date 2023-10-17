@@ -1,3 +1,4 @@
+
 document.addEventListener('alpine:init', () => {
     // init Alpine data
     Alpine.data('currentScenes', () => ({
@@ -6,6 +7,40 @@ document.addEventListener('alpine:init', () => {
 });
 
 $(document).ready(function() {
+    const $leftNav = $('#left-nav');
+    const $chunkContainer = $('#chunk-container');
+    const $generateSceneContainer = $('#generate-scene-container');
+    const $generateSceneContainerLabel = $('#generate-scene-container-label');
+    const $generateSceneContent = $('#generate_scene_content');
+    const $generateSceneError = $('#generate-scene-error');
+    const $generateSceneLoader = $('#generate-scene-loader');
+    const $generateSceneButton = $('#generate-scene-btn');
+    const $currentScenesLoader = $('#current-scenes-loader');
+    const $currentScenesError = $('#current-scenes-error');
+
+    function refreshScenesFromChunk(chunkId) {
+        $.get(`/scenes_from_chunk/${chunkId}`, function(data) {
+            console.log('data', data);
+            // refresh the Alpine data
+            let event = new CustomEvent("scenes-load", {
+                detail: {
+                    scenes: data
+                }
+            });
+            window.dispatchEvent(event);
+            $currentScenesError.hide();
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            console.error("refreshScenesFromChunk failed: " + textStatus + ". " + errorThrown);
+            $currentScenesError.show();
+        }).always(function() {
+            $currentScenesLoader.hide();
+        });
+    }
+
+    function refreshImagesFromScene(sceneId) {
+        console.log('refreshImagesFromScene', sceneId);
+    }
+
     // for serializing form data into JSON
     $.fn.serializeObject = function() {
         var o = {};
@@ -65,16 +100,6 @@ $(document).ready(function() {
     */
     const defaultCardWidth = '17rem';
     let $chunks = $('.card.chunk');
-    let $chunkContainer = $('#chunk-container');
-    let $generateSceneContainer = $('#generate-scene-container');
-    let $generateSceneContainerLabel = $('#generate-scene-container-label');
-    let $generateSceneContent = $('#generate_scene_content');
-    let $generateSceneError = $('#generate-scene-error');
-    let $generateSceneLoader = $('#generate-scene-loader');
-    let $generateSceneButton = $('#generate-scene-btn');
-    let $currentScenes = $('#current-scenes');
-    let $currentScenesLoader = $('#current-scenes-loader')
-    let $leftNav = $('#left-nav');
     
     function toggleActivateChunk($chunk) {
         // deactivate
@@ -93,8 +118,7 @@ $(document).ready(function() {
             $chunkContainer.width(315);
             console.log('$chunkContainer', $chunkContainer);
             $generateSceneContainerLabel.text($chunk.find('.chunk-title').text());
-            $currentScenesLoader = $('#current-scenes-loader');
-            $currentScenesError = $('#current-scenes-error');
+            
 
             $leftNav.animate({
                 width: 0
@@ -106,20 +130,9 @@ $(document).ready(function() {
 
             $currentScenesLoader.show();
 
-            $.get('/scenes_from_chunk/' + $chunk.data('chunkId'), function(data) {
-                console.log('data', data);
-                let event = new CustomEvent("scenes-load", {
-                    detail: {
-                        scenes: data
-                    }
-                });
-                window.dispatchEvent(event);
-                $currentScenesError.hide();
-            }).fail(function(jqXHR, textStatus, errorThrown) {
-                $currentScenesError.show();
-            }).always(function() {
-                $currentScenesLoader.hide();
-            });
+            
+            const chunkId = $chunk.data('chunkId');
+            refreshScenesFromChunk(chunkId); 
         }
     }
 
