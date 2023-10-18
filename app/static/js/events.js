@@ -33,7 +33,7 @@ function getGenerateImageUpdates(
             $sceneImagesLoader.hide();
         } else if (data.completed) {
             console.log("SCENE IMAGE GENERATION FINISHED");
-            refreshImagesFromScene(data.task_results.scene_id);
+            refreshImagesFromChunk(data.task_results.chunk_id);
         }
     }
 }

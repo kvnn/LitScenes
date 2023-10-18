@@ -42,11 +42,11 @@ function refreshScenesFromChunk(chunkId) {
     });
 }
 
-function refreshImagesFromScene(sceneId) {
-    console.log('refreshImagesFromScene', sceneId);
+function refreshImagesFromChunk(chunkId) {
+    console.log('refreshImagesFromChunk', chunkId);
     $sceneImagesLoader.show();
-    $.get(`/images/from_scene/${sceneId}`, function(data) {
-        console.log('[refreshImagesFromScene] data', data);
+    $.get(`/images/from_chunk/${chunkId}`, function(data) {
+        console.log('[refreshImagesFromChunk] data', data);
 
         // refresh the Alpine data
         let event = new CustomEvent("scene-images-load", {
@@ -63,6 +63,7 @@ function refreshImagesFromScene(sceneId) {
         $sceneImagesLoader.hide();
     });
 }
+
 
 $(document).ready(function() {
     $leftNav = $('#left-nav');
@@ -169,7 +170,8 @@ $(document).ready(function() {
 
             
             const chunkId = $chunk.data('chunkId');
-            refreshScenesFromChunk(chunkId); 
+            refreshScenesFromChunk(chunkId);
+            refreshImagesFromChunk(chunkId);
         }
     }
 

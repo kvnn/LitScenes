@@ -111,9 +111,9 @@ async def scenes_from_chunk(chunk_id: int, db: Session = Depends(get_db)):
     return crud.get_scenes_by_chunk_id(db, chunk_id)
 
 
-@app.get('/images/from_scene/{scene_id}')
-async def images_from_scene(scene_id: int, db: Session = Depends(get_db)):
-    return crud.get_images_by_scene_id(db, scene_id)
+@app.get('/images/from_chunk/{chunk_id}')
+async def images_from_chunk(chunk_id: int, db: Session = Depends(get_db)):
+    return crud.get_images_by_chunk_id(db, chunk_id)
 
 
 @app.websocket("/ws/{task_id}")

@@ -55,6 +55,9 @@ def create_scene(db: Session, title: str, content: str, aesthetic_id=int, chunk_
 def get_images_by_scene_id(db: Session, scene_id:int):
     return db.query(models.SceneImage).filter(models.SceneImage.scene_id == scene_id).all()
 
+def get_images_by_chunk_id(db: Session, chunk_id:int):
+    return db.query(models.SceneImage).filter(models.SceneImage.chunk_id == chunk_id).all()
+
 def create_scene_image_prompt(db: Session, scene_id: int, content: str):
     new = models.SceneImagePrompt(
         scene_id=scene_id,
@@ -64,9 +67,10 @@ def create_scene_image_prompt(db: Session, scene_id: int, content: str):
     db.commit()
     return new
 
-def create_scene_image(db: Session, scene_id: int, scene_image_prompt_id: int, filename: str):
+def create_scene_image(db: Session, scene_id: int, chunk_id: int, scene_image_prompt_id: int, filename: str):
     new = models.SceneImage(
         scene_image_prompt_id=scene_image_prompt_id,
+        chunk_id=chunk_id,
         scene_id=scene_id,
         filename=filename
     )
