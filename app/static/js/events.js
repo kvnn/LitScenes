@@ -1,10 +1,13 @@
+function refreshImagesFromScene(sceneId) {
+    console.log('refreshImagesFromScene', sceneId);
+}
+
 function getGenerateImageUpdates(
     taskId
 ) {
     console.log('[getGenerateImageUpdates]', taskId);
     const url = `ws://localhost:8004/ws/${taskId}`;
     const socket = new ReconnectingWebSocket(url);
-
     socket.debug = true
 
     socket.onopen = ()=>{
@@ -19,8 +22,19 @@ function getGenerateImageUpdates(
 
     socket.onmessage = async (msg) => {
         let data = {};
-        console.log('websocket message', msg);
-        if (data.task_results && data.task_results.type == 'scene_image_generate' && data.task_results.content) {
+        try {
+            data = msg.data && JSON.parse(msg.data);
+            console.log('data', data);
+        } catch (err) {
+            console.error('websocket msg is not JSON');
+            console.log('websocket message', msg);
+        }
+
+        if (data.task_results.error && data.task_results.error.length) {
+            console.error(`Sorry, there was an error generating images: ${data.task_results.error}`);
+            $('#generate-scene-image-error').show().find('.message').text(data.task_results.error);
+        }
+        else if (data.task_results && data.task_results.type == 'scene_image_generate' && data.task_results.content) {
             console.log('scene_image_generate contents');
             if (data.completed) {
                 console.log("SCENE IMAGE GENERATION FINISHED");
@@ -43,6 +57,8 @@ function getGenerateSceneUpdates(
     const url = `ws://localhost:8004/ws/${taskId}`;
 
     const socket = new ReconnectingWebSocket(url);
+
+    $('#generate-scene-image-error').hide();
 
     socket.debug = true
 
@@ -85,8 +101,12 @@ function getGenerateSceneUpdates(
             const lengthDiff = sceneGenerateContent.length - content.length;
             const newContent = content.slice(lengthDiff);
 
+            console.log('content', content);
+            console.log('lengthDiff', lengthDiff)
+            console.log('newContent', newContent)
+
             // TODO: we may be able to smooth the print effect by increasing 0 here
-            if (newContent.length > 0) {
+            if (newContent.length > 0 && Math.abs(lengthDiff) > 0) {
                 await new Promise(resolve => {
                     addTextByDelay(newContent, $generateSceneContent, 1, () => {
                         sceneGenerateBlock = false;

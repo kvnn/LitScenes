@@ -146,6 +146,8 @@ async def send_task_updates(websocket, task_id):
             # TODO: if determine if the celery backend is down / task is not running
             # and handle appropriately
             task_details = AsyncResult(task_id)
+            
+            print(f'task_details for {task_id} is {task_details.result} with state {task_details.state}')
 
             if task_details.ready():
                 logger.info(f'send_task_updates] clearing task result={task_details.result}')

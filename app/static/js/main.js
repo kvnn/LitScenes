@@ -11,7 +11,7 @@ $(document).ready(function() {
     const $chunkContainer = $('#chunk-container');
     const $generateSceneContainer = $('#generate-scene-container');
     const $generateSceneContainerLabel = $('#generate-scene-container-label');
-    const $generateSceneContent = $('#generate_scene_content');
+    const $generateSceneContent = $('#generate-scene-content');
     const $generateSceneError = $('#generate-scene-error');
     const $generateSceneLoader = $('#generate-scene-loader');
     const $generateSceneButton = $('#generate-scene-btn');
@@ -35,10 +35,6 @@ $(document).ready(function() {
         }).always(function() {
             $currentScenesLoader.hide();
         });
-    }
-
-    function refreshImagesFromScene(sceneId) {
-        console.log('refreshImagesFromScene', sceneId);
     }
 
     // for serializing form data into JSON
