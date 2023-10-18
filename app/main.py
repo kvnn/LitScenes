@@ -106,9 +106,14 @@ def generate_scene(data: CreateSceneRequest, db: Session = Depends(get_db)):
     return JSONResponse(content={"error": error})
 
 
-@app.get('/scenes_from_chunk/{chunk_id}')
+@app.get('/scenes/from_chunk/{chunk_id}')
 async def scenes_from_chunk(chunk_id: int, db: Session = Depends(get_db)):
     return crud.get_scenes_by_chunk_id(db, chunk_id)
+
+
+@app.get('/images/from_scene/{scene_id}')
+async def images_from_scene(scene_id: int, db: Session = Depends(get_db)):
+    return crud.get_images_by_scene_id(db, scene_id)
 
 
 @app.websocket("/ws/{task_id}")

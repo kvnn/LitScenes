@@ -1,6 +1,3 @@
-function refreshImagesFromScene(sceneId) {
-    console.log('refreshImagesFromScene', sceneId);
-}
 
 function getGenerateImageUpdates(
     taskId
@@ -30,22 +27,20 @@ function getGenerateImageUpdates(
             console.log('websocket message', msg);
         }
 
-        if (data.task_results.error && data.task_results.error.length) {
+        if (data.task_results && data.task_results.error && data.task_results.error.length) {
             console.error(`Sorry, there was an error generating images: ${data.task_results.error}`);
             $('#generate-scene-image-error').show().find('.message').text(data.task_results.error);
-        }
-        else if (data.task_results && data.task_results.type == 'scene_image_generate' && data.task_results.content) {
-            console.log('scene_image_generate contents');
-            if (data.completed) {
-                console.log("SCENE IMAGE GENERATION FINISHED");
-                refreshImagesFromScene(data.task_results.scene_id);
-            }
+            $sceneImagesLoader.hide();
+        } else if (data.completed) {
+            console.log("SCENE IMAGE GENERATION FINISHED");
+            refreshImagesFromScene(data.task_results.scene_id);
         }
     }
 }
 
 function getGenerateSceneUpdates(
     taskId,
+    chunkId,
     $generateSceneContent,
     $generateSceneError,
     $generateSceneLoader,
@@ -106,18 +101,17 @@ function getGenerateSceneUpdates(
             console.log('newContent', newContent)
 
             // TODO: we may be able to smooth the print effect by increasing 0 here
-            if (newContent.length > 0 && Math.abs(lengthDiff) > 0) {
+            if (newContent.length > 30 && Math.abs(lengthDiff) > 0) {
                 await new Promise(resolve => {
                     addTextByDelay(newContent, $generateSceneContent, 1, () => {
                         sceneGenerateBlock = false;
                         resolve(); // Resolve the promise to continue processing the next message
                     });
                 });
+                sceneGenerateContent = data.task_results.content;
             } else {
                 sceneGenerateBlock = false;
             }
-
-            sceneGenerateContent = data.task_results.content;
 
             // Process the next message in the queue
             await processNextMessage();
@@ -140,15 +134,18 @@ function getGenerateSceneUpdates(
                 if (data.completed) {
                     console.log('SCENE GENERATION FINISHED');
 
-                    // subscribe to image-generation task
-                    sceneImageTaskId = data.task_results.scene_image_task_id;
-                    console.log('calling getGenerateImageDetails', sceneImageTaskId);
-                    getGenerateImageUpdates(sceneImageTaskId);
-
+                    $generateSceneContent.slideUp().html('').slideDown();
 
                     $generateSceneLoader.hide();
                     $generateSceneButton.prop('disabled', false);
-                    refreshScenesFromChunk(chunkId)
+                    refreshScenesFromChunk(chunkId);
+
+                    // subscribe to image-generation task
+                    sceneImageTaskId = data.task_results.scene_image_task_id;
+                    console.log('calling getGenerateImageDetails', sceneImageTaskId);
+                    $sceneImagesLoader.show();
+                    getGenerateImageUpdates(sceneImageTaskId);
+
                 }
             }
             

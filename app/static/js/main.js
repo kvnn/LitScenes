@@ -1,41 +1,82 @@
+let $leftNav;
+let $chunkContainer;
+let $generateSceneContainer;
+let $generateSceneContainerLabel;
+let $generateSceneContent;
+let $generateSceneError;
+let $generateSceneLoader;
+let $generateSceneButton;
+let $currentScenesLoader;
+let $currentScenesError;
+let $sceneImagesLoader;
+let $sceneImagesError;
 
 document.addEventListener('alpine:init', () => {
     // init Alpine data
     Alpine.data('currentScenes', () => ({
         scenes: [],
     }));
+
+    Alpine.data('currentSceneImages', () => ({
+        sceneImages: [],
+    }));
 });
 
-$(document).ready(function() {
-    const $leftNav = $('#left-nav');
-    const $chunkContainer = $('#chunk-container');
-    const $generateSceneContainer = $('#generate-scene-container');
-    const $generateSceneContainerLabel = $('#generate-scene-container-label');
-    const $generateSceneContent = $('#generate-scene-content');
-    const $generateSceneError = $('#generate-scene-error');
-    const $generateSceneLoader = $('#generate-scene-loader');
-    const $generateSceneButton = $('#generate-scene-btn');
-    const $currentScenesLoader = $('#current-scenes-loader');
-    const $currentScenesError = $('#current-scenes-error');
-
-    function refreshScenesFromChunk(chunkId) {
-        $.get(`/scenes_from_chunk/${chunkId}`, function(data) {
-            console.log('data', data);
-            // refresh the Alpine data
-            let event = new CustomEvent("scenes-load", {
-                detail: {
-                    scenes: data
-                }
-            });
-            window.dispatchEvent(event);
-            $currentScenesError.hide();
-        }).fail(function(jqXHR, textStatus, errorThrown) {
-            console.error("refreshScenesFromChunk failed: " + textStatus + ". " + errorThrown);
-            $currentScenesError.show();
-        }).always(function() {
-            $currentScenesLoader.hide();
+function refreshScenesFromChunk(chunkId) {
+    console.log('refreshScenes from', chunkId);
+    $.get(`/scenes/from_chunk/${chunkId}`, function(data) {
+        console.log('data', data);
+        // refresh the Alpine data
+        let event = new CustomEvent("scenes-load", {
+            detail: {
+                scenes: data
+            }
         });
-    }
+        window.dispatchEvent(event);
+        $currentScenesError.hide();
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("refreshScenesFromChunk failed: " + textStatus + ". " + errorThrown);
+        $currentScenesError.show().find('.message').text(errorThrown);
+    }).always(function() {
+        $currentScenesLoader.hide();
+    });
+}
+
+function refreshImagesFromScene(sceneId) {
+    console.log('refreshImagesFromScene', sceneId);
+    $sceneImagesLoader.show();
+    $.get(`/images/from_scene/${sceneId}`, function(data) {
+        console.log('[refreshImagesFromScene] data', data);
+
+        // refresh the Alpine data
+        let event = new CustomEvent("scene-images-load", {
+            detail: {
+                sceneImages: data
+            }
+        });
+        window.dispatchEvent(event);
+
+        $sceneImagesError.hide();
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        $sceneImagesError.show().find('.message').text(errorThrown);
+    }).always(function() {
+        $sceneImagesLoader.hide();
+    });
+}
+
+$(document).ready(function() {
+    $leftNav = $('#left-nav');
+    $chunkContainer = $('#chunk-container');
+    $generateSceneContainer = $('#generate-scene-container');
+    $generateSceneContainerLabel = $('#generate-scene-container-label');
+    $generateSceneContent = $('#generate-scene-content');
+    $generateSceneError = $('#generate-scene-error');
+    $generateSceneLoader = $('#generate-scene-loader');
+    $generateSceneButton = $('#generate-scene-btn');
+    $currentScenesLoader = $('#current-scenes-loader');
+    $currentScenesError = $('#current-scenes-error');
+    $sceneImagesLoader = $('#scene-images-loader');
+    $sceneImagesError = $('#scene-images-error');
 
     // for serializing form data into JSON
     $.fn.serializeObject = function() {
@@ -152,14 +193,20 @@ $(document).ready(function() {
     $('#form-generate-scene').submit(function(evt) {
         evt.preventDefault();
 
+        let chunkId = $generateSceneContainer.data('chunkId');
         $generateSceneLoader.show();
         $generateSceneButton.prop('disabled', true);
+
+        // collapse currently-active scenes
+        $('.accordion-button').addClass('collapsed');
+        $('.accordion-collapse.show').removeClass('show');
+
         // Get the form action (URL to which the form would post)
         var postUrl = $(this).attr("action");
 
         // Serialize form data for the post request
         var data = $(this).serializeObject();
-        data['chunk_id'] = $generateSceneContainer.data('chunkId');
+        data['chunk_id'] = chunkId;
         console.log('data', data);
 
         $.ajax({
@@ -172,6 +219,7 @@ $(document).ready(function() {
                 console.log(response);
                 getGenerateSceneUpdates(
                     response.task_id,
+                    chunkId,
                     $generateSceneContent,
                     $generateSceneError,
                     $generateSceneLoader,

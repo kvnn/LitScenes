@@ -88,7 +88,7 @@ bookView
                 <span class="sr-only">...</span>
             </div>
             <div id="current-scenes-error" class="alert alert-warning hide" role="alert">
-                Sorry, scenes for this chunk could not be loaded.
+                Sorry, scenes for this chunk could not be loaded due to an error: "<span class="message"></span>"
             </div>
             <div x-data="currentScenes" x-on:scenes-load.window="scenes = $event.detail.scenes" id="current-scenes">
                 <div class="accordion">
@@ -112,6 +112,23 @@ bookView
                         </div>
                     </template>
                 </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div id="scene-images-loader" class=" col-md-12 spinner-border text-primary" role="status" style="display:none;">
+                    <span class="sr-only">Images...</span>
+                </div>
+                <div id="scene-images-error" class="alert alert-warning hide" role="alert">
+                        Sorry, images for this scene could not be loaded due to an error : "<span class="message"></span>"
+                </div>
+            </div>
+            <div class="row" x-data="currentSceneImages" x-on:scene-images-load.window="sceneImages = $event.detail.sceneImages" id="current-scene-images">
+                <template x-for="image in sceneImages">
+                    <div class="col-md-6 scene-image-container">
+                        <img x-bind:src=[`/static/img/scenes/${image.filename}`] class="img-fluid" />
+                    </div>
+                </template>
             </div>
         </div>
     </div>

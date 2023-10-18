@@ -1,6 +1,7 @@
 import base64
 import os
 import time
+from uuid import uuid4
 
 from celery import Celery
 import openai
@@ -37,6 +38,7 @@ def generate_scene_image(
     images_path,
     aesthetic_title,
 ):
+    print('one')
     generated_images = []
     img_prompt_prompt = (
         'You are an expert generative-art prompt engineer. For the following scene, please provide a prompt that has a maximum length '
@@ -47,14 +49,21 @@ def generate_scene_image(
     )
     
     img_prompt_prompt = img_prompt_prompt  # dall-e requires < 1000 chars
-
+    print('two')
     # TODO: we could stream this to the UI
     response = openai.ChatCompletion.create(
         model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": img_prompt_prompt}],
         stream=True
     )
-    
+
+    print('three')
+
+    self.update_state(
+        state='PROGRESS',
+        meta={'progress':'finished img_prompt_prompt'}
+    )
+
     img_prompt = ''
     for chunk in response:
         new = chunk['choices'][0]['delta'].get('content')
@@ -108,15 +117,17 @@ def generate_scene_image(
     b64s = [base64.b64decode(obj['b64_json']) for obj in image_response['data']]
 
     for idx, b64_img in enumerate(b64s):
-        img_path = f'{images_path}/{scene_title}-{aesthetic_title}-{idx+1:02d}.png'
+        filename = f'{scene_id}-{uuid4()}.png'
+        img_path = f'{images_path}/{filename}'
 
         with open(img_path, "wb") as img_file:
             img_file.write(b64_img)
 
         new_img = create_scene_image(
             db,
+            scene_id=scene_id,
             scene_image_prompt_id=new_img_prompt.id,
-            image_path=img_path
+            filename=filename
         )
         generated_images.append({
             'id': new_img.id,
@@ -195,7 +206,7 @@ def generate_scene(
         title = content[:20]
         print(f'[error] ValueError for {prompt[:20]}... with error {e}')
     
-    title = title[:20]  # just in case it's too long
+    title = title[:50]  # just in case it's too long
 
     new_scene = create_scene(
         db = db,

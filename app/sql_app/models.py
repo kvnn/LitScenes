@@ -100,6 +100,7 @@ class SceneImage(Base, TimestampMixin):
     __tablename__ = 'scene_images'
     
     id = Column(Integer, primary_key=True)
+    scene_id = Column(Integer, ForeignKey('scenes.id'), nullable=False)
     scene_image_prompt_id = Column(Integer, ForeignKey('scene_image_prompts.id'), nullable=False)
-    image_path = Column(String(255), nullable=False)
+    filename = Column(String(255), nullable=False)
 
