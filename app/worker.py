@@ -15,7 +15,7 @@ from sql_app.crud import (
     create_scene_image_prompt
 )
 from sql_app.database import SessionLocal
-from sql_app.seed_values import scene_prompt_title_separator
+from sql_app.seed_values import scene_prompt_title_separator, scene_prompt_format, scene_prompt_max_length
 
 
 db = SessionLocal()
@@ -42,24 +42,19 @@ def generate_scene_image(
     try:
         generated_images = []
         img_prompt_prompt = (
-            'You are an expert generative-art prompt engineer. For the following scene, please provide a prompt that has a maximum length '
-            f'of 900 characters and that will generate a fitting image for the following scene: {scene_content}. It is very important that we avoid'
-            'triggering the "safety system" exception (e.g. "Your request was rejected as a result of our safety system").'
-            'So if you see a potential for that to be triggered, please take a deep breath and think of a way to communicate'
-            'that this is just for a fictional literature project.'
+            f'You are an expert generative-art prompt engineer. For the following scene, please provide a prompt that has a maximum length '
+            f'of 900 characters and that will generate a fitting image for the following scene: {scene_content}. '
+            f'Keep in mind that it is very important that we avoid '
+            f'triggering the "safety system" exception (e.g. "Your request was rejected as a result of our safety system").'
         )
         
         img_prompt_prompt = img_prompt_prompt  # dall-e requires < 1000 chars
-        print('two')
         # TODO: we could stream this to the UI
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": img_prompt_prompt}],
             stream=True
         )
-
-        print('three')
-
         self.update_state(
             state='PROGRESS',
             meta={'progress':'finished img_prompt_prompt'}
@@ -70,11 +65,9 @@ def generate_scene_image(
             new = chunk['choices'][0]['delta'].get('content')
             if new:
                 img_prompt += new
-                print(f'{new}')
                 meta = {
                     'img_prompt': img_prompt
                 }
-                print(f'''updating state with meta={meta}''')
                 self.update_state(
                     state='PROGRESS',
                     meta=meta
@@ -139,7 +132,6 @@ def generate_scene_image(
                 'type': 'scene_image_generate',
                 'images': generated_images
             }
-            print(f'''updating state with meta={meta}''')
             self.update_state(
                 state='PROGRESS',
                 meta=meta
@@ -168,7 +160,7 @@ def generate_scene(
     self,
     images_path,
     prompt,
-    prompt_max_length,
+    chunk_content,
     aesthetic_title,
     aesthetic_id,
     chunk_id,
@@ -177,6 +169,12 @@ def generate_scene(
     try:
         print(f'generate_scene_task for {prompt}')
 
+        prompt += f'\n It is important to keep your output to a maximum of {scene_prompt_max_length} letters. '
+        prompt += f'\n Also generate a concise, captivating title. '
+        prompt += f'\n Please return the content in this format: {scene_prompt_format}. '
+        prompt += f'\n Here is the content: {chunk_content}'
+
+        print(f'scene_prompt={prompt}')
         response = openai.ChatCompletion.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
@@ -193,7 +191,7 @@ def generate_scene(
                         'new': new,
                         'type': 'scene_generate',
                         'content': content,
-                        'progress': (len(content) / prompt_max_length) if prompt_max_length else 'unknown'
+                        'progress': (len(content) / scene_prompt_max_length) if scene_prompt_max_length else 'unknown'
                     }
                 )
                 print(f'{new}')
@@ -204,11 +202,12 @@ def generate_scene(
                 'new': new,
                 'type': 'scene_generate',
                 'content': content,
-                'progress': (len(content) / prompt_max_length) if prompt_max_length else 'unknown'
+                'progress': (len(content) / scene_prompt_max_length) if scene_prompt_max_length else 'unknown'
             }
         )
-        
-        print(f'[generate_scene] content={content}')
+
+        print(f'scene_content={content}')
+
         try:
             title, content = content.split(scene_prompt_title_separator)
         except ValueError as e:
@@ -217,6 +216,7 @@ def generate_scene(
         
         title = title[:50]  # just in case it's too long
 
+        # Save to DB
         new_scene = create_scene(
             db = db,
             title = title,
@@ -226,6 +226,7 @@ def generate_scene(
             scene_prompt_id=scene_prompt_id
         )
 
+        # Generaet Imagery
         scene_image_task = generate_scene_image.delay(
             chunk_id=chunk_id,
             scene_id=new_scene.id,
@@ -235,7 +236,9 @@ def generate_scene(
             aesthetic_title=aesthetic_title,
         )
         scene_image_task_id = scene_image_task.id
+
         print(f'called scene_image_task, scene_image_task.id={scene_image_task_id}')
+
         redis_client.set(scene_image_task_id, 'init')
         
         return {
@@ -244,7 +247,7 @@ def generate_scene(
             'new': new,
             'type': 'scene_generate',
             'content': content,
-            'progress': (len(content) / prompt_max_length) if prompt_max_length else 'unknown'
+            'progress': (len(content) / scene_prompt_max_length) if scene_prompt_max_length else 'unknown'
         }
     except Exception as err:
         print (f'[error] generate_scene failed for with error {err}')

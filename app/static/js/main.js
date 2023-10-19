@@ -20,6 +20,10 @@ document.addEventListener('alpine:init', () => {
     Alpine.data('currentSceneImages', () => ({
         sceneImages: [],
     }));
+
+    Alpine.data('promptTemplates', () => ({
+        templates: [],
+    }));
 });
 
 function refreshScenesFromChunk(chunkId) {
@@ -64,6 +68,26 @@ function refreshImagesFromChunk(chunkId) {
     });
 }
 
+function refreshPromptTemplates() {
+    console.log('refreshpromptTemplates');
+    $('#create-prompt-template-loader').show();
+    $.get(`/prompt_templates`, function(data) {
+        console.log('data', data);
+        // refresh the Alpine data
+        let event = new CustomEvent("prompt-templates-load", {
+            detail: {
+                templates: data
+            }
+        });
+        window.dispatchEvent(event);
+    }).fail(function(jqXHR, textStatus, errorThrown) {
+        console.error("refreshPromptTemplates failed: " + textStatus + ". " + errorThrown);
+        $currentScenesError.show().find('.message').text(`There was an error loading prompt templates: ${errorThrown}`);
+    }).always(function() {
+        $('#create-prompt-template-loader').hide();
+    });
+}
+
 
 $(document).ready(function() {
     $leftNav = $('#left-nav');
@@ -78,6 +102,8 @@ $(document).ready(function() {
     $currentScenesError = $('#current-scenes-error');
     $sceneImagesLoader = $('#scene-images-loader');
     $sceneImagesError = $('#scene-images-error');
+
+    refreshPromptTemplates();
 
     // for serializing form data into JSON
     $.fn.serializeObject = function() {
@@ -131,6 +157,45 @@ $(document).ready(function() {
     $('#configSaveChunkSize').click(function(evt) {
         evt.preventDefault();
         alert('Not Implemented Yet');
+    });
+
+    /*
+     * PROMPT TEMPLATES
+    */
+   $('#create-prompt-template-form').submit(function(evt) {
+        evt.preventDefault();
+
+        $('#generate-scene-success').hide();
+        $('#create-prompt-template-loader').show();
+        $('#create-prompt-template-btn').prop('disabled', true);
+
+        // Get the form action (URL to which the form would post)
+        var postUrl = $(this).attr("action");
+
+        // Serialize form data for the post request
+        var data = $(this).serializeObject();
+        console.log('data', data);
+
+        $.ajax({
+            type: "POST",
+            url: postUrl,
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(data),
+            success: function(response) {
+                $('#create-prompt-template-error').hide();
+                refreshPromptTemplates();
+                $('#generate-scene-success').show();
+            }
+        }).fail(function(jqXHR, textStatus, errorThrown) {
+            // Handle error during the request
+            console.error("Request failed: ", jqXHR , textStatus + ". " + errorThrown);
+            $('#generate-scene-success').hide();
+            $('#create-prompt-template-error').show().find('.message').text(jqXHR.responseJSON.detail);
+        }).always(function() {
+            $('#create-prompt-template-loader').hide();
+            $('#create-prompt-template-btn').prop('disabled', false);
+        });
     });
 
     /*
@@ -192,7 +257,7 @@ $(document).ready(function() {
     /*
      * Generate Scene
     */
-    $('#form-generate-scene').submit(function(evt) {
+    $('#generate-scene-form').submit(function(evt) {
         evt.preventDefault();
 
         let chunkId = $generateSceneContainer.data('chunkId');
@@ -231,16 +296,15 @@ $(document).ready(function() {
             }
         }).fail(function(jqXHR, textStatus, errorThrown) {
             // Handle error during the request
-            $generateSceneError.show();
+            $generateSceneError.show().find('.message').text(errorThrown);
+            $generateSceneLoader.hide();
+            $generateSceneButton.prop('disabled', false);
             console.error("Request failed: " + textStatus + ". " + errorThrown);
             var errorMsg = "Request failed: " + textStatus;
             if (errorThrown) {
                 errorMsg += ". " + errorThrown;
             }
-            alert(errorMsg)
         }).always(function() {
-            // $sceneGenerationLoader.hide();
-            // $('#scene-generate-btn').prop('disabled', true);
         });
     });
 

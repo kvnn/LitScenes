@@ -60,6 +60,17 @@ h2.book-title {
     width: 80%;
 }
 
+    #generate-scene-form label {
+        display: block;
+    }
+
+        #generate-scene-form label a { 
+            margin-top: 5px;
+            margin-right: 7px;
+            text-decoration: none;
+            font-size: 0.8em;
+        }
+
 
 /* Config Nav */
 

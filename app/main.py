@@ -5,7 +5,7 @@ import os
 from typing import List
 
 from celery.result import AsyncResult
-from fastapi import Depends, FastAPI, Body, Request, WebSocket, WebSocketDisconnect
+from fastapi import Depends, FastAPI, Body, Request, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -19,7 +19,7 @@ from services.scene import SceneService
 
 from sql_app import crud, models, schemas, seed_values as seeds
 from sql_app.database import get_db, engine, SessionLocal
-from sql_app.schemas import ImportGutenburgBookRequest, CreateSceneRequest
+from sql_app.schemas import ImportGutenburgBookRequest, CreateSceneRequest, CreatePromptTemplateRequest
 
 
 logging.basicConfig(level=logging.INFO)
@@ -39,9 +39,9 @@ print(f'settings={settings}')
 
 ''' Seed our db '''
 db = SessionLocal()
-if not db.query(models.ScenePrompt).first():
+if not db.query(models.ScenePromptTemplate).first():
     for key, scene_prompt in seeds.scene_prompts.items:
-        db_item = models.ScenePrompt(
+        db_item = models.ScenePromptTemplate(
             title=scene_prompt['title'],
             content=scene_prompt['content'],
             max_length=scene_prompt['max_length']
@@ -68,11 +68,9 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 
 @app.get("/", response_class=HTMLResponse)
 async def root(request: Request, db: Session = Depends(get_db)):
-    books = crud.get_books(db)
-    logger.info(f'AHHH HERE ARE MY books={books}')
     return templates.TemplateResponse("base.html", {
         "request": request,
-        "books": books
+        "books": crud.get_books(db)
     })
 
 
@@ -84,7 +82,6 @@ def book(request: Request, id: int, db: Session = Depends(get_db)):
             "request": request,
             'books': books,
             'book': crud.get_book_by_id(db, id),
-            'scene_prompts': crud.get_scene_prompts(db),
             'scene_aesthetics': crud.get_scene_aesthetics(db)
         })
 
@@ -104,6 +101,25 @@ def generate_scene(data: CreateSceneRequest, db: Session = Depends(get_db)):
     if task_id:
         return JSONResponse(content={"task_id": task_id})
     return JSONResponse(content={"error": error})
+
+
+@app.get('/prompt_templates')
+async def get_prompt_templates(db: Session = Depends(get_db)):
+    return crud.get_prompt_templates(db)
+
+@app.post('/prompt_templates')
+def create_prompt_template(data: CreatePromptTemplateRequest, db: Session = Depends(get_db)):
+    try:
+        assert len(data.title) > 3
+        assert len(data.content) > 6
+        SceneService.get_prompt_template_output(data.content, 'title', 'aesthetic')
+    except Exception as err:
+        print(f'Error formatting prompt: {err}')
+        raise HTTPException(status_code=404, detail="Error formatting prompt. Title must be 4 characters or more and content must be 6 or more. Invalid template tags will also cause error.")
+
+    prompt_template = crud.create_prompt_template(db=db, title=data.title, content=data.content)
+
+    return prompt_template
 
 
 @app.get('/scenes/from_chunk/{chunk_id}')

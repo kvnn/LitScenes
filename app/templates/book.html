@@ -37,17 +37,17 @@ bookView
     <div class="offcanvas-body">
       <!-- CREATE SCENE -->
       <div class="dropdown mt-12">
-        <a class="btn btn-secondary mb-2" data-bs-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+        <a class="btn btn-secondary mb-2" data-bs-toggle="collapse" href="#generate-scene-form-container" role="button" aria-expanded="false" aria-controls="generate-scene-form-container">
             Generate a Scene
             <i class="bi bi-chevron-down"></i>
         </a>
-        <div class="collapse mb-3" id="collapseExample">
+        <div class="collapse mb-3" id="generate-scene-form-container">
             <div class="card card-body">
                 <div class="row">
-                    <form id="form-generate-scene" class="form col col-md-3" action="/scenes/generate">
+                    <form id="generate-scene-form" class="form col col-md-3" action="/scenes/generate">
                         <div class="row mb-3">
                             <div class="col-md-12 mb-1">
-                                <label class="form-label">Aesthetic</label>
+                                <label class="form-label">Imagery Style</label>
                                 <select class="form-select" name="aesthetic_id">
                                     {% for aesthetic in scene_aesthetics %}
                                     <option value="{{ aesthetic.id }}">{{ aesthetic.title }}</option>
@@ -55,11 +55,12 @@ bookView
                                 </select>
                             </div>
                             <div class="col-md-12">
-                                <label class="form-label">Prompt Style</label>
-                                <select class="form-select" name="prompt_id">
-                                    {% for prompt in scene_prompts %}
-                                    <option value="{{ prompt.id }}">{{ prompt.title }}</option>
-                                    {% endfor %}
+                                <label class="form-label">Prompt Template <a href="#" class="float-end" data-bs-toggle="modal"
+                                    data-bs-target="#create-prompt-template-modal">+ new</a></label>
+                                <select class="form-select" name="prompt_id" x-data="promptTemplates" x-on:prompt-templates-load.window="templates = $event.detail.templates">
+                                    <template x-for="template in templates">
+                                        <option x-bind:value=template.id x-text=template.title></option>
+                                    </template>
                                 </select>
                             </div>
                         </div>
@@ -69,8 +70,8 @@ bookView
                         <button type="submit" id="generate-scene-btn" type="button" class="btn btn-primary float-end">Generate</button>
                     </form>
                     <div class="col col-md-9">
-                        <div id="#generate-scene-error" class="alert alert-warning hide" role="alert">
-                            Sorry, scene generation encountered an error.
+                        <div id="generate-scene-error" class="alert alert-warning hide" role="alert">
+                            Sorry, scene generation encountered an error. <span class="message"></span>
                         </div>
                         <div id="generate-scene-image-error" class="alert alert-warning hide" role="alert">
                             Sorry, scene image could not be generated due to an error: "<span class="message"></span>"
@@ -129,6 +130,53 @@ bookView
                         <img x-bind:src=[`/static/img/scenes/${image.filename}`] class="img-fluid" />
                     </div>
                 </template>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block end_content %}
+<div id="create-prompt-template-modal" class="modal fade" id="importHelp" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>
+                    This template will define the initial prompt to the chatbot which will generate a chain of intermediate prompts for
+                    generating scene content and imagery from book chunks.
+                </p>
+                <p>
+                    You can optionally use the <code>{book_title}</code> and <code>{aesthetic}</code> variables to print their values in the prompt.
+                </p>
+                <p>
+                    We will add the rest!
+                </p>
+                <div id="create-prompt-template-loader" class="spinner-border text-primary" role="status" style="display:none;">
+                    <span class="sr-only">...</span>
+                </div>
+                <div id="generate-scene-success" class="alert alert-success hide" role="alert">
+                    Success! You can now select this prompt.
+                </div>
+                <div id="create-prompt-template-error" class="alert alert-warning hide" role="alert">
+                    Sorry, there was an error: <span class="message"></span>
+                </div>
+
+                <form id="create-prompt-template-form" class="form" action="/prompt_templates">
+                    <div class="row mb-3">
+                        <div class="col-md-12 mb-1">
+                            <label class="form-label">Title</label>
+                            <input placeholder="Sci-Fi Twist" class="form-control" type="text" name="title">
+                        </div>
+                        <div class="col-md-12">
+                            <textarea class="form-control" rows="3" name="content" placeholder="Please regenerate the following contents from {book_name}, with a sci-fi + {aesthetic} twist."></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" id="create-prompt-template-btn" type="button" class="btn btn-primary float-end">Create</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

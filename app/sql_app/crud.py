@@ -5,7 +5,7 @@ from . import models, schemas
 
 ''' Books'''
 def get_books(db: Session):
-    return db.query(models.Book).all()
+    return db.query(models.Book).order_by(models.Book.title.desc()).all()
 
 def get_book_by_id(db: Session, id: int):
     return db.query(models.Book).filter(models.Book.id == id).first()
@@ -29,9 +29,6 @@ def create_chunk(db: Session, chunk: schemas.ChunkCreate):
     return db_chunk
 
 ''' Scenes '''
-def get_scene_prompts(db: Session):
-    return db.query(models.ScenePrompt).all()
-
 def get_scenes_by_chunk_id(db: Session, chunk_id: int):
     return db.query(models.Scene).filter(models.Scene.chunk_id == chunk_id).order_by(models.Scene.dateadded.desc()).all()
 
@@ -52,11 +49,24 @@ def create_scene(db: Session, title: str, content: str, aesthetic_id=int, chunk_
     return db_scene
 
 ''' Scene Prompts and Images '''
+def get_prompt_templates(db: Session):
+    return db.query(models.ScenePromptTemplate).order_by(models.ScenePromptTemplate.title).all()    
+
+def create_prompt_template(db: Session, title: str, content: str):
+    prompt_template = models.ScenePromptTemplate(
+        title=title,
+        content=content
+    )
+    db.add(prompt_template)
+    db.commit()
+    db.refresh(prompt_template)
+    return prompt_template
+
 def get_images_by_scene_id(db: Session, scene_id:int):
-    return db.query(models.SceneImage).filter(models.SceneImage.scene_id == scene_id).all()
+    return db.query(models.SceneImage).filter(models.SceneImage.scene_id == scene_id).order_by(models.SceneImage.dateadded.desc()).all()
 
 def get_images_by_chunk_id(db: Session, chunk_id:int):
-    return db.query(models.SceneImage).filter(models.SceneImage.chunk_id == chunk_id).all()
+    return db.query(models.SceneImage).filter(models.SceneImage.chunk_id == chunk_id).order_by(models.SceneImage.dateadded.desc()).all()
 
 def create_scene_image_prompt(db: Session, scene_id: int, content: str):
     new = models.SceneImagePrompt(

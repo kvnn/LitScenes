@@ -39,16 +39,6 @@ class Book(Base, TimestampMixin):
             'dateadded': self.dateadded,
             'dateupdated': self.dateupdated,
         }
-    
-    # @classmethod
-    # def get_by_id(cls, id):
-    #     return db.session.execute(db.select(Book).where(Book.id == id)).scalar()
-
-    # @classmethod
-    # def get_list(cls):
-    #     return db.query(Book).all()
-
-
 
 # Define the Chunk model
 class Chunk(Base, TimestampMixin):
@@ -67,10 +57,11 @@ class SceneAesthetic(Base, TimestampMixin):
     title = Column(String(255), nullable=False)
 
 
-class ScenePrompt(Base, TimestampMixin):
+''' TODO: Rename to ScenePromptTemplate '''
+class ScenePromptTemplate(Base, TimestampMixin):
     __tablename__ = 'scene_prompts'
     id = Column(Integer, primary_key=True)
-    title = Column(String(255), nullable=False)
+    title = Column(String(255), nullable=False, unique=True)
     max_length = Column(Integer, nullable=True, default=1800)
     content = Column(Text, nullable=False)
     

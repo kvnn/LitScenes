@@ -97,16 +97,18 @@
     <!-- Gutenburg Import Modal -->
     <div class="modal fade" id="importHelp" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-body">
-                <p>Find books to import at <a target="_blank" href='https://www.gutenberg.org/browse/scores/top'> Project Gutenberg</a>.</p>
-                <p>Only the full .txt urls are supported. For example, <code>https://www.gutenberg.org/cache/epub/164/pg164.txt</code></p>
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>Find books to import at <a target="_blank" href='https://www.gutenberg.org/browse/scores/top'> Project Gutenberg</a>.</p>
+                    <p>Only the full .txt urls are supported. For example, <code>https://www.gutenberg.org/cache/epub/164/pg164.txt</code></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
         </div>
     </div>
+
+    {% block end_content %}{% endblock %}
 </body>
 </html>

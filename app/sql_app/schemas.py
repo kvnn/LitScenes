@@ -27,3 +27,7 @@ class CreateSceneRequest(BaseModel):
     chunk_id: int
     prompt_id: int
     aesthetic_id: int
+
+class CreatePromptTemplateRequest(BaseModel):
+    title: str
+    content: str

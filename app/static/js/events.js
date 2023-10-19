@@ -126,7 +126,11 @@ function getGenerateSceneUpdates(
             data = msg.data && JSON.parse(msg.data);
 
             // Scene Generation Updates
-            if (data.task_results && data.task_results.type == 'scene_generate' && data.task_results.content) {
+            if (data.task_results && data.task_results.error && data.task_results.error.length) {
+                $generateSceneError.show().find('.message').text(data.task_results.error);
+                $generateSceneButton.prop('disabled', false);
+                $generateSceneLoader.hide();
+            } else if (data.task_results && data.task_results.type == 'scene_generate' && data.task_results.content) {
                 messageQueue.push(data);
                 if (!sceneGenerateBlock) {
                     await processNextMessage();
