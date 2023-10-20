@@ -13,6 +13,10 @@ let $sceneImagesError;
 
 document.addEventListener('alpine:init', () => {
     // init Alpine data
+    Alpine.data('recentScenes', () => ({
+        scenes: [],
+    }));
+
     Alpine.data('currentScenes', () => ({
         scenes: [],
     }));
@@ -25,6 +29,19 @@ document.addEventListener('alpine:init', () => {
         templates: [],
     }));
 });
+
+function refreshRecentScenes() {
+    $.get('/scenes/recent', function(data){
+        console.log('recentScenes', data);
+        // refresh the Alpine data
+        let event = new CustomEvent("recent-scenes-load", {
+            detail: {
+                scenes: data
+            }
+        });
+        window.dispatchEvent(event);
+    });
+}
 
 function refreshScenesFromChunk(chunkId) {
     console.log('refreshScenes from', chunkId);
@@ -88,6 +105,53 @@ function refreshPromptTemplates() {
     });
 }
 
+function checkIfChunkShouldOpen() {
+    var match = window.location.pathname.match(/\/books\/(\d+)/);
+    var hash = window.location.hash.match(/#chunk-(\d+)/);
+
+    if (match && hash) {
+        var chunkId = hash[1];
+        console.log("Chunk ID:", `#card-chunk-${chunkId}`);
+        let $chunkCard = $(`#card-chunk-${chunkId}`);
+        toggleActivateChunk($chunkCard)
+    }
+}
+
+function toggleActivateChunk($chunk) {
+    // deactivate
+    if ($chunk.hasClass('active')) {
+        $chunk.removeClass('active');
+        $generateSceneContainer.removeClass('show');
+        $leftNav.width('auto');
+        $chunkContainer.width('auto');
+    // activate
+    } else {
+
+        $('.card.chunk.active').removeClass('active');
+        $chunk.addClass('active');
+        $generateSceneContainer.addClass('show');
+        $generateSceneContainer.data('chunkId', $chunk.data('chunkId'));
+        $chunkContainer.width(315);
+        console.log('$chunkContainer', $chunkContainer);
+        $generateSceneContainerLabel.text($chunk.find('.chunk-title').text());
+        
+
+        $leftNav.animate({
+            width: 0
+        }, 500, function(){
+            $('html, body').animate({
+                scrollTop: $chunk.position().top - 50
+            }, 500);
+        });
+
+        $currentScenesLoader.show();
+
+        
+        const chunkId = $chunk.data('chunkId');
+        refreshScenesFromChunk(chunkId);
+        refreshImagesFromChunk(chunkId);
+    }
+}
 
 $(document).ready(function() {
     $leftNav = $('#left-nav');
@@ -103,7 +167,9 @@ $(document).ready(function() {
     $sceneImagesLoader = $('#scene-images-loader');
     $sceneImagesError = $('#scene-images-error');
 
+    refreshRecentScenes();
     refreshPromptTemplates();
+    checkIfChunkShouldOpen();
 
     // for serializing form data into JSON
     $.fn.serializeObject = function() {
@@ -203,42 +269,7 @@ $(document).ready(function() {
     */
     const defaultCardWidth = '17rem';
     let $chunks = $('.card.chunk');
-    
-    function toggleActivateChunk($chunk) {
-        // deactivate
-        if ($chunk.hasClass('active')) {
-            $chunk.removeClass('active');
-            $generateSceneContainer.removeClass('show');
-            $leftNav.width('auto');
-            $chunkContainer.width('auto');
-        // activate
-        } else {
 
-            $('.card.chunk.active').removeClass('active');
-            $chunk.addClass('active');
-            $generateSceneContainer.addClass('show');
-            $generateSceneContainer.data('chunkId', $chunk.data('chunkId'));
-            $chunkContainer.width(315);
-            console.log('$chunkContainer', $chunkContainer);
-            $generateSceneContainerLabel.text($chunk.find('.chunk-title').text());
-            
-
-            $leftNav.animate({
-                width: 0
-            }, 500, function(){
-                $('html, body').animate({
-                    scrollTop: $chunk.position().top - 50
-                }, 500);
-            });
-
-            $currentScenesLoader.show();
-
-            
-            const chunkId = $chunk.data('chunkId');
-            refreshScenesFromChunk(chunkId);
-            refreshImagesFromChunk(chunkId);
-        }
-    }
 
     if ($chunks.length) {
         // toggleActivateChunk($chunks.eq(0));

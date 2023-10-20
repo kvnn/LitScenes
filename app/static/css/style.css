@@ -19,6 +19,16 @@ h2.book-title {
         margin: 0 10px 20px;
     }
 
+    .card.chunk.recent-scene {
+        padding: 0px;
+    }
+        .card.chunk.recent-scene .card-body {
+            height: auto;
+            padding: 13px 12px;
+            text-decoration: none;
+            color: #333;
+        }
+
     .card.chunk.active {
         border: 1px solid #007bff;
     }

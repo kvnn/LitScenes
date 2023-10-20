@@ -11,11 +11,11 @@ bookView
 <div class="row">
     <div id="chunk-container" class="chunk-container">
         {% for chunk in book.chunks %}
-            <div class="card chunk" data-chunk-id="{{ chunk.id }}">
+            <div class="card chunk" data-chunk-id="{{ chunk.id }}" id="card-chunk-{{ chunk.id }}">
                 <div class="card-body">
                 <h5 class="card-title chunk-title">#{{ chunk.sequence_number }}</h5>
                 <p class="card-text">{{ chunk.content }}</p>
-                </div>
+            </div>
                 <div class="chunk-tools">
                     <!-- <a href="#" data-chunk-id="{{ chunk.id }}" class="chunk-generate-image">
                         <i class="bi bi-images"></i>
@@ -37,7 +37,7 @@ bookView
     <div class="offcanvas-body">
       <!-- CREATE SCENE -->
       <div class="dropdown mt-12">
-        <a class="btn btn-secondary mb-2" data-bs-toggle="collapse" href="#generate-scene-form-container" role="button" aria-expanded="false" aria-controls="generate-scene-form-container">
+        <a class="btn btn-secondary mb-4" data-bs-toggle="collapse" href="#generate-scene-form-container" role="button" aria-expanded="false" aria-controls="generate-scene-form-container">
             Generate a Scene
             <i class="bi bi-chevron-down"></i>
         </a>
@@ -85,6 +85,7 @@ bookView
 
     <div class="row">
         <div class="col-md-6">
+            <h5>Scene Generations</h3>
             <div id="current-scenes-loader" class="spinner-border text-primary" role="status" style="display:none;">
                 <span class="sr-only">...</span>
             </div>
@@ -116,6 +117,7 @@ bookView
             </div>
         </div>
         <div class="col-md-6">
+            <h5>Scene Imagery</h3>
             <div class="row">
                 <div id="scene-images-loader" class=" col-md-12 spinner-border text-primary" role="status" style="display:none;">
                     <span class="sr-only">Images...</span>
@@ -126,9 +128,10 @@ bookView
             </div>
             <div class="row" x-data="currentSceneImages" x-on:scene-images-load.window="sceneImages = $event.detail.sceneImages" id="current-scene-images">
                 <template x-for="image in sceneImages">
-                    <div class="col-md-6 scene-image-container">
-                        <img x-bind:src=[`/static/img/scenes/${image.filename}`] class="img-fluid" />
-                    </div>
+                    <div class="col-md-6 scene-image-container mb-2">
+                        <a href="#" data-bs-toggle="modal" x-bind:data-bs-target=[`#scene-image-${image.id}`]>
+                            <img x-bind:src=[`/static/img/scenes/${image.filename}`] class="img-fluid" />
+                        </a>
                 </template>
             </div>
         </div>
@@ -138,7 +141,7 @@ bookView
 {% endblock %}
 
 {% block end_content %}
-<div id="create-prompt-template-modal" class="modal fade" id="importHelp" tabindex="-1" aria-hidden="true">
+<div id="create-prompt-template-modal" class="modal fade" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
@@ -182,4 +185,21 @@ bookView
     </div>
 </div>
 
+<div class="row" x-data="currentSceneImages" x-on:scene-images-load.window="sceneImages = $event.detail.sceneImages" id="current-scene-images">
+    <template x-for="image in sceneImages">
+        <div x-bind:id=[`scene-image-${image.id}`] class="modal fade modal-lg text-center" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <img x-bind:src=[`/static/img/scenes/${image.filename}`] class="img-fluid" />
+                    <div class="modal-footer">
+                        <a class="float-start" x-bind:download=[`LitScenes.AI_${image.filename}`] x-bind:href=[`/static/img/scenes/${image.filename}`] target="#">
+                            <button type="button" class="btn btn-primary"><i class="bi bi-download"></i> Download</button></a>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

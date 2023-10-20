@@ -85,6 +85,10 @@ def book(request: Request, id: int, db: Session = Depends(get_db)):
             'scene_aesthetics': crud.get_scene_aesthetics(db)
         })
 
+@app.get('/scenes/recent')
+async def recent_scenes(db: Session = Depends(get_db)):
+    scenes = crud.get_recent_scenes(db)
+    return JSONResponse(content=scenes)
 
 @app.post('/books/import')
 async def import_book(data: ImportGutenburgBookRequest, db: Session = Depends(get_db)):

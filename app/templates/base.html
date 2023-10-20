@@ -33,11 +33,12 @@
         <div class="container-fluid">
             <div class="col-sm-4">
                 <form id="form_book_import" class="d-flex" action="/books/import" method="post">
+                    <a href="/" class="navbar-brand"><i class="bi bi-book-half"></i> LitScenes</a>
+                    <input class="form-control mr-sm-2" type="url" placeholder="Project Gutenberg URL" name="book_url" required>
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Import</button>
                     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#importHelp">
                         ?
                     </button>
-                    <input class="form-control mr-sm-2" type="url" placeholder="Project Gutenberg URL" name="book_url" required>
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Import</button>
                     <div id="loadingSpinner" class="spinner-border text-primary" role="status" style="display:none;">
                         <span class="sr-only">Loading...</span>
                     </div>
@@ -89,7 +90,25 @@
             <!-- Main content area -->
             <main role="main" class="col-md-9">
                 <!-- Grid of book chunks will go here -->
-                {% block content %}{% endblock %}
+                {% block content %}
+                
+                <div class="col-md-12 float-end">
+                    <h4>Latest</h4>
+                    <div class="row" x-data="recentScenes" x-on:recent-scenes-load.window="scenes = $event.detail.scenes">
+                        <template x-for="scene in scenes">
+                            <div class="card chunk recent-scene" >
+                                <a x-bind:href=[`/books/${scene.book_id}/#chunk-${scene.chunk_id}`]>
+                                    <img x-bind:src=[`/static/img/scenes/${scene.scene_image_filename}`] class="img-fluid" />
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title" x-text=scene.scene_title></h5>
+                                    <p class="card-text" x-text=[`${scene.scene_content}...`]></p>
+                                </div>
+                        </template>
+                    </div>
+                </div>
+
+                {% endblock %}
             </main>
         </div>
     </div>

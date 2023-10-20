@@ -1,4 +1,8 @@
+import json
+
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
+from sqlalchemy.sql import text
 
 from . import models, schemas
 
@@ -29,6 +33,30 @@ def create_chunk(db: Session, chunk: schemas.ChunkCreate):
     return db_chunk
 
 ''' Scenes '''
+def get_recent_scenes(db: Session):
+    query = text('''SELECT DISTINCT ON (s.id)
+                s.id as scene_id,
+                si.filename AS scene_image_filename,
+                s.chunk_id,
+                c.book_id,
+                s.title as scene_title,
+                SUBSTRING(s.content FROM 1 FOR 200) as scene_content
+            FROM
+                scenes s
+            JOIN
+                scene_images si ON s.id = si.scene_id
+            JOIN
+                chunks c ON s.chunk_id = c.id
+            JOIN
+                books b ON c.book_id = b.id
+            ORDER BY
+                s.id, s.dateadded DESC
+            LIMIT 20;''')
+
+    scenes = db.execute(query).mappings().all()
+
+    return jsonable_encoder(scenes)
+
 def get_scenes_by_chunk_id(db: Session, chunk_id: int):
     return db.query(models.Scene).filter(models.Scene.chunk_id == chunk_id).order_by(models.Scene.dateadded.desc()).all()
 
