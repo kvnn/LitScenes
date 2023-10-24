@@ -31,7 +31,7 @@ app = FastAPI()
 
 templates = Jinja2Templates(directory="templates")
 
-redis_url = os.environ.get("REDIS_URL")
+redis_url = settings.redis_url
 redis_client = redis.from_url(redis_url)
 
 print(f'settings={settings}')

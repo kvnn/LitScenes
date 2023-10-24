@@ -20,12 +20,12 @@ from sql_app.seed_values import scene_prompt_title_separator, scene_prompt_forma
 
 db = SessionLocal()
 
-redis_url = os.environ["CELERY_BROKER_URL"]
+redis_url = settings.redis_url
 redis_client = redis.from_url(redis_url)
 
 celery = Celery(__name__)
-celery.conf.broker_url = os.environ["CELERY_BROKER_URL"]
-celery.conf.result_backend = os.environ["CELERY_RESULT_BACKEND"]
+celery.conf.broker_url = settings.celery_broker_url
+celery.conf.result_backend = settings.celery_result_backend
 
 openai.api_key = settings.openai_api_key
 

@@ -5,11 +5,12 @@ from worker import generate_scene
 
 import redis
 
+from config import settings
 from sql_app.models import Chunk, ScenePromptTemplate, SceneAesthetic
 from sql_app.schemas import CreateSceneRequest
 from sql_app.seed_values import scene_prompt_format
 
-redis_url = os.environ.get("REDIS_URL")
+redis_url = settings.redis_url
 redis_client = redis.from_url(redis_url)
 
 current_directory = Path(__file__).parent
