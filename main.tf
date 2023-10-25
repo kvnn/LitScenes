@@ -3,9 +3,6 @@ terraform {
     aws = {
       source = "hashicorp/aws"
     }
-    postgresql = {
-      source = "cyrilgdn/postgresql"
-    }
   }
 }
 
@@ -21,8 +18,13 @@ resource "aws_vpc" "main" {
   enable_dns_support   = true
   enable_dns_hostnames = true
 
+  lifecycle {
+    ignore_changes = all
+  }
+
   tags = {
     Name = "Main VPC"
+    Project = var.project_name
   }
 }
 
@@ -33,6 +35,7 @@ resource "aws_subnet" "public" {
   map_public_ip_on_launch = true
   tags = {
     Name = "Public Subnet"
+    Project = var.project_name
   }
 }
 
@@ -43,6 +46,7 @@ resource "aws_subnet" "public2" {
 
   tags = {
     Name = "Public Subnet 2"
+    Project = var.project_name
   }
 }
 
@@ -51,11 +55,16 @@ resource "aws_subnet" "private" {
   cidr_block = "10.0.2.0/24"
   tags = {
     Name = "Private Subnet"
+    Project = var.project_name
   }
 }
 
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.main.id
+
+  tags = {
+    Project = var.project_name
+  }
 }
 
 resource "aws_route_table" "public" {
@@ -64,6 +73,10 @@ resource "aws_route_table" "public" {
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw.id
+  }
+
+  tags = {
+    Project = var.project_name
   }
 }
 
@@ -75,6 +88,7 @@ resource "aws_route_table_association" "public" {
 # EC2 for FastAPI Server
 
 resource "aws_security_group" "fastapi_sg" {
+  name = "${var.project_name}_app_sg"
   vpc_id = aws_vpc.main.id
   egress {
     from_port   = 0
@@ -97,6 +111,7 @@ resource "aws_security_group" "fastapi_sg" {
   }
   tags = {
     Name = "FastAPI SG"
+    Project = var.project_name
   }
 }
 
@@ -107,50 +122,99 @@ resource "random_password" "db_password" {
 
 locals {
   code_setup = [
+    # TODO: I don't think DEBIAN_FRONTEND is supported, and I believe it will be ignored
     "echo 'export DEBIAN_FRONTEND=noninteractive' | sudo tee -a /etc/environment",
     "sudo apt-get update >> /tmp/apt-get-update.log 2>&1",
-    "sudo apt-get --assume-yes install -y python3-pip libpq-dev >> /tmp/apt-get-install.log 2>&1",
+    "sudo apt-get --assume-yes install -y python3-pip libpq-dev postgresql nginx >> /tmp/apt-get-install.log 2>&1",
     "sudo pip install psycopg2-binary >> /tmp/pip-install-pscyopg2-binary.log 2>&1",
-    "chmod 600 /home/ubuntu/.ssh/litscenes_deploy_key",
-    "ssh-add /home/ubuntu/.ssh/litscenes_deploy_key",
+    "chmod 600 /home/ubuntu/.ssh/${var.project_name}_deploy_key",
+    "ssh-add /home/ubuntu/.ssh/${var.project_name}_deploy_key",
     "ssh-keyscan github.com >> /home/ubuntu/.ssh/known_hosts",
-    "git clone git@github.com:kvnn/LitScenes.git >> /tmp/git-clone.log 2>&1",
+    "git clone ${var.git_url} >> /tmp/git-clone.log 2>&1",
     "sudo pip install -r /home/ubuntu/LitScenes/app/requirements.prod.txt >> /tmp/pip-install.log 2>&1"
   ]
 
-  # 1. copy values from .env.prod to .env.tmp
-  # 2. fill in the .env.tmp values with the newly deployed endpoints
+  # 1. copy values into .env.tmp then scp to the server
+  # TODO: do this in remote-exec. No need to have this local.
   env_setup = <<-EOL
     IP_ADDRESS=%s
-    cp .env.prod .env.tmp
-    echo "DB_CONNECTION=postgresql+psycopg2://litscenes_user:${random_password.db_password.result}@${aws_db_instance.litscenes.endpoint}/LitScenes" > .env.tmp
+    echo "OPENAI_API_KEY=${var.openai_api_key}" > .env.tmp
+    echo "DB_CONNECTION=postgresql+psycopg2://${var.db_username}:${random_password.db_password.result}@${aws_db_instance.db_instance.endpoint}/${var.db_name}" >> .env.tmp
     echo "CELERY_BROKER_URL=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0" >> .env.tmp
     echo "CELERY_RESULT_BACKEND=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0" >> .env.tmp
     echo "REDIS_URL=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0" >> .env.tmp
     scp -o StrictHostKeyChecking=no -i ~/.aws/kevins2023.pem .env.tmp ubuntu@$IP_ADDRESS:/home/ubuntu/LitScenes/app/.env
+    rm .env.tmp
 
   EOL
 }
 
 resource "aws_instance" "fastapi_server" {
   ami = "ami-0efcece6bed30fd98"
-  instance_type = "t3a.micro"
+  instance_type = var.instance_type
   subnet_id     = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.fastapi_sg.id, aws_security_group.redis_sg.id]
   key_name      = "Kevins2023"
 
   tags = {
     Name = "FastAPI Server"
+    Project = var.project_name
   }
 
   # git clone access
   provisioner "file" {
-    source      = "/Users/kevin/.aws/litscenes_github_deploy_key"
-    destination = "/home/ubuntu/.ssh/litscenes_deploy_key"
+    source      = var.github_deploy_key_local_path
+    destination = "/home/ubuntu/.ssh/${var.project_name}_deploy_key"
   }
 
   provisioner "remote-exec" {
-    inline = local.code_setup
+    inline = concat(
+      local.code_setup,
+      [
+        # Create the database
+        "export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};'",
+
+        # Set up uvicorn as a systemd service
+        "echo '[Unit]' | sudo tee /etc/systemd/system/fastapi.service > /dev/null",
+        "echo 'Description=FastAPI app' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo 'After=network.target' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo '' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo '[Service]' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo 'User=root' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo 'WorkingDirectory=/home/ubuntu/LitScenes/app/' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo 'ExecStart=/usr/local/bin/uvicorn main:app --host 0.0.0.0 --port 8000' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo 'Restart=always' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo '' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo '[Install]' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo 'WantedBy=multi-user.target' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        
+        # Reload systemd, enable and start the FastAPI service
+        "sudo systemctl daemon-reload",
+        "sudo systemctl enable fastapi.service",
+        "sudo systemctl start fastapi.service",
+
+        # Configure Reverse Proxy for Uvicorn
+        "echo 'server {' | sudo tee /etc/nginx/sites-available/fastapi",
+        "echo '    listen 80;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '    location / {' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_pass http://127.0.0.1:8000;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '    }' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '}' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        
+        # Create symlink to enable the configuration
+        "sudo ln -s /etc/nginx/sites-available/fastapi /etc/nginx/sites-enabled",
+
+        # Disable the default site
+        "sudo rm -f /etc/nginx/sites-enabled/default",
+
+        # Reload NGINX
+        "sudo systemctl reload nginx",
+
+        # Step 3: Restart NGINX
+        "sudo nginx -t",
+        "sudo systemctl reload nginx",
+      ]
+    )
   }
 
   connection {
@@ -171,6 +235,10 @@ resource "aws_instance" "fastapi_server" {
 resource "aws_elasticache_subnet_group" "redis_subnet_group" {
   name       = "redis-subnet-group"
   subnet_ids = [aws_subnet.public.id, aws_subnet.public2.id]
+
+  tags = {
+    Project = var.project_name
+  }
 }
 
 resource "aws_security_group" "redis_sg" {
@@ -187,6 +255,10 @@ resource "aws_security_group" "redis_sg" {
     protocol    = "tcp"
     cidr_blocks = ["10.0.0.0/16"]  # Only allow internal VPC traffic
   }
+
+  tags = {
+    Project = var.project_name
+  }
 }
 
 resource "aws_elasticache_cluster" "redis_cluster" {
@@ -197,17 +269,28 @@ resource "aws_elasticache_cluster" "redis_cluster" {
   /* parameter_group_name = "default.redis6.x" */
   subnet_group_name    = aws_elasticache_subnet_group.redis_subnet_group.name
   security_group_ids    = [aws_security_group.redis_sg.id]
+
+  tags = {
+    Project = var.project_name
+  }
 }
 
 resource "aws_instance" "celery_worker" {
   ami = "ami-0efcece6bed30fd98"
-  instance_type = "t3a.micro"
+  instance_type = var.instance_type
   subnet_id     = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.fastapi_sg.id, aws_security_group.redis_sg.id]
   key_name      = "Kevins2023"
 
   tags = {
     Name = "Celery Worker"
+    Project = var.project_name
+  }
+
+  # git clone access
+  provisioner "file" {
+    source      = var.github_deploy_key_local_path
+    destination = "/home/ubuntu/.ssh/${var.project_name}_deploy_key"
   }
 
   provisioner "remote-exec" {
@@ -229,15 +312,17 @@ resource "aws_instance" "celery_worker" {
 }
 
 resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "my-database-subnet-group"
+  name       = "${var.project_name}-database-subnet-group"
   subnet_ids = [aws_subnet.public.id, aws_subnet.public2.id]
 
   tags = {
-    Name = "My database subnet group"
+    Name = "${var.project_name} database subnet group"
+    Project = var.project_name
   }
 }
 
 resource "aws_security_group" "rds_sg" {
+  name = "${var.project_name}_rds_sg"
   vpc_id = aws_vpc.main.id
   egress {
     from_port   = 0
@@ -248,17 +333,18 @@ resource "aws_security_group" "rds_sg" {
 
   tags = {
     Name = "RDS SG"
+    Project = var.project_name
   }
 }
 
-resource "aws_db_instance" "litscenes" {
-  identifier = "litscenes"
+resource "aws_db_instance" "db_instance" {
+  identifier = var.project_name
   allocated_storage    = 20
   storage_type         = "gp2"
   engine               = "postgres"
   engine_version       = "15.3" # Choose your preferred version
-  instance_class       = "db.t3.micro"
-  username             = "litscenes_user"
+  instance_class       = var.db_instance_type
+  username             = var.db_username
   password             = random_password.db_password.result
   /* parameter_group_name = "default.postgres13" */
   skip_final_snapshot  = true
@@ -269,35 +355,11 @@ resource "aws_db_instance" "litscenes" {
 
   tags = {
     Name = "Postgres DB"
+    Project = var.project_name
   }
 }
 
-provider "postgresql" {
-  host            = aws_db_instance.litscenes.address
-  port            = aws_db_instance.litscenes.port
-  username        = aws_db_instance.litscenes.username
-  password        = aws_db_instance.litscenes.password
-  sslmode         = "require"
-  connect_timeout = 60
-
-}
-
-resource "postgresql_database" "litscenes_db" {
-  name  = "LitScenes"
-  owner = "litscenes_user"
-
-  depends_on = [aws_db_instance.litscenes]
-}
-
-/* resource "aws_security_group_rule" "rds_allow_fastapi" {
-  type        = "ingress"
-  from_port   = 5432
-  to_port     = 5432
-  protocol    = "tcp"
-  security_group_id = aws_security_group.rds_sg.id
-  source_security_group_id = aws_security_group.fastapi_sg.id
-} */
-
+# allow access to the rds instance from the internet
 resource "aws_security_group_rule" "rds_allow_all" {
   type        = "ingress"
   from_port   = 5432
@@ -305,6 +367,8 @@ resource "aws_security_group_rule" "rds_allow_all" {
   protocol    = "tcp"
   security_group_id = aws_security_group.rds_sg.id
   cidr_blocks = ["0.0.0.0/0"]
+  # replace cidr_blocks with the following to only allow traffic from the fastapi server
+  # source_security_group_id = aws_security_group.fastapi_sg.id
 }
 
 resource "aws_security_group_rule" "fastapi_allow_rds" {
@@ -322,8 +386,14 @@ output "fastapi_server_ip" {
   description = "The public IP address of the FastAPI server."
 }
 
+output "instance_public_url" {
+  value = aws_instance.fastapi_server.public_ip
+  description = "The public URL to access the FastAPI application."
+}
+
+
 output "db_endpoint" {
-  value = aws_db_instance.litscenes.endpoint
+  value = aws_db_instance.db_instance.endpoint
   description = "The connection endpoint for the Postgres DB."
 }
 

@@ -40,11 +40,10 @@ print(f'settings={settings}')
 ''' Seed our db '''
 db = SessionLocal()
 if not db.query(models.ScenePromptTemplate).first():
-    for key, scene_prompt in seeds.scene_prompts.items:
+    for key, scene_prompt in seeds.scene_prompts.items():
         db_item = models.ScenePromptTemplate(
             title=scene_prompt['title'],
             content=scene_prompt['content'],
-            max_length=scene_prompt['max_length']
         )
     db.add(db_item)
     db.commit()
