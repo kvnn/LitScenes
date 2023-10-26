@@ -62,7 +62,6 @@ class ScenePromptTemplate(Base, TimestampMixin):
     __tablename__ = 'scene_prompts'
     id = Column(Integer, primary_key=True)
     title = Column(String(255), nullable=False, unique=True)
-    max_length = Column(Integer, nullable=True, default=1800)
     content = Column(Text, nullable=False)
     
 
