@@ -132,7 +132,7 @@ locals {
     "ssh-add /home/ubuntu/.ssh/${var.project_name}_deploy_key",
     "ssh-keyscan github.com >> /home/ubuntu/.ssh/known_hosts",
     "git clone ${var.git_url} >> /tmp/git-clone.log 2>&1",
-    "sudo pip install -r /home/ubuntu/LitScenes/app/requirements.prod.txt >> /tmp/pip-install.log 2>&1"
+    "sudo pip install -r /home/ubuntu/${var.repo_name}/app/requirements.prod.txt >> /tmp/pip-install.log 2>&1"
   ]
 
   # 1. copy values into .env.tmp then scp to the server
@@ -144,7 +144,7 @@ locals {
     echo "CELERY_BROKER_URL=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0" >> .env.tmp
     echo "CELERY_RESULT_BACKEND=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0" >> .env.tmp
     echo "REDIS_URL=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0" >> .env.tmp
-    scp -o StrictHostKeyChecking=no -i ~/.aws/kevins2023.pem .env.tmp ubuntu@$IP_ADDRESS:/home/ubuntu/LitScenes/app/.env
+    scp -o StrictHostKeyChecking=no -i ~/.aws/kevins2023.pem .env.tmp ubuntu@$IP_ADDRESS:/home/ubuntu/${var.repo_name}/app/.env
     rm .env.tmp
 
   EOL
@@ -168,13 +168,23 @@ resource "aws_instance" "fastapi_server" {
     destination = "/home/ubuntu/.ssh/${var.project_name}_deploy_key"
   }
 
+  provisioner "local-exec" {
+    command = format(local.env_setup, aws_instance.fastapi_server.public_ip)
+  }
+
   provisioner "remote-exec" {
     inline = concat(
       local.code_setup,
       [
+        # TODO : this is not working ; it always returns a connection error, but sshing into the server and running the command works
         # Create the database with a retry loop to give DNS time to propagate
-        "for i in {1..5}; do export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' && break || sleep 15; done >> /tmp/db-create.log 2>&1",
+        /* "for i in {1..5}; do export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' && break || sleep 15; done >> /tmp/db-create.log 2>&1", */
         #"export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' >> /tmp/db-create.log 2>&1",
+        "cd /home/ubuntu/${var.repo_name}/app",
+        "export PGPASSWORD=${random_password.db_password.result} && psql -h $(echo ${aws_db_instance.db_instance.endpoint} | sed 's/:5432//') -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' >> /tmp/db-create.log 2>&1",
+
+        # Try to run alembic mgiration
+        "alembic upgrade head >> /tmp/alembic-upgrade.log 2>&1 || (echo 'failed, .env is' >> /tmp/alembic-upgrade.log && cat .env >> /tmp/alembic-upgrade.log && false) || true",
 
         # Set up uvicorn as a systemd service
         "echo '[Unit]' | sudo tee /etc/systemd/system/fastapi.service > /dev/null",
@@ -183,7 +193,7 @@ resource "aws_instance" "fastapi_server" {
         "echo '' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
         "echo '[Service]' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
         "echo 'User=root' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
-        "echo 'WorkingDirectory=/home/ubuntu/LitScenes/app/' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
+        "echo 'WorkingDirectory=/home/ubuntu/${var.repo_name}/app/' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
         "echo 'ExecStart=/usr/local/bin/uvicorn main:app --host 0.0.0.0 --port 8000' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
         "echo 'Restart=always' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
         "echo '' | sudo tee -a /etc/systemd/system/fastapi.service > /dev/null",
@@ -198,8 +208,17 @@ resource "aws_instance" "fastapi_server" {
         # Configure Reverse Proxy for Uvicorn
         "echo 'server {' | sudo tee /etc/nginx/sites-available/fastapi",
         "echo '    listen 80;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    location / {' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '        proxy_pass http://127.0.0.1:8000;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header Host \\$host;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Real-IP \\$remote_addr;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Forwarded-For \\$proxy_add_x_forwarded_for;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Forwarded-Proto \\$scheme;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '    }' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '    location /static/ {' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        alias /home/ubuntu/${var.repo_name}/app/static/;' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    }' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '}' | sudo tee -a /etc/nginx/sites-available/fastapi",
         
@@ -213,8 +232,8 @@ resource "aws_instance" "fastapi_server" {
         "sudo systemctl reload nginx",
 
         # Set file permissions
-        "sudo chmod +x /home /home/ubuntu /home/ubuntu/LitScenes /home/ubuntu/LitScenes/app",
-        "sudo chown -R www-data:www-data /home/ubuntu/LitScenes/app/static/"
+        "sudo chmod +x /home /home/ubuntu /home/ubuntu/${var.repo_name} /home/ubuntu/${var.repo_name}/app",
+        "sudo chown -R www-data:www-data /home/ubuntu/${var.repo_name}/app/static/"
       ]
     )
   }
@@ -222,16 +241,36 @@ resource "aws_instance" "fastapi_server" {
   connection {
     type        = "ssh"
     user        = "ubuntu"
-    private_key = file("~/.aws/kevins2023.pem")
+    private_key = file(var.server_ssh_key_local_path)
     host        = self.public_ip
-  }
-
-  provisioner "local-exec" {
-    command = format(local.env_setup, aws_instance.fastapi_server.public_ip)
   }
 
   depends_on = [aws_elasticache_cluster.redis_cluster, aws_db_instance.db_instance]
 }
+
+/* resource "null_resource" "post_apply_tasks" {
+  depends_on = [aws_instance.fastapi_server]
+
+  triggers = {
+    instance_id = aws_instance.fastapi_server.id  # Replace with the actual resource id
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "cd /home/ubuntu/${var.repo_name}/app",
+      "for i in {1..5}; do export PGPASSWORD=${random_password.db_password.result} && psql -h $(echo ${aws_db_instance.db_instance.endpoint} | sed 's/:5432//') -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' && break || sleep 15; done >> /tmp/db-create.log 2>&1",
+      "alembic upgrade head >> /tmp/alembic-upgrade.log 2>&1 || exit 1"
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file(var.server_ssh_key_local_path)
+      host        = aws_instance.fastapi_server.public_ip  # Replace with the actual resource attribute
+    }
+  }
+} */
+
 
 # Celery Worker w/ Elasticache Redis backend
 resource "aws_elasticache_subnet_group" "redis_subnet_group" {
@@ -296,13 +335,36 @@ resource "aws_instance" "celery_worker" {
   }
 
   provisioner "remote-exec" {
-    inline = local.code_setup
+    inline = concat(
+      local.code_setup,
+      [
+        # Create the systemd service file for the Celery worker
+        "echo '[Unit]' | sudo tee /etc/systemd/system/celery-worker.service",
+        "echo 'Description=Celery Worker' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo 'After=network.target' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo '' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo '[Service]' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo 'Type=simple' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo 'User=ubuntu' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo 'WorkingDirectory=/path/to/your/app' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo 'ExecStart=/usr/local/bin/celery -A celery_app:celery_app worker --loglevel=info' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo 'Restart=always' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo '' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo '[Install]' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo 'WantedBy=multi-user.target' | sudo tee -a /etc/systemd/system/celery-worker.service",
+
+        # Reload systemd, enable and start the Celery worker service
+        "sudo systemctl daemon-reload",
+        "sudo systemctl enable celery-worker",
+        "sudo systemctl start celery-worker"
+      ]
+    )
   }
 
   connection {
     type        = "ssh"
     user        = "ubuntu"
-    private_key = file("~/.aws/kevins2023.pem")
+    private_key = file(var.server_ssh_key_local_path)
     host        = self.public_ip
   }
 
@@ -388,11 +450,15 @@ output "fastapi_server_ip" {
   description = "The public IP address of the FastAPI server."
 }
 
-output "instance_public_url" {
+output "app_server_public_url" {
   value = aws_instance.fastapi_server.public_ip
   description = "The public URL to access the FastAPI application."
 }
 
+output "celery_server_public_url" {
+  value = aws_instance.celery_worker.public_ip
+  description = "The public URL to access the Celery application."
+}
 
 output "db_endpoint" {
   value = aws_db_instance.db_instance.endpoint

@@ -1,7 +1,13 @@
 variable "openai_api_key" {
     description = "The OpenAI API key"
-    default = "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"
+    default = "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"
     type = string
+}
+
+variable "repo_name" {
+  description = "value of the repo name"
+  default     = "LitScenes"
+  type        = string
 }
 
 variable "git_url" {
@@ -10,6 +16,11 @@ variable "git_url" {
     type = string
 }
 
+variable "server_ssh_key_local_path" {
+    description = "The local path to the server ssh key"
+    default = "/Users/kevin/.aws/kevins2023.pem"
+    type = string
+}
 variable "github_deploy_key_local_path" {
     description = "The local path to the github deploy key"
     default = "/Users/kevin/.aws/litscenes_github_deploy_key"
