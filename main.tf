@@ -172,8 +172,9 @@ resource "aws_instance" "fastapi_server" {
     inline = concat(
       local.code_setup,
       [
-        # Create the database
-        "export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' >> /tmp/db-create.log 2>&1",
+        # Create the database with a retry loop to give DNS time to propagate
+        "for i in {1..5}; do export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' && break || sleep 15; done >> /tmp/db-create.log 2>&1",
+        #"export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' >> /tmp/db-create.log 2>&1",
 
         # Set up uvicorn as a systemd service
         "echo '[Unit]' | sudo tee /etc/systemd/system/fastapi.service > /dev/null",
@@ -211,9 +212,9 @@ resource "aws_instance" "fastapi_server" {
         # Reload NGINX
         "sudo systemctl reload nginx",
 
-        # Step 3: Restart NGINX
-        "sudo nginx -t",
-        "sudo systemctl reload nginx",
+        # Set file permissions
+        "sudo chmod +x /home /home/ubuntu /home/ubuntu/LitScenes /home/ubuntu/LitScenes/app",
+        "sudo chown -R www-data:www-data /home/ubuntu/LitScenes/app/static/"
       ]
     )
   }
