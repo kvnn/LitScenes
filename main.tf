@@ -6,7 +6,6 @@ terraform {
   }
 }
 
-
 provider "aws" {
   region = "us-west-2"  # Choose your preferred AWS region
 }
@@ -120,6 +119,7 @@ resource "random_password" "db_password" {
   special          = false
 }
 
+
 locals {
   code_setup = [
     # TODO: I don't think DEBIAN_FRONTEND is supported, and I believe it will be ignored
@@ -135,19 +135,16 @@ locals {
     "sudo pip install -r /home/ubuntu/${var.repo_name}/app/requirements.prod.txt >> /tmp/pip-install.log 2>&1"
   ]
 
-  # 1. copy values into .env.tmp then scp to the server
-  # TODO: do this in remote-exec. No need to have this local.
-  env_setup = <<-EOL
-    IP_ADDRESS=%s
-    echo "OPENAI_API_KEY=${var.openai_api_key}" > .env.tmp
-    echo "DB_CONNECTION=postgresql+psycopg2://${var.db_username}:${random_password.db_password.result}@${aws_db_instance.db_instance.endpoint}/${var.db_name}" >> .env.tmp
-    echo "CELERY_BROKER_URL=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0" >> .env.tmp
-    echo "CELERY_RESULT_BACKEND=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0" >> .env.tmp
-    echo "REDIS_URL=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0" >> .env.tmp
-    scp -o StrictHostKeyChecking=no -i ~/.aws/kevins2023.pem .env.tmp ubuntu@$IP_ADDRESS:/home/ubuntu/${var.repo_name}/app/.env
-    rm .env.tmp
-
-  EOL
+  env_setup = [
+    # create .env and load env vars into it
+    "echo 'OPENAI_API_KEY=${var.openai_api_key}' > /home/ubuntu/${var.repo_name}/app/.env",
+    "echo 'DB_CONNECTION=postgresql+psycopg2://${var.db_username}:${random_password.db_password.result}@${aws_db_instance.db_instance.endpoint}/${var.db_name}' >> /home/ubuntu/${var.repo_name}/app/.env",
+    "echo 'CELERY_BROKER_URL=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0' >> /home/ubuntu/${var.repo_name}/app/.env",
+    "echo 'CELERY_RESULT_BACKEND=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0' >> /home/ubuntu/${var.repo_name}/app/.env",
+    "echo 'REDIS_URL=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0' >> /home/ubuntu/${var.repo_name}/app/.env",
+    # copy all env vars to /etc/environment
+    "cat /home/ubuntu/${var.repo_name}/app/.env | sed 's/^\\\"\\(.*\\)\\\"$/\\1/' | while read -r line || [[ -n \\\"$line\\\" ]]; do echo \\\"$line\\\" | sudo tee -a /etc/environment; done",
+  ]
 }
 
 resource "aws_instance" "fastapi_server" {
@@ -168,19 +165,13 @@ resource "aws_instance" "fastapi_server" {
     destination = "/home/ubuntu/.ssh/${var.project_name}_deploy_key"
   }
 
-  provisioner "local-exec" {
-    command = format(local.env_setup, aws_instance.fastapi_server.public_ip)
-  }
-
   provisioner "remote-exec" {
     inline = concat(
       local.code_setup,
+      local.env_setup,
       [
-        # TODO : this is not working ; it always returns a connection error, but sshing into the server and running the command works
-        # Create the database with a retry loop to give DNS time to propagate
-        /* "for i in {1..5}; do export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' && break || sleep 15; done >> /tmp/db-create.log 2>&1", */
-        #"export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' >> /tmp/db-create.log 2>&1",
         "cd /home/ubuntu/${var.repo_name}/app",
+        "source .env || true",
         "export PGPASSWORD=${random_password.db_password.result} && psql -h $(echo ${aws_db_instance.db_instance.endpoint} | sed 's/:5432//') -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' >> /tmp/db-create.log 2>&1",
 
         # Try to run alembic mgiration
@@ -211,10 +202,10 @@ resource "aws_instance" "fastapi_server" {
         "echo '' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    location / {' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '        proxy_pass http://127.0.0.1:8000;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header Host \\$host;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header X-Real-IP \\$remote_addr;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header X-Forwarded-For \\$proxy_add_x_forwarded_for;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header X-Forwarded-Proto \\$scheme;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header Host $host;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Real-IP $remote_addr;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Forwarded-Proto $scheme;' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    }' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    location /static/ {' | sudo tee -a /etc/nginx/sites-available/fastapi",
@@ -337,6 +328,7 @@ resource "aws_instance" "celery_worker" {
   provisioner "remote-exec" {
     inline = concat(
       local.code_setup,
+      local.env_setup,
       [
         # Create the systemd service file for the Celery worker
         "echo '[Unit]' | sudo tee /etc/systemd/system/celery-worker.service",
@@ -346,8 +338,8 @@ resource "aws_instance" "celery_worker" {
         "echo '[Service]' | sudo tee -a /etc/systemd/system/celery-worker.service",
         "echo 'Type=simple' | sudo tee -a /etc/systemd/system/celery-worker.service",
         "echo 'User=ubuntu' | sudo tee -a /etc/systemd/system/celery-worker.service",
-        "echo 'WorkingDirectory=/path/to/your/app' | sudo tee -a /etc/systemd/system/celery-worker.service",
-        "echo 'ExecStart=/usr/local/bin/celery -A celery_app:celery_app worker --loglevel=info' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo 'WorkingDirectory=/home/ubuntu/${var.repo_name}/app' | sudo tee -a /etc/systemd/system/celery-worker.service",
+        "echo 'ExecStart=/usr/local/bin/celery -A worker.celery worker --loglevel=info' | sudo tee -a /etc/systemd/system/celery-worker.service",
         "echo 'Restart=always' | sudo tee -a /etc/systemd/system/celery-worker.service",
         "echo '' | sudo tee -a /etc/systemd/system/celery-worker.service",
         "echo '[Install]' | sudo tee -a /etc/systemd/system/celery-worker.service",
@@ -366,10 +358,6 @@ resource "aws_instance" "celery_worker" {
     user        = "ubuntu"
     private_key = file(var.server_ssh_key_local_path)
     host        = self.public_ip
-  }
-
-  provisioner "local-exec" {
-    command = format(local.env_setup, aws_instance.celery_worker.public_ip)
   }
 
   depends_on = [aws_elasticache_cluster.redis_cluster, aws_db_instance.db_instance]

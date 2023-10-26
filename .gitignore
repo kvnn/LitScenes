@@ -1,6 +1,9 @@
 .DS_Store
 *.pyc
 
+# TERRAFORM
+terraform.tfvars
+
 # SERVER
 .env
 .DS_Store

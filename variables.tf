@@ -1,6 +1,6 @@
+# openai_api_key is required to live in variable.tfvars file
 variable "openai_api_key" {
     description = "The OpenAI API key"
-    default = "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"
     type = string
 }
 
