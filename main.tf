@@ -125,7 +125,8 @@ locals {
     # TODO: I don't think DEBIAN_FRONTEND is supported, and I believe it will be ignored
     "echo 'export DEBIAN_FRONTEND=noninteractive' | sudo tee -a /etc/environment",
     "sudo apt-get update >> /tmp/apt-get-update.log 2>&1",
-    "sudo apt-get --assume-yes install -y python3-pip libpq-dev postgresql nginx >> /tmp/apt-get-install.log 2>&1",
+    # TODO: apt-get update shouldn't be necessary again, but, I'm not sure.
+    "sudo apt-get update && sudo apt-get --assume-yes install -y python3-pip libpq-dev postgresql nginx >> /tmp/apt-get-install.log 2>&1",
     "sudo pip install psycopg2-binary >> /tmp/pip-install-pscyopg2-binary.log 2>&1",
     "chmod 600 /home/ubuntu/.ssh/${var.project_name}_deploy_key",
     "ssh-add /home/ubuntu/.ssh/${var.project_name}_deploy_key",
@@ -172,7 +173,7 @@ resource "aws_instance" "fastapi_server" {
       local.code_setup,
       [
         # Create the database
-        "export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};'",
+        "export PGPASSWORD=${random_password.db_password.result} && psql -h ${aws_db_instance.db_instance.endpoint} -U ${var.db_username} -d postgres -c 'create database ${var.db_name};' >> /tmp/db-create.log 2>&1",
 
         # Set up uvicorn as a systemd service
         "echo '[Unit]' | sudo tee /etc/systemd/system/fastapi.service > /dev/null",
@@ -228,7 +229,7 @@ resource "aws_instance" "fastapi_server" {
     command = format(local.env_setup, aws_instance.fastapi_server.public_ip)
   }
 
-  depends_on = [aws_elasticache_cluster.redis_cluster]
+  depends_on = [aws_elasticache_cluster.redis_cluster, aws_db_instance.db_instance]
 }
 
 # Celery Worker w/ Elasticache Redis backend
@@ -308,7 +309,7 @@ resource "aws_instance" "celery_worker" {
     command = format(local.env_setup, aws_instance.celery_worker.public_ip)
   }
 
-  depends_on = [aws_elasticache_cluster.redis_cluster]
+  depends_on = [aws_elasticache_cluster.redis_cluster, aws_db_instance.db_instance]
 }
 
 resource "aws_db_subnet_group" "db_subnet_group" {
