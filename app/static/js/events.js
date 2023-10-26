@@ -3,7 +3,7 @@ function getGenerateImageUpdates(
     taskId
 ) {
     console.log('[getGenerateImageUpdates]', taskId);
-    const url = `ws://localhost:8004/ws/${taskId}`;
+    const url = `/ws/${taskId}`;
     const socket = new ReconnectingWebSocket(url);
     socket.debug = true
 
