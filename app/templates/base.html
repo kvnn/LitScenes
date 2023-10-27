@@ -100,7 +100,7 @@
                         <template x-for="scene in scenes">
                             <div class="card chunk recent-scene" >
                                 <a x-bind:href=[`/books/${scene.book_id}/#chunk-${scene.chunk_id}`]>
-                                    <img x-bind:src=[`/static/img/scenes/${scene.scene_image_filename}`] class="img-fluid" />
+                                    <img x-bind:src=scene.scene_image_url class="img-fluid" />
                                 </a>
                                 <div class="card-body">
                                     <h5 class="card-title" x-text=scene.scene_title></h5>

@@ -150,6 +150,8 @@ function toggleActivateChunk($chunk) {
         const chunkId = $chunk.data('chunkId');
         refreshScenesFromChunk(chunkId);
         refreshImagesFromChunk(chunkId);
+
+        history.replaceState(null, null, `#chunk-${chunkId}`);
     }
 }
 

@@ -1,5 +1,8 @@
 import re
 
+from config import settings
+
+
 gutenburg_txt_file_url_pattern = r'^https?://www\.gutenberg\.org/.*\.txt$'
 gutenburg_txt_file_id_pattern = r'/(\d+)/'
 gutenburg_txt_file_title_pattern = r"Title: ([^\r\n]+)"
@@ -50,3 +53,11 @@ def chunk_text(text, char_limit=5000):
 
     return chunks
 
+
+def get_scene_image_url(filename):
+    if settings.in_cloud:
+        # TODO: pull from a config setting
+        return f"https://{settings.s3_bucket_name}.s3.amazonaws.com/{filename}"
+    else:
+        # TODO: /static/img/scenes should be pulled from a config
+        return f'/static/img/scenes/{filename}'

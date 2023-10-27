@@ -118,13 +118,18 @@ def generate_scene_image(
 
         for idx, b64_img in enumerate(b64s):
             filename = f'{scene_id}-{uuid4()}.png'
-            img_path = f'{images_path}/{filename}'
 
             if settings.in_cloud:
-                s3.upload_file(img_path, s3_bucket_name, filename)
+                filename = f'img/{filename}'
+                s3.put_object(Body=b64_img, Bucket=s3_bucket_name, Key=filename, ContentType='image/png')
+                # TODO: idk how necessary this is, and it should be a config
+                img_path = f"https://{s3_bucket_name}.s3.amazonaws.com/{filename}"
+                print(f's3 img_path={img_path}')
             else:
+                img_path = f'{images_path}/{filename}'
                 with open(img_path, "wb") as img_file:
                     img_file.write(b64_img)
+                print(f'local img_path={img_path}')
 
             new_img = create_scene_image(
                 db,

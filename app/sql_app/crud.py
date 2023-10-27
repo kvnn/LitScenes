@@ -1,10 +1,16 @@
 import json
+import logging
 
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 
+from utils import get_scene_image_url
 from . import models, schemas
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 ''' Books'''
@@ -54,8 +60,12 @@ def get_recent_scenes(db: Session):
             LIMIT 20;''')
 
     scenes = db.execute(query).mappings().all()
+    scenes = jsonable_encoder(scenes)
 
-    return jsonable_encoder(scenes)
+    for scene in scenes:
+        scene['scene_image_url'] = get_scene_image_url(scene['scene_image_filename'])
+
+    return scenes
 
 def get_scenes_by_chunk_id(db: Session, chunk_id: int):
     return db.query(models.Scene).filter(models.Scene.chunk_id == chunk_id).order_by(models.Scene.dateadded.desc()).all()
@@ -90,11 +100,11 @@ def create_prompt_template(db: Session, title: str, content: str):
     db.refresh(prompt_template)
     return prompt_template
 
-def get_images_by_scene_id(db: Session, scene_id:int):
-    return db.query(models.SceneImage).filter(models.SceneImage.scene_id == scene_id).order_by(models.SceneImage.dateadded.desc()).all()
-
 def get_images_by_chunk_id(db: Session, chunk_id:int):
-    return db.query(models.SceneImage).filter(models.SceneImage.chunk_id == chunk_id).order_by(models.SceneImage.dateadded.desc()).all()
+    images = db.query(models.SceneImage).filter(models.SceneImage.chunk_id == chunk_id).order_by(models.SceneImage.dateadded.desc()).all()
+    for image in images:
+        image.url = get_scene_image_url(image.filename)
+    return images
 
 def create_scene_image_prompt(db: Session, scene_id: int, content: str):
     new = models.SceneImagePrompt(

@@ -331,12 +331,38 @@ resource "aws_iam_role" "celery_worker_role" {
   })
 }
 
+resource "aws_iam_instance_profile" "celery_worker_profile" {
+  name = "celery-worker-profile"
+  role = aws_iam_role.celery_worker_role.name
+}
+
+resource "aws_iam_policy" "celery_worker_s3_write_policy" {
+  name        = "celery-worker-s3-write-policy"
+  description = "Allows writing to the litscenes-scenes S3 bucket"
+  policy      = <<-EOF
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": "s3:PutObject",
+          "Resource": "arn:aws:s3:::litscenes-scenes/*"
+        }
+      ]
+    }
+    EOF
+}
+
+resource "aws_iam_role_policy_attachment" "celery_worker_s3_write_policy_attach" {
+  role       = aws_iam_role.celery_worker_role.name
+  policy_arn = aws_iam_policy.celery_worker_s3_write_policy.arn
+}
 
 resource "aws_instance" "celery_worker" {
   ami = "ami-0efcece6bed30fd98"
   instance_type = var.instance_type
   subnet_id     = aws_subnet.public.id
-  iam_instance_profile = aws_iam_role.celery_worker_role.name
+  iam_instance_profile =   aws_iam_instance_profile.celery_worker_profile.name
   vpc_security_group_ids = [aws_security_group.fastapi_sg.id, aws_security_group.redis_sg.id]
   key_name      = "Kevins2023"
 
@@ -388,29 +414,6 @@ resource "aws_instance" "celery_worker" {
 
   depends_on = [aws_elasticache_cluster.redis_cluster, aws_db_instance.db_instance]
 }
-
-resource "aws_iam_policy" "celery_worker_s3_write_policy" {
-  name        = "celery-worker-s3-write-policy"
-  description = "Allows writing to the litscenes-scenes S3 bucket"
-  policy      = <<-EOF
-    {
-      "Version": "2012-10-17",
-      "Statement": [
-        {
-          "Effect": "Allow",
-          "Action": "s3:PutObject",
-          "Resource": "arn:aws:s3:::litscenes-scenes/*"
-        }
-      ]
-    }
-    EOF
-}
-
-resource "aws_iam_role_policy_attachment" "celery_worker_s3_write_policy_attach" {
-  role       = aws_iam_role.celery_worker_role.name
-  policy_arn = aws_iam_policy.celery_worker_s3_write_policy.arn
-}
-
 
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "${var.project_name}-database-subnet-group"
