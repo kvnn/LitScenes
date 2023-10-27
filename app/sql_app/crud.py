@@ -40,13 +40,16 @@ def create_chunk(db: Session, chunk: schemas.ChunkCreate):
 
 ''' Scenes '''
 def get_recent_scenes(db: Session):
-    query = text('''SELECT DISTINCT ON (s.id)
+    query = text('''SELECT *
+        FROM (
+            SELECT DISTINCT ON (s.id)
                 s.id as scene_id,
                 si.filename AS scene_image_filename,
                 s.chunk_id,
                 c.book_id,
                 s.title as scene_title,
-                SUBSTRING(s.content FROM 1 FOR 200) as scene_content
+                SUBSTRING(s.content FROM 1 FOR 200) as scene_content,
+                si.dateadded
             FROM
                 scenes s
             JOIN
@@ -56,8 +59,10 @@ def get_recent_scenes(db: Session):
             JOIN
                 books b ON c.book_id = b.id
             ORDER BY
-                s.id, s.dateadded DESC
-            LIMIT 20;''')
+                s.id, si.dateadded DESC
+        ) AS sub
+        ORDER BY dateadded DESC
+        LIMIT 20;''')
 
     scenes = db.execute(query).mappings().all()
     scenes = jsonable_encoder(scenes)

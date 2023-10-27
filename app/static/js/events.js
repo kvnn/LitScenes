@@ -122,6 +122,7 @@ function getGenerateSceneUpdates(
                 sceneGenerateContent = data.task_results.content;
             } else {
                 sceneGenerateBlock = false;
+                $generateSceneContent.slideUp();//.html('').slideDown();
             }
 
             // Process the next message in the queue
@@ -148,8 +149,6 @@ function getGenerateSceneUpdates(
                 }
                 if (data.completed) {
                     console.log('SCENE GENERATION FINISHED');
-
-                    $generateSceneContent.slideUp().html('').slideDown();
 
                     $generateSceneLoader.hide();
                     $generateSceneButton.prop('disabled', false);

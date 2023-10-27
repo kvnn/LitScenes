@@ -226,8 +226,8 @@ def generate_scene(
         try:
             title, content = content.split(scene_prompt_title_separator)
         except ValueError as e:
-            title = content[:20]
-            print(f'[error] ValueError for {prompt[:20]}... with error {e}')
+            title = content[:50]
+            print(f'[error] ValueError for {prompt[:50]}... with error {e}')
         
         title = title[:50]  # just in case it's too long
 
