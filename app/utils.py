@@ -57,7 +57,7 @@ def chunk_text(text, char_limit=5000):
 def get_scene_image_url(filename):
     if settings.in_cloud:
         # TODO: pull from a config setting
-        return f"https://{settings.s3_bucket_name}.s3.amazonaws.com/{filename}"
+        return f"https://{settings.s3_bucket_name_media}.s3.amazonaws.com/{filename}"
     else:
         # TODO: /static/img/scenes should be pulled from a config
         return f'/static/img/scenes/{filename}'
