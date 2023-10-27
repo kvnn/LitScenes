@@ -1,9 +1,20 @@
+const currentHostname = window.location.hostname;
+const currentPort = window.location.port;
+let websocketUrl = `ws://${currentHostname}`;
+
+if (currentPort && currentPort.length) {
+    websocketUrl = `${websocketUrl}:${currentPort}`;
+}
+
+websocketUrl = `${websocketUrl}/ws`;
+
+console.log('websocketUrl', websocketUrl);
 
 function getGenerateImageUpdates(
     taskId
 ) {
     console.log('[getGenerateImageUpdates]', taskId);
-    const url = `/ws/${taskId}`;
+    const url = `${websocketUrl}/${taskId}`;
     const socket = new ReconnectingWebSocket(url);
     socket.debug = true
 
@@ -49,7 +60,7 @@ function getGenerateSceneUpdates(
 
     console.log('[getGenerateSceneUpdates] taskId=', taskId);
 
-    const url = `ws://localhost:8004/ws/${taskId}`;
+    const url = `${websocketUrl}/${taskId}`;
 
     const socket = new ReconnectingWebSocket(url);
 
