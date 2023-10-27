@@ -132,12 +132,15 @@ locals {
     "ssh-add /home/ubuntu/.ssh/${var.project_name}_deploy_key",
     "ssh-keyscan github.com >> /home/ubuntu/.ssh/known_hosts",
     "git clone ${var.git_url} >> /tmp/git-clone.log 2>&1",
-    "sudo pip install -r /home/ubuntu/${var.repo_name}/app/requirements.prod.txt >> /tmp/pip-install.log 2>&1"
+    "sudo pip install -r /home/ubuntu/${var.repo_name}/app/requirements.prod.txt >> /tmp/pip-install.log 2>&1",
+    "mkdir -p /home/ubuntu/${var.repo_name}/app/static/img"
   ]
 
   env_setup = [
     # create .env and load env vars into it
-    "echo 'OPENAI_API_KEY=${var.openai_api_key}' > /home/ubuntu/${var.repo_name}/app/.env",
+    "echo 'IN_CLOUD=${var.in_cloud}' > /home/ubuntu/${var.repo_name}/app/.env",
+    "echo 'S3_BUCKET_NAME_MEDIA=${var.s3_bucket_name_media}' >> /home/ubuntu/${var.repo_name}/app/.env",
+    "echo 'OPENAI_API_KEY=${var.openai_api_key}' >> /home/ubuntu/${var.repo_name}/app/.env",
     "echo 'DB_CONNECTION=postgresql+psycopg2://${var.db_username}:${random_password.db_password.result}@${aws_db_instance.db_instance.endpoint}/${var.db_name}' >> /home/ubuntu/${var.repo_name}/app/.env",
     "echo 'CELERY_BROKER_URL=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0' >> /home/ubuntu/${var.repo_name}/app/.env",
     "echo 'CELERY_RESULT_BACKEND=redis://${aws_elasticache_cluster.redis_cluster.cache_nodes[0].address}:6379/0' >> /home/ubuntu/${var.repo_name}/app/.env",
@@ -202,14 +205,18 @@ resource "aws_instance" "fastapi_server" {
         "echo '' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    location / {' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '        proxy_pass http://127.0.0.1:8000;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header Host $host;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header X-Real-IP $remote_addr;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header X-Forwarded-Proto $scheme;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header Host \$host;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Real-IP \$remote_addr;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Forwarded-Proto \$scheme;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        # WebSocket support' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_http_version 1.1;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header Upgrade \$http_upgrade;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header Connection \"upgrade\";' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    }' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    location /static/ {' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        alias /home/ubuntu/${var.repo_name}/app/static/;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        alias /home/ubuntu/\${var.repo_name}/app/static/;' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    }' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '}' | sudo tee -a /etc/nginx/sites-available/fastapi",
         
@@ -362,6 +369,29 @@ resource "aws_instance" "celery_worker" {
 
   depends_on = [aws_elasticache_cluster.redis_cluster, aws_db_instance.db_instance]
 }
+
+resource "aws_iam_policy" "celery_worker_s3_write_policy" {
+  name        = "celery-worker-s3-write-policy"
+  description = "Allows writing to the litscenes-scenes S3 bucket"
+  policy      = <<-EOF
+    {
+      "Version": "2012-10-17",
+      "Statement": [
+        {
+          "Effect": "Allow",
+          "Action": "s3:PutObject",
+          "Resource": "arn:aws:s3:::litscenes-scenes/*"
+        }
+      ]
+    }
+    EOF
+}
+
+resource "aws_iam_role_policy_attachment" "celery_worker_s3_write_policy_attach" {
+  role       = aws_iam_role.celery_worker_role.name
+  policy_arn = aws_iam_policy.celery_worker_s3_write_policy.arn
+}
+
 
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "${var.project_name}-database-subnet-group"

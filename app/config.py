@@ -3,6 +3,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     app_name: str = "LitScenes"
+    in_cloud: bool = False
     openai_api_key: str
     db_connection: str
     celery_broker_url: str

@@ -9,7 +9,7 @@ from . import models, schemas
 
 ''' Books'''
 def get_books(db: Session):
-    return db.query(models.Book).order_by(models.Book.title.desc()).all()
+    return db.query(models.Book).order_by(models.Book.title.asc()).all()
 
 def get_book_by_id(db: Session, id: int):
     return db.query(models.Book).filter(models.Book.id == id).first()

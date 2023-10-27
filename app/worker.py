@@ -1,4 +1,5 @@
 import base64
+import boto3
 import os
 import time
 from uuid import uuid4
@@ -28,6 +29,12 @@ celery.conf.broker_url = settings.celery_broker_url
 celery.conf.result_backend = settings.celery_result_backend
 
 openai.api_key = settings.openai_api_key
+
+if settings.in_cloud:
+    s3 = boto3.client('s3')
+    s3_bucket_name = settings.s3_bucket_name_media
+else:
+    s3 = object()
 
 @celery.task(name="generate_scene_image", bind=True)
 def generate_scene_image(
@@ -113,8 +120,11 @@ def generate_scene_image(
             filename = f'{scene_id}-{uuid4()}.png'
             img_path = f'{images_path}/{filename}'
 
-            with open(img_path, "wb") as img_file:
-                img_file.write(b64_img)
+            if settings.in_cloud:
+                s3.upload_file(img_path, s3_bucket_name, filename)
+            else:
+                with open(img_path, "wb") as img_file:
+                    img_file.write(b64_img)
 
             new_img = create_scene_image(
                 db,

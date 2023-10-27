@@ -4,6 +4,18 @@ variable "openai_api_key" {
     type = string
 }
 
+variable "in_cloud" {
+  description = "Are we in a cloud environment?"
+  default = 1
+  type = string
+}
+
+variable "s3_bucket_name_media" {
+  description = "Name of s3 bucket to save generated media to"
+  default = "litscenes-scenes"
+  type = string
+}
+
 variable "repo_name" {
   description = "value of the repo name"
   default     = "LitScenes"
