@@ -205,18 +205,18 @@ resource "aws_instance" "fastapi_server" {
         "echo '' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    location / {' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '        proxy_pass http://127.0.0.1:8000;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header Host \$host;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header X-Real-IP \$remote_addr;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header X-Forwarded-For \$proxy_add_x_forwarded_for;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header X-Forwarded-Proto \$scheme;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header Host $host;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Real-IP $remote_addr;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header X-Forwarded-Proto $scheme;' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '        # WebSocket support' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '        proxy_http_version 1.1;' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        proxy_set_header Upgrade \$http_upgrade;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        proxy_set_header Upgrade $http_upgrade;' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '        proxy_set_header Connection \"upgrade\";' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    }' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    location /static/ {' | sudo tee -a /etc/nginx/sites-available/fastapi",
-        "echo '        alias /home/ubuntu/\${var.repo_name}/app/static/;' | sudo tee -a /etc/nginx/sites-available/fastapi",
+        "echo '        alias /home/ubuntu/${var.repo_name}/app/static/;' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '    }' | sudo tee -a /etc/nginx/sites-available/fastapi",
         "echo '}' | sudo tee -a /etc/nginx/sites-available/fastapi",
         
@@ -314,10 +314,29 @@ resource "aws_elasticache_cluster" "redis_cluster" {
   }
 }
 
+resource "aws_iam_role" "celery_worker_role" {
+  name = "celery-worker-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Action = "sts:AssumeRole",
+        Effect = "Allow",
+        Principal = {
+          Service = "ec2.amazonaws.com"
+        }
+      }
+    ]
+  })
+}
+
+
 resource "aws_instance" "celery_worker" {
   ami = "ami-0efcece6bed30fd98"
   instance_type = var.instance_type
   subnet_id     = aws_subnet.public.id
+  iam_instance_profile = aws_iam_role.celery_worker_role.name
   vpc_security_group_ids = [aws_security_group.fastapi_sg.id, aws_security_group.redis_sg.id]
   key_name      = "Kevins2023"
 
