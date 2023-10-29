@@ -114,7 +114,7 @@ function toggleActivateChunk($chunk) {
     if ($chunk.hasClass('active')) {
         $chunk.removeClass('active');
         $generateSceneContainer.removeClass('show');
-        $leftNav.width('auto');
+        $leftNav.width('');
         $chunkContainer.width('auto');
 
     // activate
