@@ -4,6 +4,7 @@
 
 #left-nav {
     overflow: hidden;
+    max-width: 420px;
 }
 
 h2.book-title {
@@ -126,3 +127,33 @@ h2.book-title {
         .config-nav .save {
             float: right;
         }
+
+
+#chunk-hint {
+    position: absolute;
+    top: -17px;
+    right: 30px;
+    display: inline-block;
+    width: max-content;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    animation: bounce 1s infinite;
+    }
+
+    @keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+    #chunk-hint .popover-arrow {
+        position: absolute;
+        transform: translate3d(0px, 19px, 0px);
+        bottom: 10px;
+    }

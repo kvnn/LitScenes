@@ -122,7 +122,7 @@ function getGenerateSceneUpdates(
                 sceneGenerateContent = data.task_results.content;
             } else {
                 sceneGenerateBlock = false;
-                $generateSceneContent.slideUp();//.html('').slideDown();
+                $generateSceneContent.slideUp();
             }
 
             // Process the next message in the queue

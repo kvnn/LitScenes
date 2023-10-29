@@ -41,7 +41,6 @@ top_ebooks = [
     "https://www.gutenberg.org/cache/epub/71935/pg71935.txt",
     "https://www.gutenberg.org/cache/epub/6130/pg6130.txt",
     "https://www.gutenberg.org/cache/epub/31284/pg31284.txt",
-    "https://www.gutenberg.org/cache/epub/71931/pg71931.txt",
     "https://www.gutenberg.org/cache/epub/219/pg219.txt",
     "https://www.gutenberg.org/cache/epub/2554/pg2554.txt",
     "https://www.gutenberg.org/cache/epub/2814/pg2814.txt",

@@ -10,6 +10,7 @@ let $currentScenesLoader;
 let $currentScenesError;
 let $sceneImagesLoader;
 let $sceneImagesError;
+let $chunkHint;
 
 document.addEventListener('alpine:init', () => {
     // init Alpine data
@@ -32,7 +33,6 @@ document.addEventListener('alpine:init', () => {
 
 function refreshRecentScenes() {
     $.get('/scenes/recent', function(data){
-        console.log('recentScenes', data);
         // refresh the Alpine data
         let event = new CustomEvent("recent-scenes-load", {
             detail: {
@@ -44,9 +44,7 @@ function refreshRecentScenes() {
 }
 
 function refreshScenesFromChunk(chunkId) {
-    console.log('refreshScenes from', chunkId);
     $.get(`/scenes/from_chunk/${chunkId}`, function(data) {
-        console.log('data', data);
         // refresh the Alpine data
         let event = new CustomEvent("scenes-load", {
             detail: {
@@ -64,11 +62,8 @@ function refreshScenesFromChunk(chunkId) {
 }
 
 function refreshImagesFromChunk(chunkId) {
-    console.log('refreshImagesFromChunk', chunkId);
     $sceneImagesLoader.show();
     $.get(`/images/from_chunk/${chunkId}`, function(data) {
-        console.log('[refreshImagesFromChunk] data', data);
-
         // refresh the Alpine data
         let event = new CustomEvent("scene-images-load", {
             detail: {
@@ -86,10 +81,8 @@ function refreshImagesFromChunk(chunkId) {
 }
 
 function refreshPromptTemplates() {
-    console.log('refreshpromptTemplates');
     $('#create-prompt-template-loader').show();
     $.get(`/prompt_templates`, function(data) {
-        console.log('data', data);
         // refresh the Alpine data
         let event = new CustomEvent("prompt-templates-load", {
             detail: {
@@ -111,7 +104,6 @@ function checkIfChunkShouldOpen() {
 
     if (match && hash) {
         var chunkId = hash[1];
-        console.log("Chunk ID:", `#card-chunk-${chunkId}`);
         let $chunkCard = $(`#card-chunk-${chunkId}`);
         toggleActivateChunk($chunkCard)
     }
@@ -124,15 +116,20 @@ function toggleActivateChunk($chunk) {
         $generateSceneContainer.removeClass('show');
         $leftNav.width('auto');
         $chunkContainer.width('auto');
+
     // activate
     } else {
+        sessionStorage.setItem(
+            "chunkActivatedCount",
+            parseInt(sessionStorage.getItem("chunkActivatedCount")) + 1
+        );
 
+        $chunkHint.hide();
         $('.card.chunk.active').removeClass('active');
         $chunk.addClass('active');
         $generateSceneContainer.addClass('show');
         $generateSceneContainer.data('chunkId', $chunk.data('chunkId'));
         $chunkContainer.width(315);
-        console.log('$chunkContainer', $chunkContainer);
         $generateSceneContainerLabel.text($chunk.find('.chunk-title').text());
         
 
@@ -168,6 +165,14 @@ $(document).ready(function() {
     $currentScenesError = $('#current-scenes-error');
     $sceneImagesLoader = $('#scene-images-loader');
     $sceneImagesError = $('#scene-images-error');
+    $chunkHint = $('#chunk-hint');
+
+    let chunkActivatedCount = parseInt(sessionStorage.getItem("chunkActivatedCount"));
+    if (chunkActivatedCount > 2) {
+        $chunkHint.hide();
+    } else if (isNaN(chunkActivatedCount)) {
+        sessionStorage.setItem("chunkActivatedCount", 0);
+    }
 
     refreshRecentScenes();
     refreshPromptTemplates();
@@ -214,7 +219,6 @@ $(document).ready(function() {
             $container.removeClass('expanded');
         } else {
             let newHeight = $(window).height() - 50;
-            console.log('newHeight', newHeight);
             $nav.animate({
                 height: newHeight
             }, 500, function() {
@@ -242,7 +246,6 @@ $(document).ready(function() {
 
         // Serialize form data for the post request
         var data = $(this).serializeObject();
-        console.log('data', data);
 
         $.ajax({
             type: "POST",
@@ -296,6 +299,7 @@ $(document).ready(function() {
         let chunkId = $generateSceneContainer.data('chunkId');
         $generateSceneLoader.show();
         $generateSceneButton.prop('disabled', true);
+        $generateSceneContent.html('').slideDown();
 
         // collapse currently-active scenes
         $('.accordion-button').addClass('collapsed');
@@ -307,7 +311,6 @@ $(document).ready(function() {
         // Serialize form data for the post request
         var data = $(this).serializeObject();
         data['chunk_id'] = chunkId;
-        console.log('data', data);
 
         $.ajax({
             type: "POST",
@@ -316,7 +319,6 @@ $(document).ready(function() {
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
             success: function(response) {
-                console.log(response);
                 getGenerateSceneUpdates(
                     response.task_id,
                     chunkId,
@@ -357,8 +359,6 @@ $(document).ready(function() {
         $(this).find(":input").prop("disabled", true);
         $("#loadingSpinner").show();
 
-        console.log('data', data);
-
         $.ajax({
             type: "POST",
             url: postUrl,
@@ -366,7 +366,6 @@ $(document).ready(function() {
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(data),
             success: function(response) {
-                console.log(response);
 
                 if (response.error) {
                     $("#successAlert").hide();

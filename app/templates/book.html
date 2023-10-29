@@ -7,22 +7,23 @@ bookView
 {% block content %}
 
 <h2 class="book-title">{{book.title}} <small>by {{book.author}}</small></h2>
-
 <div class="row">
     <div id="chunk-container" class="chunk-container">
         {% for chunk in book.chunks %}
             <div class="card chunk" data-chunk-id="{{ chunk.id }}" id="card-chunk-{{ chunk.id }}">
                 <div class="card-body">
-                <h5 class="card-title chunk-title">#{{ chunk.sequence_number }}</h5>
-                <p class="card-text">{{ chunk.content }}</p>
-            </div>
-                <div class="chunk-tools">
-                    <!-- <a href="#" data-chunk-id="{{ chunk.id }}" class="chunk-generate-image">
-                        <i class="bi bi-images"></i>
-                    </a>
-                    <a href="#"class="chunk-expand btn btn-sm btn-secondary">
-                        <i class="bi bi-arrows-angle-expand"></i>
-                    </a> -->
+                    <h5 class="card-title chunk-title">#{{ chunk.sequence_number }}</h5>
+                    <p class="card-text">{{ chunk.content }}</p>
+
+                    {% if loop.index == 3 %}
+                    <div id="chunk-hint" class="popover bs-popover-top show">
+                        <div class="popover-arrow"></div>
+                        <!-- Always Shown Popover Content -->
+                        <div class="popover-content">
+                            <p>Click here.</p>
+                        </div>
+                    </div>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
