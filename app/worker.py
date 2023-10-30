@@ -19,8 +19,6 @@ from sql_app.database import SessionLocal
 from sql_app.seed_values import scene_prompt_title_separator, scene_prompt_format, scene_prompt_max_length
 
 
-db = SessionLocal()
-
 redis_url = settings.redis_url
 redis_client = redis.from_url(redis_url)
 
@@ -86,7 +84,7 @@ def generate_scene_image(
         img_prompt = f'{img_prompt}, {aesthetic_title} style'
 
         new_img_prompt = create_scene_image_prompt(
-            db,
+            SessionLocal(),
             scene_id=scene_id,
             content=img_prompt
         )
@@ -132,7 +130,7 @@ def generate_scene_image(
                 print(f'local img_path={img_path}')
 
             new_img = create_scene_image(
-                db,
+                SessionLocal(),
                 chunk_id=chunk_id,
                 scene_id=scene_id,
                 scene_image_prompt_id=new_img_prompt.id,
@@ -233,7 +231,7 @@ def generate_scene(
 
         # Save to DB
         new_scene = create_scene(
-            db = db,
+            db = SessionLocal(),
             title = title,
             content=content,
             aesthetic_id=aesthetic_id,

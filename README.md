@@ -7,6 +7,9 @@
 - create a `terraform.tfvars` file with a value of `openai_api_key = {your api key}`. this file is ignored by git
 - run `terraform destory --auto-approve && terraform apply --auto-aprove`
 
+**common tasks**
+- update repo : `eval "$(ssh-agent -s)" && ssh-add  ~/.ssh/litscenes_deploy_key && sudo chown -R ubuntu:ubuntu /home/ubuntu/LitScenes && git pull && sudo chown -R www-data:www-data .`
+
 
 ## Top 100 eBooks oct 24 2023
 ```
