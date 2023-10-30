@@ -27,7 +27,6 @@ def create_book(db: Session, book: schemas.BookCreate):
     db_book = models.Book(**book.dict())
     db.add(db_book)
     db.commit()
-    db.refresh(db_book)
     return db_book
 
 ''' Chunks '''
@@ -35,7 +34,6 @@ def create_chunk(db: Session, chunk: schemas.ChunkCreate):
     db_chunk = models.Chunk(**chunk.dict())
     db.add(db_chunk)
     db.commit()
-    db.refresh(db_chunk)
     return db_chunk
 
 ''' Scenes '''
@@ -88,7 +86,6 @@ def create_scene(db: Session, title: str, content: str, aesthetic_id=int, chunk_
     )
     db.add(db_scene)
     db.commit()
-    db.refresh(db_scene)
     return db_scene
 
 ''' Scene Prompts and Images '''
