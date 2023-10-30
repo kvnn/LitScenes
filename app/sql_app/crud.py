@@ -102,7 +102,6 @@ def create_prompt_template(db: Session, title: str, content: str):
     )
     db.add(prompt_template)
     db.commit()
-    db.refresh(prompt_template)
     return prompt_template
 
 def get_images_by_chunk_id(db: Session, chunk_id:int):
