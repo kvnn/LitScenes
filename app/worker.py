@@ -83,8 +83,9 @@ def generate_scene_image(
         
         img_prompt = f'{img_prompt}, {aesthetic_title} style'
 
+        db = SessionLocal()
         new_img_prompt = create_scene_image_prompt(
-            SessionLocal(),
+            db=db,
             scene_id=scene_id,
             content=img_prompt
         )
@@ -230,8 +231,9 @@ def generate_scene(
         title = title[:50]  # just in case it's too long
 
         # Save to DB
+        db = SessionLocal()
         new_scene = create_scene(
-            db = SessionLocal(),
+            db = db,
             title = title,
             content=content,
             aesthetic_id=aesthetic_id,
