@@ -83,7 +83,7 @@ def generate_scene_image(
         
         img_prompt = f'{img_prompt}, {aesthetic_title} style'
 
-        db = SessionLocal()
+        db = SessionLocal(expire_on_commit=False)
         new_img_prompt = create_scene_image_prompt(
             db=db,
             scene_id=scene_id,
@@ -130,8 +130,9 @@ def generate_scene_image(
                     img_file.write(b64_img)
                 print(f'local img_path={img_path}')
 
+            db = SessionLocal(expire_on_commit=False)
             new_img = create_scene_image(
-                SessionLocal(),
+                db,
                 chunk_id=chunk_id,
                 scene_id=scene_id,
                 scene_image_prompt_id=new_img_prompt.id,
@@ -231,7 +232,7 @@ def generate_scene(
         title = title[:50]  # just in case it's too long
 
         # Save to DB
-        db = SessionLocal()
+        db = SessionLocal(expire_on_commit=False)
         new_scene = create_scene(
             db = db,
             title = title,
