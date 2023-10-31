@@ -155,7 +155,7 @@ resource "aws_instance" "fastapi_server" {
   instance_type = var.instance_type
   subnet_id     = aws_subnet.public.id
   vpc_security_group_ids = [aws_security_group.fastapi_sg.id, aws_security_group.redis_sg.id]
-  key_name      = "Kevins2023"
+  key_name      = var.aws_ssh_key_name
 
   tags = {
     Name = "FastAPI Server"
@@ -338,7 +338,7 @@ resource "aws_iam_instance_profile" "celery_worker_profile" {
 
 resource "aws_iam_policy" "celery_worker_s3_write_policy" {
   name        = "celery-worker-s3-write-policy"
-  description = "Allows writing to the litscenes-scenes S3 bucket"
+  description = "Allows writing to the S3 bucket"
   policy      = <<-EOF
     {
       "Version": "2012-10-17",
@@ -346,7 +346,7 @@ resource "aws_iam_policy" "celery_worker_s3_write_policy" {
         {
           "Effect": "Allow",
           "Action": "s3:PutObject",
-          "Resource": "arn:aws:s3:::litscenes-scenes/*"
+          "Resource": "arn:aws:s3:::${var.s3_bucket_name_media}/*"
         }
       ]
     }
@@ -364,7 +364,7 @@ resource "aws_instance" "celery_worker" {
   subnet_id     = aws_subnet.public.id
   iam_instance_profile =   aws_iam_instance_profile.celery_worker_profile.name
   vpc_security_group_ids = [aws_security_group.fastapi_sg.id, aws_security_group.redis_sg.id]
-  key_name      = "Kevins2023"
+  key_name      = var.aws_ssh_key_name
 
   tags = {
     Name = "Celery Worker"

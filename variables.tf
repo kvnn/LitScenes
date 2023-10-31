@@ -28,6 +28,12 @@ variable "git_url" {
     type = string
 }
 
+variable "aws_ssh_key_name" {
+  description = "The name of the ssh in AWS"
+  default = "Kevins2023"
+  type = string
+}
+
 variable "server_ssh_key_local_path" {
     description = "The local path to the server ssh key"
     default = "/Users/kevin/.aws/kevins2023.pem"
